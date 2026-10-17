@@ -1,0 +1,965 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PAINEL EXECUTIVO OS — SEMAE Manutenção de Água</title>
+<style>
+:root{
+ --bg:#0A0A0B; --bg2:#121214; --painel:#1A1A1D; --painel2:#202024; --borda:#2E2E33;
+ --texto:#FFFFFF; --texto2:#C9CDD3; --texto3:#8A8F98;
+ --laranja:#F59E0B; --roxo:#8B5CF6; --rosa:#EC4899; --verde:#10B981; --azul:#3B82F6;
+ --ciano:#22D3EE; --verm:#EF4444; --amarelo:#FBBF24;
+}
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',Arial,sans-serif}
+body{background:linear-gradient(180deg,var(--bg) 0%,var(--bg2) 100%);min-height:100vh;padding:16px;color:var(--texto)}
+header{background:linear-gradient(120deg,#17171A 0%,#1F1F23 100%);color:#fff;padding:18px 26px;border-radius:12px;margin-bottom:14px;
+ display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;border:1px solid var(--borda);position:relative;overflow:hidden}
+header::after{content:'';position:absolute;left:0;right:0;bottom:0;height:3px;background:linear-gradient(90deg,var(--laranja),var(--rosa),var(--roxo))}
+header h1{font-size:19px;font-weight:800;letter-spacing:.4px;text-transform:uppercase}
+header h1 span{color:var(--laranja)}
+header .sub{font-size:11.5px;color:var(--texto2);margin-top:3px}
+.botoes{display:flex;gap:8px;flex-wrap:wrap}
+.btn{background:linear-gradient(90deg,var(--laranja),#F97316);color:#0B1120;border:none;padding:10px 18px;border-radius:8px;
+ font-weight:800;font-size:12.5px;cursor:pointer;transition:.15s;letter-spacing:.3px}
+.btn:hover{filter:brightness(1.12)}
+.btn.sec{background:rgba(168,85,247,.12);border:1px solid rgba(168,85,247,.55);color:#D8B4FE}
+.btn.sec:hover{background:rgba(168,85,247,.22)}
+.tabs{display:flex;gap:4px;flex-wrap:wrap;padding:0 6px}
+.tab{padding:11px 18px;border-radius:10px 10px 0 0;background:rgba(255,255,255,.05);color:var(--texto2);
+ font-weight:600;font-size:12.5px;cursor:pointer;transition:.15s;border:1px solid transparent;border-bottom:none}
+.tab:hover{background:rgba(255,255,255,.09);color:#fff}
+.tab.ativa{background:var(--painel);color:#fff;border-color:var(--borda)}
+.pagina{display:none;background:var(--painel);border:1px solid var(--borda);border-radius:0 12px 12px 12px;padding:20px}
+.pagina.ativa{display:block}
+.grid-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:18px}
+.card{background:var(--painel2);border-radius:12px;padding:16px 12px;text-align:center;border:1px solid var(--borda);box-shadow:0 2px 10px rgba(0,0,0,.45)}
+.card .lbl{font-size:9.5px;font-weight:700;color:var(--texto2);text-transform:uppercase;letter-spacing:.7px}
+.card .val{font-size:30px;font-weight:800;color:#fff;margin-top:4px;line-height:1}
+.card .det{font-size:9.5px;color:var(--texto3);margin-top:3px;font-weight:600}
+.card.c-navy{border-left-color:var(--ciano)}.card.c-navy .val{color:#fff}
+@keyframes pulsaVerm{
+ 0%,100%{color:#F87171; text-shadow:0 0 0 rgba(239,68,68,0)}
+ 50%{color:#EF4444; text-shadow:0 0 14px rgba(239,68,68,.55)}
+}
+.card.c-vermelho{border-color:rgba(239,68,68,.4);animation:pulsaCard 1.6s ease-in-out infinite}
+@keyframes pulsaCard{
+ 0%,100%{box-shadow:0 2px 10px rgba(0,0,0,.45); border-color:rgba(239,68,68,.35)}
+ 50%{box-shadow:0 0 18px rgba(239,68,68,.35); border-color:rgba(239,68,68,.75)}
+}
+.card.c-vermelho{border-left-color:var(--verm)}.card.c-vermelho .val{color:#fff;animation:pulsaVerm 1.6s ease-in-out infinite}
+.card.c-vermelho .det{color:#FCA5A5}
+.card.c-verde{border-left-color:var(--verde)}.card.c-verde .val{color:#fff}
+.card.c-dourado{border-left-color:var(--amarelo)}.card.c-dourado .val{color:#fff}
+.card.c-ciano{border-left-color:var(--ciano)}.card.c-ciano .val{color:#fff}
+.card.c-branco{border-left-color:#475569}.card.c-branco .val{color:#fff}
+.card.c-roxo{border-left-color:var(--roxo)}.card.c-roxo .val{color:#fff}
+.alertas{margin-bottom:18px;display:grid;gap:7px}
+.alerta{padding:10px 14px;border-radius:8px;font-size:12.5px;font-weight:600;border-left:4px solid;display:flex;align-items:center;gap:8px}
+.alerta.vermelho{background:rgba(239,68,68,.12);border-color:var(--verm);color:#FCA5A5;animation:pulsaAlerta 1.6s ease-in-out infinite}
+@keyframes pulsaAlerta{
+ 0%,100%{background:rgba(239,68,68,.08)}
+ 50%{background:rgba(239,68,68,.22);box-shadow:0 0 12px rgba(239,68,68,.25)}
+}
+.alerta.amarelo{background:rgba(245,158,11,.10);border-color:var(--laranja);color:#FCD34D}
+.alerta.verde{background:rgba(16,185,129,.10);border-color:var(--verde);color:#6EE7B7}
+.alerta.azul{background:rgba(59,130,246,.10);border-color:var(--azul);color:#93C5FD}
+.q4{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+@media(max-width:980px){.q4{grid-template-columns:1fr}}
+.painel{background:var(--painel);border-radius:12px;padding:16px;border:1px solid var(--borda);border-top:3px solid #3F3F46}
+.painel h3{font-size:12px;color:#E2E8F0;margin-bottom:10px;text-transform:uppercase;letter-spacing:.7px;font-weight:700}
+.painel .nota{font-size:10px;color:var(--texto3);margin-top:8px;font-weight:600}
+table{width:100%;border-collapse:collapse;font-size:12px}
+th{background:#1E293B;color:#CBD5E1;padding:9px 8px;text-align:left;font-weight:700;font-size:10.5px;text-transform:uppercase;letter-spacing:.4px}
+th:first-child{border-radius:8px 0 0 0}th:last-child{border-radius:0 8px 0 0}
+td{padding:8px;border-bottom:1px solid #22304A;color:var(--texto)}
+tr:nth-child(even) td{background:rgba(255,255,255,.03)}
+.tag{display:inline-block;padding:2px 9px;border-radius:5px;font-size:10px;font-weight:800;color:#fff}
+.tag.alta{background:var(--verm)}
+.tag.media{background:var(--laranja)}
+.tag.baixa{background:var(--verde)}
+.tag.sim{background:var(--verm);animation:pulse 1.5s infinite}
+.tag.info{background:var(--azul)}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.45}}
+canvas{max-width:100%;display:block}
+.kpi-linha{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:18px}
+.kpi-box{flex:1;min-width:200px;background:var(--painel2);border-radius:10px;padding:14px 16px;border:1px solid var(--borda);border-left:4px solid var(--azul)}
+.kpi-box .t{font-size:9.5px;font-weight:700;color:var(--texto2);text-transform:uppercase;letter-spacing:.6px}
+.kpi-box .v{font-size:26px;font-weight:800;color:#fff;margin-top:3px}
+.kpi-box .m{font-size:10px;font-weight:600;margin-top:3px;color:var(--texto2)}
+.kpi-box.ok{border-left-color:var(--verde)}.kpi-box.ok .m{color:#34D399}
+.kpi-box.ruim{border-left-color:var(--verm)}.kpi-box.ruim .m{color:#F87171}
+.kpi-box.aten{border-left-color:var(--amarelo)}.kpi-box.aten .m{color:#FBBF24}
+.barra-ext{height:8px;background:#22304A;border-radius:4px;margin-top:7px;overflow:hidden}
+.barra-ext>div{height:100%;border-radius:4px}
+.rodape{margin-top:22px;padding:12px 16px;background:rgba(255,255,255,.03);border:1px solid var(--borda);border-radius:8px;font-size:10.5px;color:var(--texto3);text-align:center}
+.upload-box{border:2px dashed rgba(168,85,247,.55);border-radius:12px;padding:20px;text-align:center;background:rgba(168,85,247,.06);margin-bottom:18px;cursor:pointer}
+.upload-box strong{color:#D8B4FE;font-size:14.5px}
+.upload-box small{color:var(--texto2)}
+input[type=file]{display:none}
+.calor{width:100%;border-collapse:separate;border-spacing:3px}
+.calor td,.calor th{padding:8px 6px;text-align:center;font-size:10.5px;border-radius:5px}
+.calor th{background:#1E293B;color:#CBD5E1}
+.calor td:first-child{text-align:left;font-weight:600;background:var(--painel2);font-size:10.5px}
+@media print{
+ body{background:#0D1424;padding:0}
+ .botoes,.tabs,.upload-box,.nao-imprimir{display:none!important}
+ .pagina{display:block!important;page-break-after:always;border-radius:0;padding:10px}
+ .painel{page-break-inside:avoid}
+ *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+</style>
+</head>
+<body>
+<header>
+ <div>
+  <h1>PAINEL EXECUTIVO <span>OS</span> — MANUTENÇÃO DE ÁGUA</h1>
+  <div class="sub">SEMAE Mogi das Cruzes • Divisão de Manutenção • <span id="dataAtual"></span></div>
+ </div>
+ <div class="botoes">
+  <label class="btn" for="filePdf">📄 Subir PDF do CEBI</label>
+  <input type="file" id="filePdf" accept=".pdf">
+  <button class="btn sec" onclick="window.print()">🖨️ Exportar PDF</button>
+ </div>
+</header>
+
+<div class="nao-imprimir" style="background:linear-gradient(90deg,rgba(245,158,11,.22),rgba(236,72,153,.18));border:2px solid #F59E0B;border-radius:10px;padding:12px 18px;margin:0 0 14px;display:flex;align-items:center;gap:12px">
+ <span style="font-size:22px">🕒</span>
+ <div>
+  <div style="font-weight:900;font-size:15px;color:#FCD34D;letter-spacing:.4px">ATUALIZAÇÃO DE SEGUNDA A SÁBADO ÀS 09h DA MANHÃ</div>
+  <div style="font-size:11.5px;color:#E8EDF4;margin-top:2px">Dados extraídos direto do CEBI pela rotina automática</div>
+ </div>
+</div>
+<div class="upload-box nao-imprimir" onclick="document.getElementById('filePdf').click()">
+ <strong>📄 Subir relatório PDF do CEBI</strong><br>
+ <small>Leitura 100% local no navegador — recalcula todos os indicadores e gráficos. Formatos novo e antigo.</small>
+</div>
+
+<div class="tabs">
+ <div class="tab ativa" onclick="aba('p1',this)">📊 VISÃO GERAL</div>
+ <div class="tab" onclick="aba('p2',this)">📈 FLUXO &amp; PRODUTIVIDADE</div>
+ <div class="tab" onclick="aba('p3',this)">🏭 SETORES</div>
+ <div class="tab" onclick="aba('p4',this)">📋 OS EM ABERTO</div>
+ <div class="tab" onclick="aba('p5',this)">🔍 VISTORIAS</div>
+ <div class="tab" onclick="aba('p6',this)">📍 TERRITÓRIO</div>
+ <div class="tab" onclick="aba('p7',this)">🗓️ REUNIÃO</div>
+ <div class="tab" onclick="aba('p8',this)">🔎 PESQUISA</div>
+ <div class="tab" onclick="aba('p9',this)">🗺️ SETORES &amp; BAIRROS</div>
+ <div class="tab" onclick="aba('p11',this)">📅 PROGRAMAÇÃO</div>
+ <div class="tab" onclick="aba('p12',this)">⏱️ VAZAMENTOS EXECUTADOS</div>
+</div>
+
+<div id="p1" class="pagina ativa">
+ <div class="grid-cards" id="cards"></div>
+ <div class="alertas" id="alertas"></div>
+ <div class="kpi-linha" id="kpis"></div>
+ <div class="q4">
+  <div class="painel"><h3>Backlog por prioridade</h3><canvas id="gPrior"></canvas></div>
+  <div class="painel"><h3>Backlog por setor</h3><canvas id="gSetor"></canvas></div>
+ </div>
+ <div class="q4">
+  <div class="painel"><h3>Faixa de aging das OS em aberto</h3><canvas id="gAging"></canvas></div>
+  <div class="painel"><h3>OS em aberto por tipo de chamado</h3><canvas id="gTipo"></canvas></div>
+ </div>
+</div>
+
+<div id="p2" class="pagina">
+ <div class="painel" style="margin-bottom:16px"><h3>📈 Entradas × Conclusões — últimos 14 dias</h3><canvas id="gFluxo"></canvas>
+  <div class="nota">Barras laranja = OS que entraram no dia · Barras verdes = OS concluídas no dia. Verde maior que laranja = backlog caindo.</div></div>
+ <div class="painel" style="margin-bottom:16px"><h3>⚖️ Saldo diário do backlog — o backlog cresceu ou caiu?</h3><canvas id="gSaldo"></canvas>
+  <div class="nota">Verde = concluímos mais do que entrou (backlog caiu) · Vermelho = entraram mais do que concluímos (backlog cresceu)</div></div>
+ <div class="q4">
+  <div class="painel"><h3>✅ Produtividade da divisão</h3><div id="prodBox"></div></div>
+  <div class="painel"><h3>🗓️ Backlog por semana de abertura — o que está envelhecendo</h3><canvas id="gBackSem"></canvas>
+   <div class="nota">Barras antigas altas = OS velhas paradas · ideal: tudo concentrado nas semanas recentes</div></div>
+ </div>
+</div>
+
+<div id="p3" class="pagina">
+ <div class="q4">
+  <div class="painel"><h3>Backlog por SETOR (em aberto)</h3><canvas id="gSetores2"></canvas></div>
+  <div class="painel"><h3>Backlog por departamento atual</h3><canvas id="gDepto"></canvas></div>
+ </div>
+ <div class="painel" style="margin-bottom:18px"><h3>Detalhamento por setor</h3><div id="tabSetores"></div></div>
+ <div class="painel"><h3>OS em aberto por departamento</h3><div id="tabDepto"></div></div>
+</div>
+
+<div id="p4" class="pagina">
+ <div class="painel"><h3>OS em aberto — da mais antiga para a mais recente</h3>
+ <div style="max-height:64vh;overflow:auto"><table id="tabOS"></table></div></div>
+</div>
+
+<div id="p5" class="pagina">
+ <div class="painel"><h3>🔍 Vistorias — lista de cobrança dos fiscais (prazo: 24h)</h3>
+ <div id="tabVist"></div>
+ <div id="cobrancaVist"></div>
+ <p style="font-size:12px;color:#C9CDD3;margin-top:12px;background:rgba(59,130,246,.08);padding:10px;border-radius:8px">
+ <b>Fluxo da vistoria:</b> fiscal vistoria → <b>confirmou</b> = converte em "Vazamento de Água" (execução) ·
+ <b>outro setor</b> = encaminha ao responsável · <b>não confirmou</b> = baixa com justificativa.</p></div>
+</div>
+
+<div id="p8" class="pagina">
+ <div class="painel"><h3>🔎 Vazamentos produto de pesquisa — contagem à parte</h3>
+ <div id="tabPesq"></div>
+ <p style="font-size:12px;color:#C9CDD3;margin-top:12px;background:rgba(168,85,247,.08);padding:10px;border-radius:8px">
+ Estes vazamentos NÃO entram no backlog operacional das equipes — são produto da pesquisa de vazamento (equipe técnica).
+ Contados à parte para não inflar os indicadores da divisão.</p></div>
+</div>
+
+<div id="p6" class="pagina">
+ <div class="q4">
+  <div class="painel"><h3>TOP bairros — histórico completo da base</h3><canvas id="gBairros"></canvas></div>
+  <div class="painel"><h3>Curva ABC — concentração das OS por bairro</h3><canvas id="gABC"></canvas>
+   <div class="nota">Classe A = poucos bairros concentram a maior parte das OS → foco de prevenção</div></div>
+ </div>
+ <div class="q4">
+  <div class="painel"><h3>Origem do chamado — Geofone × População</h3><canvas id="gGeofone"></canvas></div>
+  <div class="painel"><h3>TOP CDC — imóveis com OS recorrentes</h3><canvas id="gCdc"></canvas></div>
+ </div>
+ <div class="painel"><h3>🔥 Mapa de calor — entradas por bairro × semana (últimas semanas)</h3><div id="tabCalor"></div></div>
+</div>
+
+<div id="p7" class="pagina">
+ <div class="painel"><h3>Pauta da reunião semanal — gerada automaticamente</h3><div id="pauta"></div></div>
+</div>
+
+<div id="p9" class="pagina">
+ <div class="painel" style="margin-bottom:16px"><h3>🗺️ Divisão da cidade em 4 setores — bairros agrupados por setor hidro</h3>
+  <div class="nota">Cada bloco = um setor e seu fiscal responsável. Bairros em vermelho têm OS em aberto (número ao lado). Base: histórico completo do CEBI + mapa bairro→setor.</div></div>
+ <div id="mapaSetores"></div>
+ <div class="painel" style="margin-top:8px"><h3>🔥 Mapa de calor — VISTORIAS de vazamento de água por bairro × dia</h3>
+  <div class="nota">Amarelo claro → laranja = mais vistorias no dia · coluna "Pendentes" = vistorias aguardando o fiscal agora</div>
+  <div id="calorVist"></div></div>
+</div>
+
+<div id="p11" class="pagina">
+ <div class="painel" style="margin-bottom:16px"><h3>📅 Programação manual das equipes — cole aqui a lista do dia</h3>
+  <div class="nota">Formato livre: uma OS por linha (ex.: "AG-1 2026140383" ou "AG-1: 2026140383, 2026140371"). O painel cruza com a base e mostra: OS programadas × em aberto, OS fora de lista, equipes sem carga, execução >48h e cobrança por setor.</div>
+  <textarea id="progInput" rows="9" placeholder="AG-1 2026140383&#10;AG-1 2026140371&#10;AG-2 2026140347&#10;..." style="width:100%;background:#0D1424;color:#E8EDF4;border:1px solid #2E2E33;border-radius:8px;padding:10px;font-family:Consolas,monospace;font-size:12px"></textarea>
+  <button class="btn" style="margin-top:10px;padding:8px 18px" onclick="analisarProg()">▶️ Analisar programação</button>
+  <button class="btn sec" style="margin-top:10px;padding:8px 18px" onclick="document.getElementById('progInput').value='';document.getElementById('progResult').innerHTML=''">🧹 Limpar</button>
+ </div>
+ <div id="progResult"></div>
+</div>
+
+<div id="p12" class="pagina">
+ <div class="painel" style="margin-bottom:16px"><h3>⏱️ OS de vazamento executadas — tempo de resposta × meta ≤ 8% em atraso</h3>
+  <div class="nota">Acompanha o conceito dos relatórios mensais: % de OS de vazamento de água executadas EM ATRASO (>48h) sobre o total executado no mês. Meta da divisão: voltar a ≤ 8% (índice de ago/2025). Atraso conta da abertura no CEBI até a execução.</div></div>
+ <div id="execCards"></div>
+ <div class="painel" style="margin-bottom:16px"><h3>📈 Taxa de execução em atraso por mês (%) — meta ≤ 8%</h3><canvas id="gExecTaxa"></canvas>
+  <div class="nota">Linha vermelha = meta de 8% · barras vermelhas = mês fora da meta · verdes = dentro da meta</div></div>
+ <div class="painel" style="margin-bottom:16px"><h3>📊 Volume executado por mês — total × em atraso</h3><canvas id="gExecVol"></canvas></div>
+ <div class="painel"><h3>📅 Comparativo com o mês anterior — mesma data de corte (dia 10)</h3>
+ <div id="tabComparativo"></div>
+ <div class="nota">Comparação justa: acumulado de 1º até o dia 10 de cada mês (mesma janela). ago/26 aparece como referência do mês completo (a base histórica de agosto inicia em 26/08).</div></div>
+</div>
+
+<div class="rodape">
+ PAINEL EXECUTIVO OS v8 — 7 abas • 14 gráficos • motor de alertas automático • processamento 100% local no navegador • suba o PDF do CEBI para atualizar • exporte com 🖨️ ou Ctrl+P
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script>(function(){
+  try{
+    pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+  }catch(e){ console.warn('worker', e); }
+})();</script>
+<script>// PARSER PDF CEBI v5 — agrupa linhas por tolerância de Y (como pdfplumber)
+const TIPOS_CEBI = [
+  'Vazamento de Água','Vistoria de Vazamento de Água','Vazamento de Esgoto',
+  'Fiscalização de Irregularidade/Fraude','Comunicação de vazamento no cavalete/UMA',
+  'Regularização de Ligação - Fiscalização','Pressão Baixa','Reclamação de falta de água',
+  'Verificação de Serviços Pendentes - Manut. Água'
+];
+const RUÍDO = /(Página\s*\d|Total de|Setor da|SEMAE|CNPJ|Rua Otto|Ordens de|Periodo|gerenciamento|^Endereço$|^Serviço$|^Bairro$|^Nro$|^CDC$|^Tipo Chamado$|^Solicitante$|^O\.S\.$|^Data$|52\.561\.214)/;
+
+function coluna(x){
+  if(x<60) return 'os';
+  if(x<130) return 'cdc';
+  if(x<250) return 'sol';
+  if(x<378) return 'tipo';
+  if(x<528) return 'end';
+  if(x<625) return 'bairro';
+  if(x<705) return 'data';
+  return 'serv';
+}
+const quitar = s => s.replace(RUÍDO,' ').replace(/\s+/g,' ').trim();
+
+// Agrupar itens em linhas visuais por proximidade de Y (tolerância ~6px)
+function agruparLinhas(items){
+  // Agrupa por NÚMERO DE OS: cada número de 10 dígitos (x<60) inicia um registro.
+  // A linha da OS + continuações ficam numa janela de y: [y_os - 7, y_os + 1] (pdf.js).
+  const ordenados = items.slice().sort((a,b)=> (b.y-a.y) || (a.x-b.x));
+  const registros=[];
+  let atual=null;
+  for(const it of ordenados){
+    if(/^\d{10}$/.test(it.s) && it.x<60){
+      if(atual) registros.push(atual);
+      atual={y:it.y, itens:[{x:it.x,s:it.s}]};
+    } else if(atual && it.y <= atual.y+1 && it.y >= atual.y-7){
+      atual.itens.push({x:it.x,s:it.s});
+    }
+  }
+  if(atual) registros.push(atual);
+  return registros;
+}
+async function lerPdfCebi(file){
+  const buf = await file.arrayBuffer();
+  const pdf = await pdfjsLib.getDocument({data: buf}).promise;
+  let linhas = [];
+  for(let i=1;i<=pdf.numPages;i++){
+    const pg = await pdf.getPage(i);
+    const tc = await pg.getTextContent();
+    const items = [];
+    for(const it of tc.items){
+      const s = (it.str||'').trim();
+      if(!s) continue;
+      items.push({y: it.transform[5], x: it.transform[4], s});
+    }
+    linhas = linhas.concat(agruparLinhas(items));
+  }
+  linhas.sort((a,b)=>b.y-a.y);
+  return linhas;
+}
+
+function parsePdfCebi(linhas){
+  const os = [];
+  let atual = null;
+  for(const linha of linhas){
+    const itens = linha.itens;
+    const idx = itens.findIndex(i=>/^\d{10}$/.test(i.s) && i.x<60);
+    if(idx>=0){
+      if(atual && atual.tipo) os.push(atual);
+      atual = {os: itens[idx].s, cdc:'', sol:'', tipo:'', end:'', bairro:'', data:'', serv:''};
+      for(const it of itens){
+        if(it===itens[idx]) continue;
+        const c = coluna(it.x);
+        if(c==='os') continue;
+        if(atual[c]!==undefined) atual[c] += (atual[c]?' ':'')+it.s;
+      }
+    } else if(atual){
+      for(const it of itens){
+        const c = coluna(it.x);
+        if(c==='os'||c==='cdc') continue;
+        if(atual[c]!==undefined) atual[c] += (atual[c]?' ':'')+it.s;
+      }
+    }
+  }
+  if(atual && atual.tipo) os.push(atual);
+
+  return os.map(o=>{
+    for(const k of ['cdc','sol','tipo','end','bairro','data','serv']) o[k]=quitar(o[k]);
+    const md = o.data.match(/(\d{2}\/\d{2}\/\d{4})\s+(\d{2}:\d{2}:\d{2})/);
+    o.abertura = md? (md[1]+' '+md[2]) : (o.data||'');
+    // CLASSIFICAÇÃO POR CÓDIGO CEBI (à prova de texto embaralhado do PDF):
+    // tipo chamado 1033 = Vistoria de Vazamento · 1077 = produto de pesquisa · 1 = Vazamento de Água
+    let tipoReal;
+    if(/\b1033\b/.test(o.tipo)) tipoReal = 'Vistoria de Vazamento de Água';
+    else if(/\b1077\b/.test(o.tipo)) tipoReal = 'Vazamento de água produto de pesquisa';
+    else {
+      tipoReal = o.tipo.replace(/^\d+\s*[-–]\s*/,'').trim();
+      let ok=false;
+      for(const t of TIPOS_CEBI){ if(tipoReal.includes(t)){ ok=true; break; } }
+      if(!ok){ for(const t of TIPOS_CEBI){ if(t.startsWith(tipoReal) || (tipoReal+' '+o.serv).includes(t)){ tipoReal=t; break; } } }
+    }
+    o.tipo = tipoReal;
+    // Vistoria convertida: serviço virou "Vazamento de Água" (fiscal JÁ vistoriou)
+    if(/vistoria/i.test(o.tipo) && o.serv && /vazamento/i.test(o.serv) && !/vistoria/i.test(o.serv)) o.sit='Convertida';
+    else if(/vistoria/i.test(o.tipo)) o.sit='Nova';
+    o.cdc = o.cdc.replace(/\D/g,'');
+    return o;
+  }).filter(o=>o.tipo && /^(Vazamento|Vistoria|Fiscalização|Comunicação|Regularização|Pressão|Reclamação|Verificação)/.test(o.tipo));
+}</script>
+<script>(function(){
+  const BASE_OS = [{"os": "2026139458", "abertura": "2026-09-30 09:22:33", "tipo": "Vazamento de Água", "depto": "", "cdc": "106494", "bairro": "JARDIM AEROPORTO II", "endereco": "AV. PRFA JOAQUINA DE OLIVEIRA RUIZ, 112", "sit": "Nova", "dias": -0.4, "setor": null, "sol": "JOSE PAULO DA SILVA"}, {"os": "2026139316", "abertura": "2026-09-30 08:53:59", "tipo": "Vistoria de Vazamento de Água", "depto": "", "cdc": "65554", "bairro": "VILA SAO PAULO", "endereco": "RUA STA. CRUZ DO ANDRE, 111", "sit": "Nova", "dias": -0.4, "setor": null, "sol": "MARIA DO ROSARIO DE CAMPOS"}, {"os": "2026138881", "abertura": "2026-09-30 08:49:17", "tipo": "Vistoria de Vazamento de Água", "depto": "", "cdc": "69469", "bairro": "CONJ. HABITACIONAL ALVARO BOVOLENTA", "endereco": "RUA ARISTIDES GERMANO MONTAGNINI, 302", "sit": "Nova", "dias": -0.4, "setor": null, "sol": "ROSANE FERREIRA BARRIOS DE OLIVEIRA"}, {"os": "2026139257", "abertura": "2026-09-30 08:18:42", "tipo": "Vistoria de Vazamento de Água", "depto": "", "cdc": "68443", "bairro": "VILA AUREA MARIA", "endereco": "RUA JOAO FRANCO MARTINS, 297", "sit": "Nova", "dias": -0.3, "setor": null, "sol": "TAMIRES DOS SANTPS ROSA YASSINE"}, {"os": "2026137619", "abertura": "2026-09-30 08:08:41", "tipo": "Vistoria de Vazamento de Água", "depto": "", "cdc": "45210", "bairro": "VILA NOVA CINTRA", "endereco": "RUA MARIO IOSHIDA, 518", "sit": "Nova", "dias": -0.3, "setor": null, "sol": "ALLAN VICTOR CESPEDES RODRIGUES"}, {"os": "2026138086", "abertura": "2026-09-30 08:05:05", "tipo": "Regularização de Ligação - Fiscalização", "depto": "", "cdc": "180543", "bairro": "JARDIM SANTOS DUMONT II", "endereco": "RUA UGANDA, 976", "sit": "Nova", "dias": -0.3, "setor": null, "sol": "MARIA APARECIDA ALVES PAIM"}, {"os": "2026138905", "abertura": "2026-09-30 06:36:57", "tipo": "Vazamento de Água", "depto": "Norte Sul - DOSA", "cdc": "44539", "bairro": "CENTRO", "endereco": "RUA TTE MANOEL ALVES DOS ANJOS, 215", "sit": "Nova", "dias": -0.3, "setor": 1, "sol": "FISCAL MANUTENÇÃO DE ÁGUA"}, {"os": "2026138904", "abertura": "2026-09-30 06:34:51", "tipo": "Vazamento de Água", "depto": "Norte Sul - DOSA", "cdc": "105767", "bairro": "CENTRO", "endereco": "RUA TTE MANOEL ALVES DOS ANJOS, 205", "sit": "Nova", "dias": -0.3, "setor": 1, "sol": "FISCAL MANUTENÇÃO DE ÁGUA"}, {"os": "2026138903", "abertura": "2026-09-29 22:34:28", "tipo": "Vistoria de Vazamento de Água", "depto": "", "cdc": "19511", "bairro": "VILA SUISSA", "endereco": "RUA EUDOXIA CASTELLO BRANCO, 111", "sit": "Nova", "dias": 0.1, "setor": null, "sol": "KALEO MARTINS FOSSE"}, {"os": "2026138772", "abertura": "2026-09-29 15:38:33", "tipo": "Vistoria de Vazamento de Água", "depto": "", "cdc": "", "bairro": "RESIDENCIAL FAZENDA RODEIO", "endereco": "AV. EXP JOSE BARCA, 283", "sit": "Nova", "dias": 0.3, "setor": null, "sol": "SAMANTA"}, {"os": "2026138136", "abertura": "2026-09-29 15:19:47", "tipo": "Vistoria de Vazamento de Água", "depto": "", "cdc": "42987", "bairro": "VILA OLIVEIRA", "endereco": "RUA VER. JAIR SALVARANI, 328", "sit": "Nova", "dias": 0.4, "setor": null, "sol": "FELICIO FUMIAKI KAMIYAMA"}, {"os": "2026137170", "abertura": "2026-09-29 15:11:25", "tipo": "Vazamento de Água", "depto": "SERVIÇOS DE MANUTENÇÃO DE REDES ÁGUA", "cdc": "59515", "bairro": "VILA OLIVEIRA", "endereco": "RUA DES. FRANCISCO FERREIRA, 325", "sit": "Reaberta", "dias": 0.4, "setor": null, "sol": "PAULO ROBERTO DOS SANTOS"}, {"os": "2026134156", "abertura": "2026-09-29 14:41:46", "tipo": "Vazamento de Água", "depto": "CCO/CCC", "cdc": "22833", "bairro": "JARDIM UNIVERSO", "endereco": "AV. ULYSSES BORGES DE SIQUEIRA, 646", "sit": "Reaberta", "dias": 0.4, "setor": 2, "sol": "JOAO FATIMA DE SIQUEIRA"}, {"os": "2026135507", "abertura": "2026-09-29 13:58:37", "tipo": "Vazamento de Água", "depto": "SERVIÇOS DE MANUTENÇÃO DE REDES ÁGUA", "cdc": "89645", "bairro": "JARDIM BELA VISTA", "endereco": "RUA ANTONIO BOZ VIDAL, 300", "sit": "Reaberta", "dias": 0.4, "setor": 3, "sol": "CDHU - CONDOMINIO JEQUITIBA III"}, {"os": "2026138693", "abertura": "2026-09-29 13:16:36", "tipo": "Vazamento de Água", "depto": "SERVIÇOS DE MANUTENÇÃO DE REDES ÁGUA", "cdc": "152347", "bairro": "VILA JUNDIAPEBA", "endereco": "AV. LIBANO, 571", "sit": "Nova", "dias": 0.4, "setor": 4, "sol": "GESSI ESTELA MARTINS"}, {"os": "2026138529", "abertura": "2026-09-29 11:06:59", "tipo": "Vazamento de Água", "depto": "SERVIÇOS DE MANUTENÇÃO DE REDES ÁGUA", "cdc": "13573", "bairro": "RODEIO", "endereco": "AV. LOTHAR WALDEMAR HOEHNE, 2665", "sit": "Nova", "dias": 0.5, "setor": 3, "sol": "PEDRO FROIS,FISCAL MANUTENÇÃO DE ÁGUA."}, {"os": "2026138053", "abertura": "2026-09-29 10:53:57", "tipo": "Vistoria de Vazamento de Água", "depto": "", "cdc": "106122", "bairro": "VILA SAO PAULO", "endereco": "AV. FRANCISCO RODRIGUES FILHO, 7100", "sit": "Nova", "dias": 0.5, "setor": null, "sol": "PAULO HENRIQUE DE JESUS SILVA"}, {"os": "2026138429", "abertura": "2026-09-29 10:51:41", "tipo": "Vistoria de Vazamento de Água", "depto": "", "cdc": "107219", "bairro": "VILA NOVA APARECIDA", "endereco": "RUA BENEDICTO JOSE LEITE, 1320", "sit": "Nova", "dias": 0.5, "setor": null, "sol": "NAILZIO DE JESUS DIAS"}, {"os": "2026119718", "abertura": "2026-09-29 10:12:52", "tipo": "Vazamento de Água", "depto": "", "cdc": "53516", "bairro": "VILA JUNDIAPEBA", "endereco": "RUA OTACILIO BARBOSA DE GOIS, 56", "sit": "Nova", "dias": 0.6, "setor": null, "sol": "Gilson pontes geofone"}, {"os": "2026008880", "abertura": "2026-09-29 10:03:05", "tipo": "Comunicação de vazamento no cavalete/UMA", "depto": "", "cdc": "22681", "bairro": "JARDIM SAO PEDRO", "endereco": "AV. PAULO VI, 877", "sit": "Nova", "dias": 0.6, "setor": null, "sol": "MARLENE PEREIRA DA SILVA"}, {"os": "2026132667", "abertura": "2026-09-29 10:02:33", "tipo": "Vazamento de Água", "depto": "CCO/CCC", "cdc": "23529", "bairro": "VILA OLIVEIRA", "endereco": "RUA LUIZ DA SILVA PIRES, 509", "sit": "Reaberta", "dias": 0.6, "setor": null, "sol": "JACILENE DE OLIVEIRA GERMANO"}, {"os": "2026006679", "abertura": "2026-09-29 10:00:25", "tipo": "Comunicação de vazamento no cavalete/UMA", "depto": "", "cdc": "90321", "bairro": "SABAUNA", "endereco": "RUA FRANCISCO RODRIGUES MATHIAS, 87", "sit": "Nova", "dias": 0.6, "setor": null, "sol": "ASSOCIACAO NACIONAL PRESERVACAO FERROVIARIA"}, {"os": "2025132388", "abertura": "2026-09-29 09:54:02", "tipo": "Comunicação de vazamento no cavalete/UMA", "depto": "", "cdc": "50440", "bairro": "VILA PAUL EST ALTA", "endereco": "AV. GASPAR VAZ, 293", "sit": "Nova", "dias": 0.6, "setor": null, "sol": "SALVIO PINTO CARDOSO"}, {"os": "2026138443", "abertura": "2026-09-29 09:24:29", "tipo": "Vazamento de Água", "depto": "SERVIÇOS DE MANUTENÇÃO DE REDES ÁGUA", "cdc": "38258", "bairro": "VILA PAULISTA", "endereco": "RUA JOAO RIBEIRO DE BRITO, 94", "sit": "Nova", "dias": 0.6, "setor": 2, "sol": "ARACY DE BRITO FERREIRA"}, {"os": "2026138442", "abertura": "2026-09-29 09:22:38", "tipo": "Vazamento de Água", "depto": "SERVIÇOS DE MANUTENÇÃO DE REDES ÁGUA", "cdc": "159222", "bairro": "VILA PAULISTA", "endereco": "RUA JOAO RIBEIRO DE BRITO, 298", "sit": "Nova", "dias": 0.6, "setor": 2, "sol": "DANILO OLIVEIRA DOS SANTOS"}, {"os": "2026138215", "abertura": "2026-09-29 06:52:46", "tipo": "Vazamento de Água", "depto": "SERVIÇOS DE MANUTENÇÃO DE REDES ÁGUA", "cdc": "", "bairro": "BIRITIBA USSU", "endereco": "RUA STO EXPEDITO, 0000", "sit": "Nova", "dias": 0.7, "setor": null, "sol": "FISCAL MANUTENÇÃO DE ÁGUA"}, {"os": "2026137910", "abertura": "2026-09-28 15:38:07", "tipo": "Vistoria de Vazamento de Água", "depto": "", "cdc": "92939", "bairro": "PARQUE RESIDENCIAL ITAPETI", "endereco": "RUA JULIO DINIZ, 7", "sit": "Nova", "dias": 1.3, "setor": null, "sol": "CLARA APARECIDA DE OLIVEIRA"}, {"os": "2026137913", "abertura": "2026-09-28 15:34:29", "tipo": "Vistoria de Vazamento de Água", "depto": "", "cdc": "154817", "bairro": "VILA SAO PAULO", "endereco": "RUA LUZIA DOS SANTOS CARDOSO, 77", "sit": "Nova", "dias": 1.4, "setor": null, "sol": "VITOR JOSE DOS ANJOS"}, {"os": "2026138104", "abertura": "2026-09-28 14:59:17", "tipo": "Vazamento de Água", "depto": "SERVIÇOS DE MANUTENÇÃO DE REDES ÁGUA", "cdc": "3015", "bairro": "VILA MOGI MODERNO", "endereco": "AV. PRES GETULIO VARGAS, 446", "sit": "Nova", "dias": 1.4, "setor": 1, "sol": "FISCAL MANUTENÇÃO DE ÁGUA"}, {"os": "2026136873", "abertura": "2026-09-28 14:19:06", "tipo": "Fiscalização de Irregularidade/Fraude", "depto": "", "cdc": "119577", "bairro": "JARDIM AEROPORTO III", "endereco": "RUA CONSTELATION, 211", "sit": "Nova", "dias": 1.4, "setor": null, "sol": "FIDELCINO LOPES DOS SANTOS"}, {"os": "2026137618", "abertura": "2026-09-28 13:16:10", "tipo": "Vistoria de Vazamento de Água", "depto": "", "cdc": "71093", "bairro": "JARDIM SAO PEDRO", "endereco": "RUA NILO GARCIA ALABARCE, 598", "sit": "Nova", "dias": 1.4, "setor": null, "sol": "HILDEFONSO GEISSLER"}, {"os": "2026138026", "abertura": "2026-09-28 12:55:59", "tipo": "Vazamento de Água", "depto": "SERVIÇOS DE MANUTENÇÃO DE REDES ÁGUA", "cdc": "140182", "bairro": "VILA JUNDIAPEBA", "endereco": "RUA JOSE PEREIRA, 1635", "sit": "Nova", "dias": 1.5, "setor": 4, "sol": "JOAO MARCELO DA SILVA COSTA"}, {"os": "2026130938", "abertura": "2026-09-28 11:56:41", "tipo": "Vazamento de Esgoto", "depto": "", "cdc": "38277", "bairro": "VILA PAULISTA", "endereco": "RUA JOAO RIBEIRO DE BRITO, 112", "sit": "Nova", "dias": 1.5, "setor": null, "sol": "TEMISTOCLES ALVES DE SOUZA"}, {"os": "2026137855", "abertura": "2026-09-28 09:59:38", "tipo": "Vistoria de Vazamento de Água", "depto": "", "cdc": "171375", "bairro": "TAIACUPEBA", "endereco": "TV. AVELINO NUNES DE SOUZA, 622", "sit": "Nova", "dias": 1.6, "setor": null, "sol": "LUIZ FELIX DOS SANTOS"}, {"os": "2026137835", "abertura": "2026-09-28 09:39:47", "tipo": "Vistoria de Vazamento de Água", "depto": "", "cdc": "45348", "bairro": "VILA EUGENIA", "endereco": "RUA GUNNER ORBERG, 26", "sit": "Nova", "dias": 1.6, "setor": null, "sol": "MARIA NILCEIA COUTO DOS SANTOS -CMP"}, {"os": "2026137614", "abertura": "2026-09-28 08:08:39", "tipo": "Vazamento de Água", "depto": "SERVIÇOS DE MANUTENÇÃO DE REDES ÁGUA", "cdc": "76362", "bairro": "JARDIM AEROPORTO III", "endereco": "RUA AERONAUTA, 88", "sit": "Nova", "dias": 1.7, "setor": null, "sol": "HENRIQUE ANTONIO DE OLIVEIRA - COMP"}, {"os": "2026137186", "abertura": "2026-09-28 07:18:01", "tipo": "Vazamento de Água", "depto": "SERVIÇOS DE MANUTENÇÃO DE REDES ÁGUA", "cdc": "14441", "bairro": "VILA MOGILAR", "endereco": "RUA DR. RENATO GRANADEIRO GUIMARAES, 426", "sit": "Nova", "dias": 1.7, "setor": 3, "sol": "PAULO ROBERTO FRANCO"}, {"os": "2026137078", "abertura": "2026-09-26 16:49:47", "tipo": "Vistoria de Vazamento de Água", "depto": "", "cdc": "", "bairro": "BRAZ CUBAS", "endereco": "RUA JULIO ARAGAO, 222", "sit": "Nova", "dias": 3.3, "setor": null, "sol": "regiane"}, {"os": "2026136990", "abertura": "2026-09-26 07:08:55", "tipo": "Vazamento de Água", "depto": "SERVIÇOS DE MANUTENÇÃO DE REDES ÁGUA", "cdc": "22458", "bairro": "VILA CIDINHA", "endereco": "RUA WILSON ALVARENGA ABREU, 60", "sit": "Nova", "dias": 3.7, "setor": 4, "sol": "JOSE CARLOS P NARVAIS"}, {"os": "2026136883", "abertura": "2026-09-25 14:54:21", "tipo": "Vazamento de Água", "depto": "SERVIÇOS DE MANUTENÇÃO DE REDES ÁGUA", "cdc": "82593", "bairro": "VILA SAO PAULO", "endereco": "RUA MARIA APARECIDA LOPES FAURY, 393", "sit": "Nova", "dias": 4.4, "setor": 3, "sol": "NORTESUL"}, {"os": "2026133746", "abertura": "2026-09-21 09:46:50", "tipo": "Vazamento de Água", "depto": "SERVIÇOS DE MANUTENÇÃO DE REDES ÁGUA", "cdc": "59593", "bairro": "VILA JUNDIAPEBA", "endereco": "RUA EQUADOR, 19", "sit": "Nova", "dias": 8.6, "setor": null, "sol": "AURICELIO SOUSA FREITAS"}];
+  window.__BASE_OS__ = BASE_OS;
+  try{
+    let raw = null;
+    try{ raw = localStorage.getItem('painel_os_pdf_v2'); }catch(e){}
+    if(!raw){ try{ raw = sessionStorage.getItem('painel_os_pdf_v2'); }catch(e){} }
+    if(!raw && location.hash.indexOf('#pdfdata=')===0){ try{ raw = decodeURIComponent(location.hash.slice(9)); }catch(e){} }
+    if(!raw) return;
+    const d = JSON.parse(raw);
+    if(!d.os || !d.os.length) return;
+    if(Date.now() - d.quando > 3*86400000){ try{localStorage.removeItem('painel_os_pdf_v2');}catch(e){} try{sessionStorage.removeItem('painel_os_pdf_v2');}catch(e){} return; }
+    const idx = {};
+    BASE_OS.forEach(o=>idx[o.os]=o);
+    window.__PDF_OS__ = d.os.map(o=>{
+      const b = idx[o.os];
+      if(b) return Object.assign({}, o, {setor:b.setor, depto:b.depto, sol:b.sol, sit:o.sit||b.sit});
+      return o;
+    });
+    window.__PDF_INFO__ = {nome: d.nome, quando: d.quando};
+  }catch(e){}
+})();</script>
+<script>
+const D = {"cfg": {"meta_digital": 1, "meta_reab": 0.05, "lim_alta": 7, "lim_media": 3, "ref_mercado": 0.54, "lim_atraso": 10, "gatilho": 30, "regra6": 36, "prazo_vistoria": 1, "prazo_execucao": 2}, "resumo": {"total": 1011, "abertas": 51, "concluidas": 606, "canceladas": 69, "novas7d": 197, "reabertas": 3, "recorrentes": 30}, "indic": {"digital": 0, "ate3": 0.618403247631935, "mttr": 3.66300530517757, "reab": 0.140730717185386, "idade": 0.732916304976681, "propria": 0.046875, "terc": 0.109375, "vistoria_res": 0}, "prior": {"ALTA": 15, "MÉDIA": 10, "BAIXA": 26}, "aging": {"0-3d": 26, "4-7d": 10, "8-15d": 15, "+15d": 0}, "depto": {"CCO/CCC": 0, "ENORSUL (Empreiteira de Corte, Religação, Fiscalização e troca de hidrômetro)": 0, "MANUTENÇÃO CIVIL": 0, "Norte Sul - DOSA": 6, "Norte-Sul - DOSES": 0, "POTENZA (Empreiteria de Recomposição e Reaterro de Valas)": 0, "RECOMPOSIÇÃO DE PAVIMENTO E REMOÇÃO DE ENTULHO": 0, "SERVIÇOS COMERCIAIS": 0, "SERVIÇOS DE MANUTENÇÃO DE REDES DE ESGOTO": 0, "SERVIÇOS DE MANUTENÇÃO DE REDES ÁGUA": 3}, "tipos_hist": {"Comunicação de vazamento no cavalete/UMA": 7, "Fiscalização de Irregularidade/Fraude": 2, "Pressão Baixa": 3, "Reclamação de falta de água": 1, "Regularização de Ligação - Fiscalização": 2, "Vazamento de Esgoto": 7, "Vazamento de Água": 658, "Vazamento de água produto de pesquisa": 31, "Verificação de Serviços Pendentes - Manut. Água": 1}, "bairros_hist": {"TOP BAIRROS COM MAIS OS": null, "VILA JUNDIAPEBA": 83, "CONJ HABITACIONAL STO ANGELO": 81, "CONJUNTO RESIDENCIAL COCUERA": 52, "VILA SAO PAULO": 45, "CENTRO": 31, "VILA OLIVEIRA": 21}, "entradas": [["ENTRADAS POR DIA (últimos 14 dias)", null], ["2026-09-18 00:00:00", 52], ["2026-09-19 00:00:00", 11], ["2026-09-20 00:00:00", 6], ["2026-09-21 00:00:00", 17], ["2026-09-22 00:00:00", 12], ["2026-09-23 00:00:00", 19], ["2026-09-24 00:00:00", 36], ["2026-09-25 00:00:00", 57], ["2026-09-26 00:00:00", 12], ["2026-09-27 00:00:00", 4], ["2026-09-28 00:00:00", 28], ["2026-09-29 00:00:00", 29]], "conclusoes": [["CONCLUSÕES POR DIA (últimos 14 dias)", null], ["2026-09-18 00:00:00", 22], ["2026-09-19 00:00:00", 24], ["2026-09-20 00:00:00", 5], ["2026-09-21 00:00:00", 22], ["2026-09-22 00:00:00", 11], ["2026-09-23 00:00:00", 22], ["2026-09-24 00:00:00", 30], ["2026-09-25 00:00:00", 50], ["2026-09-26 00:00:00", 21], ["2026-09-27 00:00:00", 10], ["2026-09-28 00:00:00", 39], ["2026-09-29 00:00:00", 37]], "semana_dia": {"ABERTURAS POR DIA DA SEMANA (histórico)": null, "Domingo": 25, "Segunda": 71, "Terça": 95, "Quarta": 200, "Quinta": 144}, "turnos": {"ABERTURAS POR TURNO DO DIA": null, "Madrugada (0h-6h)": 1, "Manhã (6h-12h)": 400}, "backlog_sem": {"BACKLOG POR SEMANA DE ABERTURA (em aberto)": null, "Semana 5 (há 5 sem.)": 0, "Semana 4 (há 4 sem.)": 0, "Semana 3 (há 3 sem.)": 0, "Semana 2 (há 2 sem.)": 0}, "produt": {"concl_dia": 18.9, "proj_dias": 3.22751322751323}, "top_cdc": {"CDC 0": 15, "CDC 22681": 2, "CDC 44539": 2, "CDC 19511": 2, "CDC 126045": 2, "CDC 140182": 2, "CDC 45348": 2, "CDC 42819": 2}, "solicitantes": {"ENORSUL": 91, "Enorsul": 91, "Gilson pontes geofone": 39, "FISCAL MANUTENÇÃO DE ÁGUA": 25, "PEDRO FROIS": 17, "Duilio Geofone": 7, "NORTESUL": 7, "MOISÉIS": 7}, "setor_backlog": {"SETOR 1": 10, "SETOR 2": 7, "SETOR 3": 15, "SETOR 4": 2, "Sem setor": 17}, "abc": [["VILA JUNDIAPEBA", 83, 0.112313937753721], ["CONJ HABITACIONAL STO ANGELO", 81, 0.22192151556157], ["CONJUNTO RESIDENCIAL COCUERA", 52, 0.292286874154263], ["VILA SAO PAULO", 45, 0.353179972936401], ["CENTRO", 31, 0.395128552097429], ["VILA OLIVEIRA", 21, 0.423545331529093], ["VILA SUISSA", 19, 0.449255751014885], ["JARDIM ARACY", 18, 0.47361299052774]], "geofone": {"Geofone (detecção técnica)": 47, "População / outros": 692}, "calor": [["VILA JUNDIAPEBA", 14, 3, 12], ["CONJ HABITACIONAL STO ANGELO", 8, 37, 8], ["CONJUNTO RESIDENCIAL COCUERA", 7, 16, 9], ["VILA SAO PAULO", 2, 4, 12], ["CENTRO", 1, 8, 8], ["VILA OLIVEIRA", 6, 1, 2], ["VILA SUISSA", 2, 4, 3], ["JARDIM ARACY", 2, 0, 3]], "os": [{"os": "2026147095", "abertura": "15/10/2026 06:40:26", "tipo": "Vazamento de Água", "depto": "SERVIÇOS DE MANUTENÇÃO DE REDES ÁGUA", "cdc": "15135", "bairro": "CENTRO", "endereco": "RUA  S JOAO, 237  CENTRO", "sit": "Nova", "dias": 0.1, "setor": 1, "sol": "FISCAL MANUTENÇÃO DE ÁGUA"}, {"os": "2026147084", "abertura": "14/10/2026 18:33:43", "tipo": "Vistoria de Vazamento de Água", "depto": "", "cdc": "", "bairro": "RESIDENCIAL MOSAICO", "endereco": "RUA DEZENOVE 110", "sit": "Nova", "dias": 0.6, "setor": null, "sol": ""}, {"os": "2026147080", "abertura": "14/10/2026 17:37:21", "tipo": "Vistoria de Vazamento de Água", "depto": "", "cdc": "", "bairro": "VILA JUNDIAPEBA", "endereco": "AL STO. ANGELO 510", "sit": "Nova", "dias": 0.6, "setor": 4, "sol": ""}, {"os": "2026146845", "abertura": "14/10/2026 15:26:00", "tipo": "Vistoria de Vazamento de Água", "depto": "", "cdc": "", "bairro": "VILA SAO PAULO", "endereco": "RUA INDEPENDENCIA 2151", "sit": "Convertida", "dias": 0.7, "setor": 3, "sol": ""}, {"os": "2026146702", "abertura": "14/10/2026 15:23:38", "tipo": "Vistoria de Vazamento de Água", "depto": "", "cdc": "", "bairro": "JARDIM SAO PEDRO", "endereco": "RUA PRF. PAULO DE OLIVEIRA", "sit": "Convertida", "dias": 0.7, "setor": null, "sol": ""}, {"os": "2026146944", "abertura": "14/10/2026 15:21:30", "tipo": "Vistoria de Vazamento de Água", "depto": "", "cdc": "", "bairro": "VILA NOVA APARECIDA", "endereco": "RUA GEN. OSORIO 116", "sit": "Convertida", "dias": 0.7, "setor": null, "sol": ""}, {"os": "2026146971", "abertura": "14/10/2026 14:40:17", "tipo": "Vazamento de água produto de pesquisa", "depto": "", "cdc": "", "bairro": "VILA OLIVEIRA", "endereco": "RUA LUIZ DA SILVA PIRES 332", "sit": "Nova", "dias": 0.7, "setor": 2, "sol": ""}, {"os": "2026146954", "abertura": "14/10/2026 14:15:28", "tipo": "Vazamento de Água", "depto": "Norte Sul - DOSA", "cdc": "76432", "bairro": "CONJUNTO HABITACIONAL TOYAMA", "endereco": "RUA  UM, 153  BL 05 - TOYAMA", "sit": "Nova", "dias": 0.7, "setor": null, "sol": "CDHU - TOYAMA"}, {"os": "2026146820", "abertura": "14/10/2026 14:00:32", "tipo": "Vistoria de Vazamento de Água", "depto": "", "cdc": "", "bairro": "COCUERA", "endereco": "AV. ENG. MIGUEL GEMMA 675", "sit": "Convertida", "dias": 0.8, "setor": null, "sol": ""}, {"os": "2026146938", "abertura": "14/10/2026 13:53:29", "tipo": "Vazamento de Água", "depto": "MANUTENÇÃO CIVIL", "cdc": "91842", "bairro": "VILA OLIVEIRA", "endereco": "RUA  JOSE LUCIANO NAVA NAMORADO, 141  ", "sit": "Reaberta", "dias": 0.8, "setor": 2, "sol": "JOSE BARROS"}, {"os": "2026146930", "abertura": "14/10/2026 13:50:09", "tipo": "Vazamento de água produto de pesquisa", "depto": "", "cdc": "", "bairro": "JARDIM FUKAMIZU", "endereco": "37 RUA GERALDO BRITO DA", "sit": "Nova", "dias": 0.8, "setor": null, "sol": ""}, {"os": "2026146769", "abertura": "14/10/2026 13:41:20", "tipo": "Vistoria de Vazamento de Água", "depto": "", "cdc": "", "bairro": "VILA SAO SEBASTIAO", "endereco": "RUA JOSE ROSA 150", "sit": "Convertida", "dias": 0.8, "setor": 2, "sol": ""}, {"os": "2026146873", "abertura": "14/10/2026 12:40:24", "tipo": "Vazamento de Água", "depto": "MANUTENÇÃO CIVIL", "cdc": "54081", "bairro": "VILA SAO SEBASTIAO", "endereco": "RUA  JOSE ROSA, 48  C/2 - VL S SEBASTIAO", "sit": "Reaberta", "dias": 0.8, "setor": 2, "sol": "JOSE EXPEDITO FERREIRA JUNIOR"}, {"os": "2026146706", "abertura": "14/10/2026 09:52:09", "tipo": "Vistoria de Vazamento de Água", "depto": "", "cdc": "", "bairro": "JARDIM CAMILA", "endereco": "60 RUA VER. PLATAO CHAVES DE", "sit": "Convertida", "dias": 0.9, "setor": null, "sol": ""}, {"os": "2026146735", "abertura": "14/10/2026 09:16:36", "tipo": "Vistoria de Vazamento de Água", "depto": "", "cdc": "", "bairro": "VILA ESTACAO - GICA", "endereco": "RUA SEM NOME 6", "sit": "Nova", "dias": 1.0, "setor": null, "sol": ""}, {"os": "2026146699", "abertura": "14/10/2026 08:59:33", "tipo": "Vistoria de Vazamento de Água", "depto": "", "cdc": "", "bairro": "CENTRO", "endereco": "RUA BR. DE JACEGUAI 1483", "sit": "Convertida", "dias": 1.0, "setor": 1, "sol": ""}, {"os": "2026146412", "abertura": "14/10/2026 08:33:26", "tipo": "Vistoria de Vazamento de Água", "depto": "", "cdc": "", "bairro": "JARDIM ESPERANCA", "endereco": "RUA BURITI 48", "sit": "Convertida", "dias": 1.0, "setor": null, "sol": ""}, {"os": "2026146328", "abertura": "13/10/2026 12:13:06", "tipo": "Vistoria de Vazamento de Água", "depto": "", "cdc": "", "bairro": "VILA SAO PAULO", "endereco": "444 RUA MARIA APARECIDA LOPES", "sit": "Nova", "dias": 1.8, "setor": 3, "sol": ""}, {"os": "2026146301", "abertura": "13/10/2026 11:34:25", "tipo": "Vistoria de Vazamento de Água", "depto": "", "cdc": "", "bairro": "VILA SAO SEBASTIAO", "endereco": "RUA JOSE ROSA 150", "sit": "Nova", "dias": 1.9, "setor": 2, "sol": ""}, {"os": "2026146269", "abertura": "13/10/2026 11:09:05", "tipo": "Vazamento de água produto de pesquisa", "depto": "", "cdc": "", "bairro": "PARQUE SAO", "endereco": "RUA UM 244", "sit": "Nova", "dias": 1.9, "setor": null, "sol": ""}, {"os": "2026146259", "abertura": "13/10/2026 10:53:47", "tipo": "Vazamento de água produto de pesquisa", "depto": "", "cdc": "", "bairro": "PARQUE SAO", "endereco": "10 RUA ROMULO ARAUJO", "sit": "Nova", "dias": 1.9, "setor": null, "sol": ""}, {"os": "2026146253", "abertura": "13/10/2026 10:50:17", "tipo": "Vazamento de água produto de pesquisa", "depto": "", "cdc": "", "bairro": "PARQUE SAO", "endereco": "312 RUA ROMULO ARAUJO", "sit": "Nova", "dias": 1.9, "setor": null, "sol": ""}, {"os": "2026146246", "abertura": "13/10/2026 10:43:34", "tipo": "Vazamento de água produto de pesquisa", "depto": "", "cdc": "", "bairro": "PARQUE SAO", "endereco": "113 RUA RAIMUNDO GLICERIO", "sit": "Nova", "dias": 1.9, "setor": null, "sol": ""}, {"os": "2026146175", "abertura": "13/10/2026 09:58:10", "tipo": "Vistoria de Vazamento de Água", "depto": "", "cdc": "", "bairro": "JARDIM PLANALTO", "endereco": "RUA FERNANDO NAMURA 640", "sit": "Nova", "dias": 1.9, "setor": null, "sol": ""}, {"os": "2026144017", "abertura": "12/10/2026 15:13:05", "tipo": "Vistoria de Vazamento de Água", "depto": "", "cdc": "", "bairro": "VILA LAVINIA", "endereco": "171 AV. FRANCISCO FERREIRA", "sit": "Convertida", "dias": 2.7, "setor": 4, "sol": ""}, {"os": "2026139572", "abertura": "12/10/2026 14:15:04", "tipo": "Vazamento de água produto de pesquisa", "depto": "", "cdc": "7507", "bairro": "JARDIM STA CAROLINA", "endereco": "RUA ROMULO DE BRITO, 388", "sit": "Nova", "dias": 2.7, "setor": null, "sol": "ENORSUL"}, {"os": "2026145734", "abertura": "11/10/2026 14:10:10", "tipo": "Vazamento de água produto de pesquisa", "depto": "", "cdc": "", "bairro": "VILA MOGILAR", "endereco": "600 AV. PREF. CARLOS FERREIRA", "sit": "Nova", "dias": 3.7, "setor": 3, "sol": ""}, {"os": "2026143532", "abertura": "10/10/2026 08:03:03", "tipo": "Vazamento de água produto de pesquisa", "depto": "", "cdc": "", "bairro": "VILA MOGILAR", "endereco": "770 RUA DR DEODATO", "sit": "Nova", "dias": 5.0, "setor": 3, "sol": ""}, {"os": "2026144238", "abertura": "09/10/2026 13:49:11", "tipo": "Reclamação de falta de água", "depto": "", "cdc": "", "bairro": "VILA JAFET", "endereco": "9 RUA JURANDYR BINO", "sit": "Nova", "dias": 5.8, "setor": 3, "sol": ""}, {"os": "2026144884", "abertura": "09/10/2026 11:59:59", "tipo": "Vistoria de Vazamento de Água", "depto": "", "cdc": "", "bairro": "VILA SAO SEBASTIAO", "endereco": "RUA ALPHEU GUILHEMAT 487", "sit": "Convertida", "dias": 5.8, "setor": 2, "sol": ""}, {"os": "2026144961", "abertura": "09/10/2026 10:25:57", "tipo": "Vazamento de Água", "depto": "MANUTENÇÃO CIVIL", "cdc": "46659", "bairro": "QUATINGA", "endereco": "RUA  ANTONIO ROZENDO DE LIMA, 103  ", "sit": "Reaberta", "dias": 5.9, "setor": 3, "sol": "JHONATAN MARTINS CAMPOS"}, {"os": "2026144422", "abertura": "09/10/2026 07:16:59", "tipo": "Vazamento de água produto de pesquisa", "depto": "", "cdc": "", "bairro": "VILA MOGILAR", "endereco": "RUA JOSE MALOZZE 985", "sit": "Nova", "dias": 6.0, "setor": 3, "sol": ""}, {"os": "2026144305", "abertura": "08/10/2026 15:12:41", "tipo": "Vazamento de água produto de pesquisa", "depto": "", "cdc": "", "bairro": "VILA MOGILAR", "endereco": "AV. MARIANO DE SOUZA MELLO 580", "sit": "Nova", "dias": 6.7, "setor": 3, "sol": ""}, {"os": "2026140238", "abertura": "08/10/2026 14:24:45", "tipo": "Vazamento de água produto de pesquisa", "depto": "", "cdc": "46270", "bairro": "VILA MOGILAR", "endereco": "RUA DR. RENATO GRANADEIRO GUIMARAES, 147", "sit": "Nova", "dias": 6.7, "setor": 3, "sol": "Enorsul"}, {"os": "2026144163", "abertura": "08/10/2026 13:20:43", "tipo": "Vistoria de Vazamento de Água", "depto": "", "cdc": "", "bairro": "JARDIM UNIVERSO", "endereco": "RUA FELIPE CAMARAO 486", "sit": "Convertida", "dias": 6.8, "setor": 2, "sol": ""}, {"os": "2026142894", "abertura": "08/10/2026 10:10:25", "tipo": "Vazamento de água produto de pesquisa", "depto": "", "cdc": "", "bairro": "CENTRO", "endereco": "RUA ENG. GUALBERTO 678", "sit": "Nova", "dias": 6.9, "setor": 1, "sol": ""}, {"os": "2026143530", "abertura": "07/10/2026 12:44:32", "tipo": "Vazamento de água produto de pesquisa", "depto": "", "cdc": "", "bairro": "VILA MOGILAR", "endereco": "AV. JOSE BENEDITO BRAGA 594", "sit": "Nova", "dias": 7.8, "setor": 3, "sol": ""}, {"os": "2026143523", "abertura": "07/10/2026 12:37:19", "tipo": "Vazamento de água produto de pesquisa", "depto": "", "cdc": "", "bairro": "VILA MOGILAR", "endereco": "RUA TAKASHI WATANABE 76", "sit": "Nova", "dias": 7.8, "setor": 3, "sol": ""}, {"os": "2026143466", "abertura": "07/10/2026 11:01:03", "tipo": "Vazamento de Água", "depto": "Norte Sul - DOSA", "cdc": "13188", "bairro": "VILA AVIGNON", "endereco": "RUA  CAP. LEONCIO AROUCHE DE TOLEDO, 258  VL AVIGNON", "sit": "Nova", "dias": 7.9, "setor": 3, "sol": "PEDRO FROIS"}, {"os": "2026142879", "abertura": "06/10/2026 14:43:27", "tipo": "Vazamento de água produto de pesquisa", "depto": "", "cdc": "", "bairro": "CENTRO", "endereco": "133 RUA HAMILTON DA SILVA E", "sit": "Nova", "dias": 8.7, "setor": 1, "sol": ""}, {"os": "2026142882", "abertura": "06/10/2026 14:42:07", "tipo": "Vazamento de água produto de pesquisa", "depto": "", "cdc": "", "bairro": "CENTRO", "endereco": "114 RUA HAMILTON DA SILVA E", "sit": "Nova", "dias": 8.7, "setor": 1, "sol": ""}, {"os": "2026142888", "abertura": "06/10/2026 14:39:02", "tipo": "Vazamento de água produto de pesquisa", "depto": "", "cdc": "", "bairro": "CENTRO", "endereco": "261 RUA HAMILTON DA SILVA E", "sit": "Nova", "dias": 8.7, "setor": 1, "sol": ""}, {"os": "2026142891", "abertura": "06/10/2026 14:37:42", "tipo": "Vazamento de água produto de pesquisa", "depto": "", "cdc": "", "bairro": "CENTRO", "endereco": "206 RUA HAMILTON DA SILVA E", "sit": "Nova", "dias": 8.7, "setor": 1, "sol": ""}, {"os": "2026142897", "abertura": "06/10/2026 14:35:41", "tipo": "Vazamento de água produto de pesquisa", "depto": "", "cdc": "", "bairro": "CENTRO", "endereco": "RUA ENG. GUALBERTO 641", "sit": "Nova", "dias": 8.7, "setor": 1, "sol": ""}, {"os": "2026142900", "abertura": "06/10/2026 14:33:29", "tipo": "Vazamento de água produto de pesquisa", "depto": "", "cdc": "", "bairro": "CENTRO", "endereco": "RUA FIDALGO 197", "sit": "Nova", "dias": 8.7, "setor": 1, "sol": ""}, {"os": "2026142871", "abertura": "06/10/2026 14:28:08", "tipo": "Vazamento de água produto de pesquisa", "depto": "", "cdc": "", "bairro": "VILA MOGILAR", "endereco": "327 AV. JOSE MARIA DE ALB.", "sit": "Nova", "dias": 8.7, "setor": 3, "sol": ""}, {"os": "2026141216", "abertura": "06/10/2026 09:24:57", "tipo": "Pressão Baixa", "depto": "", "cdc": "", "bairro": "VILA MOGILAR", "endereco": "AV. LUCIANO FREZATO 43", "sit": "Nova", "dias": 8.9, "setor": 3, "sol": ""}, {"os": "2026142059", "abertura": "05/10/2026 13:51:12", "tipo": "Vazamento de água produto de pesquisa", "depto": "", "cdc": "", "bairro": "JARDIM NAUTICO", "endereco": "26 RUA JOAO JOSE DA COSTA", "sit": "Nova", "dias": 9.8, "setor": 3, "sol": ""}, {"os": "2026139568", "abertura": "05/10/2026 06:58:31", "tipo": "Vazamento de água produto de pesquisa", "depto": "", "cdc": "42597", "bairro": "CENTRO", "endereco": "RUA BRASILIO MARQUES, 68", "sit": "Nova", "dias": 10.0, "setor": 1, "sol": "ENORSUL"}, {"os": "2026139554", "abertura": "05/10/2026 06:47:54", "tipo": "Vazamento de água produto de pesquisa", "depto": "", "cdc": "28602", "bairro": "ELIZEU PIERUCET", "endereco": "RUA PEDRO JESUS DE PAULA, 36", "sit": "Nova", "dias": 10.1, "setor": null, "sol": "Enorsul"}, {"os": "2026139546", "abertura": "05/10/2026 06:46:05", "tipo": "Vazamento de água produto de pesquisa", "depto": "", "cdc": "82911", "bairro": "JARDIM STA CAROLINA", "endereco": "RUA ANGELO RIZZI, 213", "sit": "Nova", "dias": 10.1, "setor": null, "sol": "ENORSUL"}], "tipos_abertos": {"Vazamento de Água": 6, "Vistoria de Vazamento de Água": 17, "Vazamento de água produto de pesquisa": 26, "Reclamação de falta de água": 1, "Pressão Baixa": 1}, "setor_bairros": {"CENTRO": 1, "VILA JUNDIAPEBA": 4, "VILA SAO PAULO": 3, "VILA OLIVEIRA": 2, "VILA SAO SEBASTIAO": 2, "VILA LAVINIA": 4, "VILA MOGILAR": 3, "VILA JAFET": 3, "QUATINGA": 3, "JARDIM UNIVERSO": 2, "VILA AVIGNON": 3, "JARDIM NAUTICO": 3}, "calor_vist": {"dias": ["28/09", "29/09", "30/09", "01/10"], "rows": [["VILA SAO PAULO", 1, 1, 1, 4, 3, 3], ["VILA OLIVEIRA", 0, 1, 1, 1, 2, 2], ["VILA JUNDIAI", 1, 0, 0, 1, 4, 1], ["CENTRO", 0, 0, 0, 2, 1, 1], ["PARQUE RESIDENCIAL ITAPETI", 1, 0, 0, 1, 3, 1], ["VILA BRASILEIRA", 1, 0, 0, 1, 2, 1], ["VILA SUISSA", 1, 0, 1, 0, 3, 0], ["JARDIM SAO PEDRO", 2, 0, 0, 0, 3, 0], ["VILA JUNDIAPEBA", 0, 0, 0, 1, 4, 1], ["JARDIM NOVE DE JULHO", 0, 0, 0, 1, 4, 0], ["PARQUE DAS VARINHAS", 0, 0, 0, 1, 4, 1], ["PARQUE SANTANA", 0, 0, 0, 1, 1, 0], ["VILA CINTRA", 0, 0, 0, 1, 2, 1], ["VILA MOGILAR", 0, 0, 0, 1, 3, 1], ["BOA VISTA", 0, 0, 0, 1, 2, 0], ["BRAZ CUBAS", 0, 0, 1, 0, 2, 0], ["CONJ. HABITACIONAL ALVARO BOVOLENTA", 0, 0, 1, 0, 2, 0], ["VILA AUREA MARIA", 0, 0, 1, 0, 3, 0], ["VILA NOVA CINTRA", 0, 0, 1, 0, 2, 0], ["RESIDENCIAL FAZENDA RODEIO", 0, 1, 0, 0, 3, 0], ["VILA NOVA APARECIDA", 0, 1, 0, 0, 3, 0], ["TAIACUPEBA", 1, 0, 0, 0, 2, 1], ["VILA EUGENIA", 1, 0, 0, 0, 4, 0]]}, "vist_pend_setor": {"None": 2, "3": 1, "2": 2, "4": 1}, "execvaz": {"meses": [{"mes": "out/25", "tot": 1, "atr": 1, "taxa": 100.0, "tm_atr": 352.9}, {"mes": "jul/26", "tot": 4, "atr": 4, "taxa": 100.0, "tm_atr": 57.7}, {"mes": "ago/26", "tot": 82, "atr": 15, "taxa": 18.3, "tm_atr": 11.1}, {"mes": "set/26", "tot": 514, "atr": 223, "taxa": 43.4, "tm_atr": 5.6}, {"mes": "out/26", "tot": 76, "atr": 6, "taxa": 7.9, "tm_atr": 2.9}], "atrasadas": [{"os": "2025126198", "ab": "11/10/2025", "exec": "29/09/2026", "dias": 352.9, "bairro": "JARDIM AEROPORTO II", "mes": "2025-10"}, {"os": "2026099082", "ab": "17/07/2026", "exec": "30/09/2026", "dias": 75.0, "bairro": "VILA JUNDIAPEBA", "mes": "2026-07"}, {"os": "2026108849", "ab": "05/08/2026", "exec": "30/09/2026", "dias": 56.0, "bairro": "CONJUNTO RESIDENCIAL DO BOSQUE", "mes": "2026-08"}, {"os": "2026104164", "ab": "27/07/2026", "exec": "19/09/2026", "dias": 53.9, "bairro": "CONJ. HABITACIONAL ALVARO BOVOLENTA", "mes": "2026-07"}, {"os": "2026105796", "ab": "29/07/2026", "exec": "19/09/2026", "dias": 51.8, "bairro": "NOVO HORIZONTE", "mes": "2026-07"}, {"os": "2026106953", "ab": "31/07/2026", "exec": "19/09/2026", "dias": 50.0, "bairro": "CHACARA JAFET", "mes": "2026-07"}, {"os": "2026121695", "ab": "27/08/2026", "exec": "28/09/2026", "dias": 31.8, "bairro": "JARDIM CAMILA", "mes": "2026-08"}, {"os": "2026123380", "ab": "30/08/2026", "exec": "17/09/2026", "dias": 18.0, "bairro": "JARDIM UNIVERSO", "mes": "2026-08"}, {"os": "2026132667", "ab": "18/09/2026", "exec": "05/10/2026", "dias": 17.1, "bairro": "VILA OLIVEIRA", "mes": "2026-09"}, {"os": "2026124007", "ab": "02/09/2026", "exec": "19/09/2026", "dias": 17.0, "bairro": "VILA JUNDIAPEBA", "mes": "2026-09"}, {"os": "2026129659", "ab": "13/09/2026", "exec": "29/09/2026", "dias": 16.2, "bairro": "CENTRO", "mes": "2026-09"}, {"os": "2026124032", "ab": "02/09/2026", "exec": "18/09/2026", "dias": 16.2, "bairro": "VILA JUNDIAPEBA", "mes": "2026-09"}, {"os": "2026123964", "ab": "02/09/2026", "exec": "18/09/2026", "dias": 16.2, "bairro": "VILA JUNDIAPEBA", "mes": "2026-09"}, {"os": "2026124118", "ab": "02/09/2026", "exec": "18/09/2026", "dias": 16.0, "bairro": "VILA JUNDIAPEBA", "mes": "2026-09"}, {"os": "2026125102", "ab": "03/09/2026", "exec": "19/09/2026", "dias": 15.9, "bairro": "VILA JUNDIAPEBA", "mes": "2026-09"}, {"os": "2026124141", "ab": "02/09/2026", "exec": "18/09/2026", "dias": 15.9, "bairro": "VILA JUNDIAPEBA", "mes": "2026-09"}, {"os": "2026125254", "ab": "03/09/2026", "exec": "18/09/2026", "dias": 14.8, "bairro": "VILA JUNDIAPEBA", "mes": "2026-09"}, {"os": "2026123927", "ab": "02/09/2026", "exec": "15/09/2026", "dias": 13.2, "bairro": "VILA JUNDIAPEBA", "mes": "2026-09"}, {"os": "2026131055", "ab": "15/09/2026", "exec": "28/09/2026", "dias": 13.0, "bairro": "VILA JUNDIAPEBA", "mes": "2026-09"}, {"os": "2026126125", "ab": "04/09/2026", "exec": "17/09/2026", "dias": 13.0, "bairro": "CONJ HABITACIONAL STO ANGELO", "mes": "2026-09"}, {"os": "2026125315", "ab": "03/09/2026", "exec": "16/09/2026", "dias": 12.9, "bairro": "VILA SUISSA", "mes": "2026-09"}, {"os": "2026131593", "ab": "16/09/2026", "exec": "29/09/2026", "dias": 12.8, "bairro": "VILA MOGI MODERNO", "mes": "2026-09"}, {"os": "2026131060", "ab": "15/09/2026", "exec": "28/09/2026", "dias": 12.7, "bairro": "VILA OROXO GLEBA I", "mes": "2026-09"}, {"os": "2026121369", "ab": "27/08/2026", "exec": "08/09/2026", "dias": 12.2, "bairro": "VILA JUNDIAPEBA", "mes": "2026-08"}, {"os": "2026131403", "ab": "16/09/2026", "exec": "28/09/2026", "dias": 12.1, "bairro": "VILA JUNDIAI", "mes": "2026-09"}, {"os": "2026127540", "ab": "09/09/2026", "exec": "21/09/2026", "dias": 12.0, "bairro": "VILA SAGRADO CORACAO DE MARIA", "mes": "2026-09"}, {"os": "2026138215", "ab": "29/09/2026", "exec": "10/10/2026", "dias": 11.1, "bairro": "BIRITIBA USSU", "mes": "2026-09"}, {"os": "2026127033", "ab": "08/09/2026", "exec": "19/09/2026", "dias": 11.0, "bairro": "VILA JUNDIAPEBA", "mes": "2026-09"}, {"os": "2026132034", "ab": "17/09/2026", "exec": "28/09/2026", "dias": 10.9, "bairro": "VILA CECILIA", "mes": "2026-09"}, {"os": "2026126301", "ab": "07/09/2026", "exec": "18/09/2026", "dias": 10.9, "bairro": "JARDIM ARACY", "mes": "2026-09"}, {"os": "2026132913", "ab": "18/09/2026", "exec": "29/09/2026", "dias": 10.8, "bairro": "JARDIM RODEIO-GB II", "mes": "2026-09"}, {"os": "2026130850", "ab": "15/09/2026", "exec": "25/09/2026", "dias": 10.2, "bairro": "VILA RESSACA", "mes": "2026-09"}, {"os": "2026130909", "ab": "15/09/2026", "exec": "25/09/2026", "dias": 10.1, "bairro": "VILA NATAL", "mes": "2026-09"}, {"os": "2026127492", "ab": "09/09/2026", "exec": "19/09/2026", "dias": 10.1, "bairro": "VILA SAO PAULO", "mes": "2026-09"}, {"os": "2026132893", "ab": "18/09/2026", "exec": "28/09/2026", "dias": 9.8, "bairro": "RESIDENCIAL FAZENDA RODEIO", "mes": "2026-09"}, {"os": "2026127756", "ab": "09/09/2026", "exec": "19/09/2026", "dias": 9.7, "bairro": "JARDIM MARICA", "mes": "2026-09"}, {"os": "2026133014", "ab": "18/09/2026", "exec": "28/09/2026", "dias": 9.6, "bairro": "VILA VICTORIA", "mes": "2026-09"}, {"os": "2026120855", "ab": "26/08/2026", "exec": "04/09/2026", "dias": 9.3, "bairro": "VILA SAO PAULO", "mes": "2026-08"}, {"os": "2026131807", "ab": "17/09/2026", "exec": "26/09/2026", "dias": 9.2, "bairro": "VILA MOGI MODERNO", "mes": "2026-09"}, {"os": "2026131515", "ab": "16/09/2026", "exec": "25/09/2026", "dias": 9.1, "bairro": "VILA SAO PAULO", "mes": "2026-09"}, {"os": "2026127973", "ab": "10/09/2026", "exec": "19/09/2026", "dias": 9.1, "bairro": "JARDIM MARICA", "mes": "2026-09"}, {"os": "2026127191", "ab": "08/09/2026", "exec": "17/09/2026", "dias": 9.0, "bairro": "CONJ HABITACIONAL STO ANGELO", "mes": "2026-09"}, {"os": "2026134627", "ab": "22/09/2026", "exec": "01/10/2026", "dias": 8.9, "bairro": "VILA CAPUTERA", "mes": "2026-09"}, {"os": "2026131557", "ab": "16/09/2026", "exec": "25/09/2026", "dias": 8.9, "bairro": "CONJ HABITACIONAL STO ANGELO", "mes": "2026-09"}, {"os": "2026132074", "ab": "17/09/2026", "exec": "26/09/2026", "dias": 8.8, "bairro": "VILA ANDRADE", "mes": "2026-09"}, {"os": "2026130862", "ab": "15/09/2026", "exec": "24/09/2026", "dias": 8.8, "bairro": "VILA SUISSA", "mes": "2026-09"}, {"os": "2026128440", "ab": "10/09/2026", "exec": "19/09/2026", "dias": 8.7, "bairro": "ALTO DO IPIRANGA", "mes": "2026-09"}, {"os": "2026128421", "ab": "10/09/2026", "exec": "19/09/2026", "dias": 8.7, "bairro": "VILA SUISSA", "mes": "2026-09"}, {"os": "2026132896", "ab": "18/09/2026", "exec": "26/09/2026", "dias": 8.2, "bairro": "JARDIM PONTE GRANDE", "mes": "2026-09"}, {"os": "2026127114", "ab": "08/09/2026", "exec": "16/09/2026", "dias": 8.2, "bairro": "VILA JUNDIAPEBA", "mes": "2026-09"}, {"os": "2026132772", "ab": "18/09/2026", "exec": "26/09/2026", "dias": 8.1, "bairro": "CONJ. RESIDENCIAL JARDIM SAO JOAO", "mes": "2026-09"}, {"os": "2026132070", "ab": "17/09/2026", "exec": "25/09/2026", "dias": 8.1, "bairro": "VILA SAO PAULO", "mes": "2026-09"}, {"os": "2026132023", "ab": "17/09/2026", "exec": "25/09/2026", "dias": 8.0, "bairro": "VILA NOVA APARECIDA", "mes": "2026-09"}, {"os": "2026124009", "ab": "02/09/2026", "exec": "10/09/2026", "dias": 8.0, "bairro": "VILA SAO SEBASTIAO", "mes": "2026-09"}, {"os": "2026132539", "ab": "17/09/2026", "exec": "25/09/2026", "dias": 7.9, "bairro": "CONJ HABITACIONAL STO ANGELO", "mes": "2026-09"}, {"os": "2026131312", "ab": "16/09/2026", "exec": "24/09/2026", "dias": 7.9, "bairro": "PARQUE SANTANA", "mes": "2026-09"}, {"os": "2026129443", "ab": "11/09/2026", "exec": "19/09/2026", "dias": 7.9, "bairro": "CONJ HABITACIONAL STO ANGELO", "mes": "2026-09"}, {"os": "2026132911", "ab": "18/09/2026", "exec": "26/09/2026", "dias": 7.8, "bairro": "JARDIM RODEIO-GB II", "mes": "2026-09"}, {"os": "2026129491", "ab": "11/09/2026", "exec": "19/09/2026", "dias": 7.7, "bairro": "VILA NATAL", "mes": "2026-09"}, {"os": "2026129482", "ab": "11/09/2026", "exec": "19/09/2026", "dias": 7.6, "bairro": "VILA SAO PAULO", "mes": "2026-09"}], "meta": 8.0, "total_exec": 677, "comparativo": [{"periodo": "ago/26 (mês completo)", "tot": 82, "atr": 15, "taxa": 18.3, "tm": 11.1}, {"periodo": "set/26 até dia 10", "tot": 143, "atr": 62, "taxa": 43.4, "tm": 7.2}, {"periodo": "out/26 até dia 15", "tot": 81, "atr": 8, "taxa": 9.9, "tm": 4.4}, {"periodo": "set/26 (mês completo)", "tot": 509, "atr": 219, "taxa": 43.0, "tm": 5.5}]}} 
+const C = D.cfg, R = D.resumo, I = D.indic;
+document.getElementById('dataAtual').textContent = new Date().toLocaleDateString('pt-BR')+' às '+new Date().toLocaleTimeString('pt-BR').slice(0,5);
+
+function aba(id, el){document.querySelectorAll('.pagina').forEach(p=>p.classList.remove('ativa'));
+ document.querySelectorAll('.tab').forEach(t=>t.classList.remove('ativa'));
+ document.getElementById(id).classList.add('ativa'); el.classList.add('ativa');}
+setTimeout(function(){ try{ renderGraficos(); }catch(e){} }, 30);
+
+if(window.__PDF_OS__ && window.__PDF_OS__.length){
+  D.os = window.__PDF_OS__;
+  R.abertas = window.__PDF_OS__.length;
+}
+const OS = D.os.map(o=>({...o,
+ prior: o.dias>=C.lim_alta?'ALTA':o.dias>=C.lim_media?'MÉDIA':'BAIXA',
+ atr: o.dias>=C.lim_atraso,
+ aging: o.dias<=3?'0-3d':o.dias<=7?'4-7d':o.dias<=15?'8-15d':'+15d',
+ geofone: /geofone|enorsul|norte.?sul|fiscal/i.test(o.sol||'')
+}));
+const total = OS.length;
+const porPrior={}, porAging={}, porSetor={'SETOR 1':0,'SETOR 2':0,'SETOR 3':0,'SETOR 4':0,'Sem setor':0}, porTipo={}, porDepto={};
+OS.forEach(o=>{ porPrior[o.prior]=(porPrior[o.prior]||0)+1; porAging[o.aging]=(porAging[o.aging]||0)+1;
+ const s=o.setor?('SETOR '+o.setor):'Sem setor'; porSetor[s]=(porSetor[s]||0)+1;
+ porTipo[o.tipo]=(porTipo[o.tipo]||0)+1;
+ const d=o.depto||'Sem departamento'; porDepto[d]=(porDepto[d]||0)+1; });
+const atrasadas = OS.filter(o=>o.atr);
+const vistorias = OS.filter(o=>/vistoria/i.test(o.tipo) && o.sit!=='Convertida');
+const vistConvertidas = OS.filter(o=>/vistoria/i.test(o.tipo) && o.sit==='Convertida');
+const execAtrasadas = OS.filter(o=>/vazamento/i.test(o.tipo) && !/pesquisa|vistoria/i.test(o.tipo) && o.dias>=C.prazo_execucao);
+const vistAtrasadas = vistorias.filter(o=>o.dias>=C.prazo_vistoria);
+const pesq = OS.filter(o=>/pesquisa/i.test(o.tipo));
+const maisAntiga = Math.max(...OS.map(o=>o.dias),0);
+const idadeMedia = total?(OS.reduce((s,o)=>s+o.dias,0)/total):0;
+const geofoneAb = OS.filter(o=>o.geofone).length;
+
+/* ===== MOTOR DE ALERTAS ===== */
+const alertas=[];
+const pct = x=>(x*100).toFixed(1).replace('.',',');
+if(porPrior.ALTA>0) alertas.push(['vermelho',`🔴 ${porPrior.ALTA} OS em prioridade ALTA (≥${C.lim_alta} dias) — priorizar HOJE`]);
+else alertas.push(['verde','🟢 Nenhuma OS em prioridade ALTA']);
+if(atrasadas.length>0){ alertas.push(['vermelho',`🔴 ${atrasadas.length} OS ATRASADAS (≥${C.lim_atraso} dias) — cobrança formal: `+atrasadas.map(o=>o.os+' ('+o.dias+'d, '+(o.setor?'S'+o.setor:'s/ setor')+')').join(' · ')]);}
+else alertas.push(['verde','🟢 Nenhuma OS atrasada — divisão em dia']);
+if(total>=C.gatilho) alertas.push(['amarelo',`🟠 ${total} OS em aberto — GATILHO DOS ${C.gatilho} DISPARADO: exigir apresentação de serviços de cada setor`]);
+else alertas.push(['verde',`🟢 ${total} OS em aberto — dentro do limite operacional (${C.gatilho})`]);
+if(total<C.regra6) alertas.push(['amarelo',`🟡 REGRA ATIVA: backlog < ${C.regra6} OS — cada setor apresenta no mínimo 6 serviços na reunião`]);
+if(vistorias.length>0) alertas.push(['amarelo',`🔍 ${vistorias.length} VISTORIAS DE VAZAMENTO aguardando o fiscal — mais antiga: ${Math.max(...vistorias.map(o=>o.dias),0)} dia(s)`]);
+if(vistConvertidas.length>0) alertas.push(['azul',`✅ ${vistConvertidas.length} vistorias JÁ REALIZADAS pelo fiscal (convertidas em Vazamento de Água) — aguardam execução da NS`]);
+if(I.reab>C.meta_reab) alertas.push(['vermelho',`🔁 RETRABALHO FORA DO PADRÃO: ${pct(I.reab)}% reabertas (meta < ${pct(C.meta_reab)}%) — investigar qualidade dos consertos`]);
+else alertas.push(['verde',`🔁 Retrabalho dentro da meta: ${pct(I.reab)}%`]);
+if(I.ate3<C.ref_mercado) alertas.push(['amarelo',`⏱️ % concluídas ≤3 dias (${pct(I.ate3)}%) abaixo da referência de mercado (${pct(C.ref_mercado)}–70%)`]);
+else alertas.push(['verde',`⏱️ % concluídas ≤3 dias: ${pct(I.ate3)}% — dentro da faixa de mercado`]);
+if(I.digital<1) alertas.push(['vermelho',`📱 % encaminhadas digitalmente: ${pct(I.digital)}% (meta 100%) — campo não preenchido pelos fiscais`]);
+if(execAtrasadas.length>0) alertas.push(['vermelho',`⏱️ ${execAtrasadas.length} vazamentos fora do prazo de EXECUÇÃO (48h): `+execAtrasadas.slice(0,6).map(o=>o.os+' ('+o.dias+'d, '+(o.setor?'S'+o.setor:'s/ setor')+')').join(' · ')+(execAtrasadas.length>6?' …':'')]);
+else alertas.push(['verde','⏱️ Execução em dia: todos os vazamentos dentro das 48h']);
+if(vistAtrasadas.length>0) alertas.push(['vermelho',`🔍 ${vistAtrasadas.length} VISTORIAS fora do prazo (${C.prazo_vistoria} dias) — cobrar os fiscais: `+vistAtrasadas.map(o=>o.os+' ('+o.dias+'d)').join(' · ')]);
+else if(vistorias.length>0) alertas.push(['verde',`🔍 Vistorias em dia: ${vistorias.length} na fila (prazo ${C.prazo_vistoria} dias)`]);
+if(pesq.length>0) alertas.push(['azul',`🔎 ${pesq.length} vazamentos PRODUTO DE PESQUISA em aberto — serviços originados da equipe de pesquisa (contar à parte)`]);
+if(geofoneAb>0) alertas.push(['azul',`📡 ${geofoneAb} OS em aberto com marcador de GEOFONE/Enorsul/NorteSul — pico pode ser estudo de geofonamento, não rompimento em massa. Confirmar com o controle.`]);
+const semSetor = porSetor['Sem setor']||0;
+if(semSetor>0 && semSetor/total>0.3) alertas.push(['amarelo',`🗺️ ${semSetor} OS em aberto SEM SETOR (${Math.round(semSetor/total*100)}% do backlog) — mapear números CEBI novos no SETOR_MAP`]);
+if(maisAntiga>=C.lim_atraso-2 && maisAntiga<C.lim_atraso) alertas.push(['amarelo',`⏰ A OS mais antiga (${maisAntiga} dias) vence o limite de ${C.lim_atraso} dias em ${C.lim_atraso-maisAntiga} dia(s)`]);
+document.getElementById('alertas').innerHTML = alertas.map(a=>`<div class="alerta ${a[0]}">${a[1]}</div>`).join('');
+
+/* ===== CARDS ===== */
+function card(lbl,val,det,cls){return `<div class="card ${cls}"><div class="lbl">${lbl}</div><div class="val">${val}</div><div class="det">${det||'&nbsp;'}</div></div>`}
+document.getElementById('cards').innerHTML =
+ card('OS em aberto', total, 'backlog atual', 'c-navy') +
+ card('Prioridade ALTA', porPrior.ALTA||0, '≥ '+C.lim_alta+' dias', porPrior.ALTA?'c-vermelho':'c-verde') +
+ card('Execução >48h', execAtrasadas.length, 'prazo execução 48h', execAtrasadas.length?'c-vermelho':'c-verde') +
+ card('Atrasadas ≥'+C.lim_atraso+'d', atrasadas.length, atrasadas.length?'COBRAR AGORA':'em dia', atrasadas.length?'c-vermelho':'c-verde') +
+ card('Vistorias de vazamento', vistorias.length + vistConvertidas.length, vistorias.length + ' aguardando fiscal + ' + vistConvertidas.length + ' já vistoriadas', 'c-ciano') +
+ card('Mais antiga', maisAntiga+'d', 'da divisão', maisAntiga>=C.lim_atraso?'c-vermelho':(maisAntiga>=C.lim_atraso-2?'c-dourado':'c-verde')) +
+ card('Idade média', idadeMedia.toFixed(1)+'d', 'do backlog', 'c-branco') +
+ card('Novas 7 dias', R.novas7d, 'entradas recentes', 'c-roxo') +
+ card('Gatilho '+C.gatilho+' OS', total>=C.gatilho?'DISPARADO':'OK', 'limite operacional', total>=C.gatilho?'c-vermelho':'c-verde') +
+ card('Vistorias fora do prazo', vistAtrasadas.length, 'prazo '+C.prazo_vistoria+' dias', vistAtrasadas.length?'c-vermelho':'c-verde') +
+ card('Vaz. produto de pesquisa', pesq.length, 'da equipe de pesquisa', 'c-roxo') +
+ card('Base total', R.total, R.concluidas+' concluídas · '+R.canceladas+' cancel.', 'c-branco');
+
+/* ===== KPIs ===== */
+function kpiBox(t,v,m,cls,barra){return `<div class="kpi-box ${cls}"><div class="t">${t}</div><div class="v">${v}</div><div class="m">${m}</div>${barra||''}</div>`}
+const b3 = Math.min(I.ate3*100,100), bd = I.digital*100, br = Math.min(I.reab*100/C.meta_reab*100,100);
+document.getElementById('kpis').innerHTML =
+ kpiBox('% concluídas ≤ 3 dias', pct(I.ate3)+'%', I.ate3>=C.ref_mercado?'✅ dentro da faixa de mercado (54–70%)':'⚠️ abaixo da referência', I.ate3>=C.ref_mercado?'ok':'ruim',
+  `<div class="barra-ext"><div style="width:${b3}%;background:${I.ate3>=C.ref_mercado?'#10B981':'#EF4444'}"></div></div>`) +
+ kpiBox('MTTR — tempo médio de reparo', I.mttr.toFixed(1).replace('.',',')+' dias', 'menor é melhor', 'aten') +
+ kpiBox('% retrabalho (reabertas)', pct(I.reab)+'%', I.reab<=C.meta_reab?'✅ dentro da meta (<5%)':'🔴 FORA DA META (<5%)', I.reab<=C.meta_reab?'ok':'ruim',
+  `<div class="barra-ext"><div style="width:${br}%;background:#EF4444"></div></div>`) +
+ kpiBox('% encaminhadas digitalmente', pct(I.digital)+'%', I.digital>=1?'✅ meta atingida':'🔴 meta 100% — campo vazio', I.digital>=1?'ok':'ruim',
+  `<div class="barra-ext"><div style="width:${bd}%;background:#EF4444"></div></div>`) +
+ kpiBox('Backlog própria × terceirizada', Math.round(I.propria*100)+'% × '+Math.round(I.terc*100)+'%', 'Redes Água × Norte Sul', 'aten') +
+ kpiBox('Projeção p/ zerar backlog', D.produt.proj_dias.toFixed(1).replace('.',',')+' dias', 'média '+D.produt.concl_dia.toFixed(1).replace('.',',')+' conclusões/dia (30d)', 'ok');
+
+/* ===== GRÁFICOS ===== */
+const CORES=['#8B5CF6','#22D3EE','#EC4899','#10B981','#F59E0B','#FBBF24','#F97316','#6366F1'];
+function prepCanvas(id){const c=document.getElementById(id); if(!c) return null;
+ const dpr=window.devicePixelRatio||1; const w=Math.max(c.parentElement.clientWidth-36, 420), h=300;
+ c.width=w*dpr; c.height=h*dpr; c.style.width=w+'px'; c.style.height=h+'px';
+ const x=c.getContext('2d'); x.scale(dpr,dpr); x.clearRect(0,0,w,h); return {x,w,h};}
+function eixos(x,w,h,padL,padB,padT,max,fmt){ x.strokeStyle='#2E2E33'; x.fillStyle='#9BA0A8'; x.font='10px Segoe UI';
+ const steps=5, areaH=h-padT-padB;
+ for(let i=0;i<=steps;i++){const v=max*i/steps, yy=padT+areaH-(areaH*i/steps);
+  x.fillText(fmt?fmt(v):Math.round(v),4,yy+3);
+  x.beginPath();x.moveTo(padL,yy);x.lineTo(w-14,yy);x.stroke();} return areaH;}
+function barras(id, labels, valores, cores, opts){ const p=prepCanvas(id); if(!p) return; const {x,w,h}=p;
+ const horizontal=opts&&opts.horizontal, fmt=opts&&opts.fmt;
+ const temNeg = valores.some(v=>v<0);
+ const max=(temNeg? Math.max(...valores.map(v=>Math.abs(v)),1) : Math.max(...valores,1))*1.12;
+ const padL=horizontal?Math.min(210,w*0.48):46, padB=horizontal?20:44, padT=16;
+ const areaW=w-padL-16, areaH=h-padT-padB;
+ if(!horizontal){x.strokeStyle='#2E2E33';x.fillStyle='#9BA0A8';x.font='10px Segoe UI';
+  if(temNeg){
+   for(let i=-5;i<=5;i++){const v=max*i/5; if(i!==0&&Math.abs(v)<0.001)continue;
+    const yy=padT+areaH/2-(areaH/2)*(v/max);
+    x.fillText((v>0?'+':'')+Math.round(v),4,yy+3);
+    x.beginPath();x.moveTo(padL,yy);x.lineTo(w-16,yy);x.stroke();}
+  } else {
+   for(let i=0;i<=5;i++){const v=max*i/5,yy=padT+areaH-(areaH*i/5);x.fillText(fmt?fmt(Math.round(v)):Math.round(v),4,yy+3);
+    x.beginPath();x.moveTo(padL,yy);x.lineTo(w-16,yy);x.stroke();}}}
+ const n=labels.length, slot=horizontal?areaH/n:areaW/n, barSize=(horizontal?slot*0.62:slot*0.55);
+ labels.forEach((lb,i)=>{const v=valores[i],cor=cores[i%cores.length];
+  if(horizontal){const y=padT+slot*i+(slot-barSize)/2, len=areaW*v/max;
+   x.fillStyle=cor; x.fillRect(padL,y,len,barSize);
+   x.fillStyle='#E8EDF4'; x.font='bold 12px Segoe UI'; x.fillText(fmt?fmt(v):v,padL+len+5,y+barSize/2+4);
+   x.fillStyle='#C9CDD3'; x.font='bold 10px Segoe UI'; x.textAlign='right'; x.fillText(String(lb).slice(0,Math.floor(padL/5.6)),padL-8,y+barSize/2+4); x.textAlign='left';}
+  else{const xx=padL+slot*i+(slot-barSize)/2;
+   const zeroY = temNeg? padT+areaH/2 : padT+areaH;
+   const hh=areaH/2*(Math.abs(v)/max);
+   const yTop = v>=0? zeroY-hh : zeroY;
+   const g=x.createLinearGradient(0,yTop,0,yTop+hh); g.addColorStop(0,cor); g.addColorStop(1,cor+'99');
+   x.fillStyle=g; x.fillRect(xx,yTop,barSize,hh);
+   if(opts&&opts.semLabels){} else {x.fillStyle='#E8EDF4'; x.font='bold 11px Segoe UI'; x.textAlign='center';
+   x.fillText((fmt?fmt(v):((v>0?'+':'')+v)),xx+barSize/2, v>=0? yTop-5 : yTop+hh+12); x.textAlign='left';}
+   x.fillStyle='#9BA0A8'; x.font='bold 9px Segoe UI'; x.fillStyle='#CBD5E1';
+   if(n>=12&&i%3){} else {
+   const maxChars=Math.max(6,Math.floor(slot/5.2));
+   const parts=String(lb).slice(0,maxChars).split(' '); let line=lb.slice(0,maxChars); if(parts.length>2){line=parts.slice(0,2).join(' ')+'\n'+parts.slice(2).join(' ');}
+   String(line).split('\n').forEach((L,li)=>x.fillText(L,xx+barSize/2,h-30+li*11));}
+   x.textAlign='left';}});}
+function pizza(id, labels, valores){ const p=prepCanvas(id); if(!p) return; const {x,w,h}=p;
+ const tot=valores.reduce((a,b)=>a+b,0)||1, cx=w*0.28, cy=h/2, r=Math.min(w*0.24,h*0.38);
+ let ang=-Math.PI/2;
+ labels.forEach((lb,i)=>{const frac=valores[i]/tot; if(frac<=0)return;
+  x.beginPath(); x.moveTo(cx,cy); x.arc(cx,cy,r,ang,ang+frac*2*Math.PI); x.closePath();
+  x.fillStyle=CORES[i%CORES.length]; x.fill(); x.strokeStyle='#131C2E'; x.lineWidth=2; x.stroke();
+  const ly=cy-r+ i*((2*r)/labels.length)+10;
+  x.fillStyle=CORES[i%CORES.length]; x.fillRect(w*0.58,ly-10,14,14);
+  x.fillStyle='#E8EDF4'; x.font='bold 11px Segoe UI';
+  x.fillText(`${lb}: ${valores[i]} (${Math.round(frac*100)}%)`,w*0.58+20,ly+2); ang+=frac*2*Math.PI;});}
+function linhas(id, labels, s1, s2, nome1, nome2){ const p=prepCanvas(id); if(!p) return; const {x,w,h}=p;
+ const max=Math.max(...s1,...(s2||[0]),1)*1.15, padL=46, padB=52, padT=16;
+ const areaW=w-padL-16, areaH=h-padT-padB;
+ x.strokeStyle='#2E2E33'; x.fillStyle='#9BA0A8'; x.font='10px Segoe UI';
+ for(let i=0;i<=5;i++){const v=max*i/5,yy=padT+areaH-(areaH*i/5);x.fillText(Math.round(v),4,yy+3);
+  x.beginPath();x.moveTo(padL,yy);x.lineTo(w-16,yy);x.stroke();}
+ const n=labels.length, px=i=>padL+(areaW*i/(n-1||1));
+ // área s1
+ x.beginPath(); x.moveTo(px(0),padT+areaH);
+ s1.forEach((v,i)=>x.lineTo(px(i),padT+areaH-(areaH*v/max))); x.lineTo(px(n-1),padT+areaH); x.closePath();
+ const g1=x.createLinearGradient(0,padT,0,padT+areaH); g1.addColorStop(0,'rgba(139,92,246,.25)'); g1.addColorStop(1,'rgba(139,92,246,.02)');
+ x.fillStyle=g1; x.fill();
+ function serie(vals,cor,nome){ x.beginPath(); vals.forEach((v,i)=>i?x.lineTo(px(i),padT+areaH-(areaH*v/max)):x.moveTo(px(i),padT+areaH-(areaH*v/max)));
+  x.strokeStyle=cor; x.lineWidth=3; x.stroke();
+  vals.forEach((v,i)=>{x.beginPath();x.arc(px(i),padT+areaH-(areaH*v/max),4,0,7);x.fillStyle=cor;x.fill();x.strokeStyle='#fff';x.lineWidth=1.5;x.stroke();});}
+ serie(s1,'#8B5CF6',nome1); if(s2) serie(s2,'#22D3EE',nome2);
+ x.fillStyle='#9BA0A8'; x.font='bold 9px Segoe UI'; x.fillStyle='#CBD5E1'; x.textAlign='center';
+ x.font='bold 9px Segoe UI'; x.fillStyle='#CBD5E1';
+ labels.forEach((lb,i)=>{if(i%2)return; x.textAlign='center'; x.fillText(String(lb),px(i),h-16);}); x.textAlign='left';
+ // legenda
+ x.font='bold 11px Segoe UI'; x.fillStyle='#8B5CF6'; x.fillRect(w-190,6,12,12); x.fillStyle='#C9CDD3'; x.fillText(nome1,w-174,16);
+ if(s2){x.fillStyle='#22D3EE'; x.fillRect(w-70,6,12,12); x.fillStyle='#C9CDD3'; x.fillText(nome2,w-54,16);}}
+function barrasDuplas(id, labels, v1, v2, n1, n2){ const p=prepCanvas(id); if(!p) return; const {x,w,h}=p;
+ const max=Math.max(...v1,...v2,1)*1.15, padL=46, padB=44, padT=16;
+ const areaW=w-padL-16, areaH=h-padT-padB;
+ x.strokeStyle='#2E2E33'; x.fillStyle='#9BA0A8'; x.font='10px Segoe UI';
+ for(let i=0;i<=5;i++){const v=max*i/5,yy=padT+areaH-(areaH*i/5);x.fillText(Math.round(v),4,yy+3);
+  x.beginPath();x.moveTo(padL,yy);x.lineTo(w-16,yy);x.stroke();}
+ const n=labels.length, slot=areaW/n, bw=slot*0.32;
+ labels.forEach((lb,i)=>{const cx=padL+slot*i+slot/2;
+  const h1=areaH*v1[i]/max, h2=areaH*v2[i]/max;
+  const g1=x.createLinearGradient(0,padT+areaH-h1,0,padT+areaH); g1.addColorStop(0,'#8B5CF6'); g1.addColorStop(1,'#8B5CF699');
+  x.fillStyle=g1; x.fillRect(cx-bw-2,padT+areaH-h1,bw,h1);
+  const g2=x.createLinearGradient(0,padT+areaH-h2,0,padT+areaH); g2.addColorStop(0,'#22D3EE'); g2.addColorStop(1,'#22D3EE99');
+  x.fillStyle=g2; x.fillRect(cx+2,padT+areaH-h2,bw,h2);
+  if(v1[i]>0){x.fillStyle='#8B5CF6';x.font='bold 10px Segoe UI';x.textAlign='center';x.fillText(v1[i],cx-bw/2-2,padT+areaH-h1-4);}
+  if(v2[i]>0){x.fillStyle='#22D3EE';x.font='bold 10px Segoe UI';x.fillText(v2[i],cx+bw/2+2,padT+areaH-h2-4);}
+  x.fillStyle='#9BA0A8'; x.font='bold 9px Segoe UI'; x.fillStyle='#CBD5E1';
+  if(n<=10||i%2===0) x.fillText(lb,cx,h-16); x.textAlign='left';});
+ x.font='bold 11px Segoe UI'; x.fillStyle='#8B5CF6'; x.fillRect(w-200,6,12,12); x.fillStyle='#C9CDD3'; x.fillText(n1,w-184,16);
+ x.fillStyle='#22D3EE'; x.fillRect(w-80,6,12,12); x.fillStyle='#C9CDD3'; x.fillText(n2,w-64,16);}
+
+const fmtData = s => { const m = String(s).match(/(\d{4})-(\d{2})-(\d{2})/); return m? m[3]+'/'+m[2] : String(s).slice(0,5); };
+const fmtDia = s => { const m = String(s).match(/(\d{4})-(\d{2})-(\d{2})/); return m? m[3] : '' };
+function renderGraficos(){
+ const pk=Object.keys(porPrior);
+ barras('gPrior',pk,pk.map(k=>porPrior[k]),['#EF4444','#8B5CF6','#22D3EE']);
+ const sk=Object.keys(porSetor);
+ barras('gSetor',sk,sk.map(k=>porSetor[k]),CORES);
+ pizza('gAging',Object.keys(porAging),Object.values(porAging));
+ const tipos=Object.entries(porTipo).sort((a,b)=>b[1]-a[1]);
+ const coresTipo = tipos.map(t=>/pesquisa/i.test(t[0])?'#A855F7':/vistoria/i.test(t[0])?'#FBBF24':/esgoto/i.test(t[0])?'#EC4899':'#F59E0B');
+ barras('gTipo',tipos.map(t=>t[0].length>34?t[0].slice(0,33)+'…':t[0]),tipos.map(t=>t[1]),coresTipo,true);
+ // fluxo: barras duplas lado a lado (mais claro que linhas sobrepostas)
+ const ent=D.entradas.slice(1), con=D.conclusoes.slice(1);
+ const diasF=ent.map(e=>fmtData(e[0]));
+ barrasDuplas('gFluxo',diasF,ent.map(e=>e[1]),con.map(c=>c[1]),'Entradas','Conclusões');
+ const saldos=ent.map((e,i)=>con[i][1]-e[1]);
+ barras('gSaldo',diasF,saldos,saldos.map(s=>s>=0?'#10B981':'#EF4444'),{fmt:v=>(v>0?'+':'')+v,semLabels:true});
+ // produtividade
+ document.getElementById('prodBox').innerHTML=`
+  <table>
+   <tr><th>Indicador</th><th>Valor</th></tr>
+   <tr><td>Média de conclusões/dia (30d)</td><td><b>${D.produt.concl_dia.toFixed(1).replace('.',',')}</b></td></tr>
+   <tr><td>Backlog atual</td><td><b>${total} OS</b></td></tr>
+   <tr><td>Projeção p/ zerar backlog</td><td><b>${D.produt.proj_dias.toFixed(1).replace('.',',')} dias</b></td></tr>
+   <tr><td>MTTR</td><td><b>${I.mttr.toFixed(1).replace('.',',')} dias</b></td></tr>
+   <tr><td>Novas nos últimos 7 dias</td><td><b>${R.novas7d}</b></td></tr>
+   <tr><td>Vistorias pendentes do fiscal</td><td><b>${vistorias.length}</b></td></tr>
+  </table>`;
+ const bk=Object.keys(D.backlog_sem).slice(1);
+ barras('gBackSem',bk,bk.map(k=>D.backlog_sem[k]),['#FDE68A','#FCD34D','#F59E0B','#F97316','#A855F7','#7C3AED']);
+ barras('gSetores2',sk,sk.map(k=>porSetor[k]),CORES);
+ const dk=Object.keys(porDepto);
+ barras('gDepto',dk.map(d=>d.length>30?d.slice(0,29)+'…':d),dk.map(k=>porDepto[k]),CORES,true);
+ // território
+ const bk2=Object.keys(D.bairros_hist).slice(1);
+ barras('gBairros',bk2.map(b=>b.length>22?b.slice(0,21)+'…':b),bk2.map(k=>D.bairros_hist[k]),CORES,true);
+ const abc=D.abc.slice(1);
+ barras('gABC',abc.map(a=>a[0].length>20?a[0].slice(0,19)+'…':a[0]),abc.map(a=>Math.round(a[2]*100)),['#7C3AED','#8B5CF6','#A855F7','#C084FC','#D8B4FE','#E9D5FF','#F0ABFC','#F5D0FE'],{fmt:v=>v+'%'});
+ pizza('gGeofone',Object.keys(D.geofone).slice(1),Object.values(D.geofone).slice(1));
+ const ck=Object.keys(D.top_cdc).slice(1);
+ barras('gCdc',ck,ck.map(k=>D.top_cdc[k]),['#F59E0B','#F97316','#A855F7','#EC4899','#3B82F6','#06B6D4','#10B981','#8B5CF6']);
+ // mapa de calor geral (entradas por bairro × semana)
+ let cal='<table class="calor"><tr><th>Bairro</th>'+D.calor[0].slice(1).map(h2=>'<th>'+h2+'</th>').join('')+'</tr>';
+ const mx=Math.max(...D.calor.slice(1).flatMap(r=>r.slice(1).map(Number)),1);
+ D.calor.slice(1).forEach(r=>{
+  cal+='<tr><td>'+r[0]+'</td>'+r.slice(1).map(v=>{const f=Number(v)/mx;
+   const cor=f>0.75?'#7C3AED':f>0.5?'#8B5CF6':f>0.25?'#A855F7':f>0?'#C084FC':'#1E293B';
+   const txt=f>0?'#fff':'#64748B';
+   return `<td style="background:${cor};color:${txt};font-weight:800">${v}</td>`;}).join('')+'</tr>';});
+ document.getElementById('tabCalor').innerHTML=cal+'</table>';
+ // MAPA DE SETORES: bairros agrupados por setor (1-4) com nº de OS em aberto
+ const nomeFiscal={1:'Hugo',2:'Massaroto',3:'Pedro Frois',4:'Moisés'};
+ const corSetor={1:'#3B82F6',2:'#F59E0B',3:'#10B981',4:'#EC4899'};
+ let sm='';
+ [1,2,3,4].forEach(s=>{
+  const bairros=D.setor_bairros[String(s)]||{};
+  const lista=Object.keys(bairros).sort((a,b)=>bairros[b]-bairros[a]);
+  const totB=lista.reduce((t,b)=>t+bairros[b],0);
+  const vp=(D.vist_pend_setor||{})[String(s)]||0;
+  sm+=`<div class="painel" style="border-top:3px solid ${corSetor[s]};margin-bottom:16px">`;
+  sm+=`<h3 style="color:${corSetor[s]}">SETOR ${s} — fiscal ${nomeFiscal[s]} · ${lista.length} bairros · ${totB} OS em aberto · ${vp} vistoria(s) pendente(s)</h3>`;
+  sm+='<div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:10px">';
+  lista.forEach(b=>{
+   const n=bairros[b];
+   const bg=n>0?'rgba(239,68,68,.18)':'rgba(148,163,184,.10)';
+   const bd=n>0?'rgba(239,68,68,.45)':'rgba(148,163,184,.25)';
+   sm+=`<span style="display:inline-block;padding:5px 10px;border-radius:6px;font-size:11px;background:${bg};border:1px solid ${bd};color:#E8EDF4">${b}${n>0?' <b style="color:#F87171">'+n+'</b>':''}</span>`;
+  });
+  sm+='</div></div>';
+ });
+ document.getElementById('mapaSetores').innerHTML=sm;
+ // CALOR DE VISTORIAS: bairro × dia
+ const cv=D.calor_vist||{dias:[],rows:[]};
+ let cvh='<table class="calor"><tr><th>Bairro</th>'+cv.dias.map(d2=>'<th>'+d2+'</th>').join('')+'<th>Setor</th><th>Pendentes</th></tr>';
+ const mxv=Math.max(...cv.rows.flatMap(r=>r.slice(1,cv.dias.length+1).map(Number)),1);
+ cv.rows.forEach(r=>{
+  cvh+='<tr><td>'+r[0]+'</td>';
+  r.slice(1,cv.dias.length+1).forEach(v=>{const f=Number(v)/mxv;
+   const cor=f>0.66?'#F59E0B':f>0.33?'#FBBF24':f>0?'#FDE68A':'#1E293B';
+   const txt=f>0.5?'#0D1424':'#E8EDF4';
+   cvh+=`<td style="background:${cor};color:${txt};font-weight:800">${v}</td>`;});
+  cvh+=`<td style="background:#1E293B;color:#93C5FD;font-weight:700">${r[cv.dias.length+1]?'SETOR '+r[cv.dias.length+1]:'—'}</td>`;
+  cvh+=`<td style="background:#1E293B;color:${r[cv.dias.length+2]>0?'#F87171':'#64748B'};font-weight:800">${r[cv.dias.length+2]}</td></tr>`;
+ });
+ cvh+='</table>';
+ document.getElementById('calorVist').innerHTML=cvh;
+}
+try{ renderGraficos(); }catch(e){ console.warn('erro grafico:', e.message); }
+window.addEventListener('resize', function(){ try{ renderGraficos(); }catch(e){} });
+
+
+/* ===== VAZAMENTOS EXECUTADOS (aba p12) ===== */
+(function(){
+  const EV = D.execvaz || {meses:[],atrasadas:[],meta:8};
+  const meta = EV.meta || 8;
+  // cards
+  const ultimo = EV.meses[EV.meses.length-1] || {taxa:0,tm_atr:0,tot:0,atr:0};
+  const dentro = ultimo.taxa <= meta;
+  document.getElementById('execCards').innerHTML =
+   '<div class="q4">'+
+   '<div class="card '+(dentro?'c-verde':'c-vermelho')+'"><div class="lbl">Taxa de atraso (mês atual)</div><div class="val">'+ultimo.taxa.toFixed(1).replace('.',',')+'%</div><div class="det">'+(dentro?'✅ dentro da meta ≤ '+meta+'%':'🔴 acima da meta ≤ '+meta+'%')+'</div></div>'+
+   '<div class="card c-navy"><div class="lbl">Executadas no mês</div><div class="val">'+ultimo.tot+'</div><div class="det">'+ultimo.atr+' em atraso</div></div>'+
+   '<div class="card c-dourado"><div class="lbl">Tempo médio do atraso</div><div class="val">'+ultimo.tm_atr.toFixed(1).replace('.',',')+'d</div><div class="det">média das OS em atraso</div></div>'+
+   '<div class="card c-branco"><div class="lbl">Total executado (base)</div><div class="val">'+EV.total_exec+'</div><div class="det">vazamentos de água concluídos</div></div>'+
+   '</div>';
+  // gráfico taxa por mês
+  const lb = EV.meses.map(m=>m.mes), tx = EV.meses.map(m=>m.taxa);
+  const p = prepCanvas('gExecTaxa'); if(p){ const {x,w,h}=p;
+   const max = Math.max(...tx, meta+2)*1.15, padL=46, padB=44, padT=16;
+   const areaW=w-padL-16, areaH=h-padT-padB;
+   x.strokeStyle='#2E2E33'; x.fillStyle='#9BA0A8'; x.font='10px Segoe UI';
+   for(let i2=0;i2<=5;i2++){const v=max*i2/5,yy=padT+areaH-(areaH*i2/5);x.fillText(Math.round(v)+'%',4,yy+3);
+    x.beginPath();x.moveTo(padL,yy);x.lineTo(w-16,yy);x.stroke();}
+   const n=lb.length, slot=areaW/n, bw=slot*0.5;
+   // linha da meta
+   const yMeta = padT+areaH-(areaH*meta/max);
+   x.strokeStyle='#EF4444'; x.setLineDash([6,4]); x.beginPath(); x.moveTo(padL,yMeta); x.lineTo(w-16,yMeta); x.stroke(); x.setLineDash([]);
+   x.fillStyle='#F87171'; x.font='bold 10px Segoe UI'; x.fillText('META '+meta+'%',w-90,yMeta-5);
+   lb.forEach((lb2,i2)=>{const v=tx[i2], cx=padL+slot*i2+slot/2;
+    const hh=areaH*v/max, yTop=padT+areaH-hh;
+    const cor = v<=meta ? '#10B981' : '#EF4444';
+    const g=x.createLinearGradient(0,yTop,0,yTop+hh); g.addColorStop(0,cor); g.addColorStop(1,cor+'99');
+    x.fillStyle=g; x.fillRect(cx-bw/2,yTop,bw,hh);
+    x.fillStyle='#fff'; x.font='bold 11px Segoe UI'; x.textAlign='center';
+    x.fillText(v.toFixed(1).replace('.',',')+'%',cx,yTop-5);
+    x.fillStyle='#CBD5E1'; x.font='bold 9px Segoe UI'; x.fillText(lb2,cx,h-16); x.textAlign='left';});
+  }
+  // gráfico volume
+  const p2 = prepCanvas('gExecVol'); if(p2){ const {x,w,h}=p2;
+   const tot=EV.meses.map(m=>m.tot), atr=EV.meses.map(m=>m.atr);
+   const max = Math.max(...tot,1)*1.15, padL=46, padB=44, padT=16;
+   const areaW=w-padL-16, areaH=h-padT-padB;
+   x.strokeStyle='#2E2E33'; x.fillStyle='#9BA0A8'; x.font='10px Segoe UI';
+   for(let i2=0;i2<=5;i2++){const v=max*i2/5,yy=padT+areaH-(areaH*i2/5);x.fillText(Math.round(v),4,yy+3);
+    x.beginPath();x.moveTo(padL,yy);x.lineTo(w-16,yy);x.stroke();}
+   const n=lb.length, slot=areaW/n, bw=slot*0.32;
+   lb.forEach((lb2,i2)=>{const cx=padL+slot*i2+slot/2;
+    const h1=areaH*tot[i2]/max, h2=areaH*atr[i2]/max;
+    const g1=x.createLinearGradient(0,padT+areaH-h1,0,padT+areaH); g1.addColorStop(0,'#8B5CF6'); g1.addColorStop(1,'#8B5CF699');
+    x.fillStyle=g1; x.fillRect(cx-bw-2,padT+areaH-h1,bw,h1);
+    const g2=x.createLinearGradient(0,padT+areaH-h2,0,padT+areaH); g2.addColorStop(0,'#EF4444'); g2.addColorStop(1,'#EF444499');
+    x.fillStyle=g2; x.fillRect(cx+2,padT+areaH-h2,bw,h2);
+    if(tot[i2]>0){x.fillStyle='#C9CDD3';x.font='bold 10px Segoe UI';x.textAlign='center';x.fillText(tot[i2],cx-bw/2-2,padT+areaH-h1-4);}
+    if(atr[i2]>0){x.fillStyle='#F87171';x.font='bold 10px Segoe UI';x.fillText(atr[i2],cx+bw/2+2,padT+areaH-h2-4);}
+    x.fillStyle='#CBD5E1'; x.font='bold 9px Segoe UI'; x.fillStyle='#CBD5E1';
+    if(n<=10||i2%2===0) x.fillText(lb2,cx,h-16); x.textAlign='left';});
+   x.font='bold 11px Segoe UI'; x.fillStyle='#8B5CF6'; x.fillRect(w-200,6,12,12); x.fillStyle='#C9CDD3'; x.fillText('Executadas',w-184,16);
+   x.fillStyle='#EF4444'; x.fillRect(w-80,6,12,12); x.fillStyle='#C9CDD3'; x.fillText('Em atraso',w-64,16);
+  }
+  // comparativo mesma data de corte
+  const CMP = EV.comparativo || [];
+  let t = '<table><tr><th>Período</th><th>Executadas</th><th>Em atraso</th><th>Taxa de atraso</th><th>Tempo médio do atraso</th><th>vs meta ≤8%</th></tr>';
+  CMP.forEach((c,i)=>{
+   const dentro = c.taxa <= meta;
+   const anterior = i>0 ? CMP[i-1].taxa : null;
+   const delta = (anterior!==null && anterior>0) ? Math.round(100*(c.taxa-anterior)/anterior) : null;
+   let vs = dentro ? '<span class="tag baixa">✅ DENTRO</span>' : '<span class="tag sim">🔴 FORA</span>';
+   if(delta!==null) vs += ' <small style="color:#9BA0A8">('+(delta<=0?'':'+')+delta+'% vs período anterior)</small>';
+   t += '<tr><td><b>'+c.periodo+'</b></td><td>'+c.tot+'</td><td>'+c.atr+'</td>'+
+        '<td><b style="color:'+(dentro?'#34D399':'#F87171')+'">'+c.taxa.toFixed(1).replace('.',',')+'%</b></td>'+
+        '<td>'+c.tm.toFixed(1).replace('.',',')+'d</td><td>'+vs+'</td></tr>';
+  });
+  t += '</table>';
+  document.getElementById('tabComparativo').innerHTML = t;
+})();
+/* ===== TABELAS ===== */
+try{ renderGraficos(); }catch(e){ console.warn('erro grafico:', e.message); }
+window.addEventListener('resize', function(){ try{ renderGraficos(); }catch(e){} });
+
+/* ===== TABELAS ===== */
+function tagPrior(p){return `<span class="tag ${p==='ALTA'?'alta':p==='MÉDIA'?'media':'baixa'}">${p}</span>`}
+document.getElementById('tabOS').innerHTML =
+ '<tr><th>O.S.</th><th>Abertura</th><th>Setor</th><th>Departamento</th><th>Bairro</th><th>Endereço</th><th>Dias</th><th>Prior.</th><th>Execução 48h</th><th>Atrasada?</th><th>Situação</th></tr>' +
+ [...OS].sort((a,b)=>b.dias-a.dias).map(o=>
+  `<tr><td><b>${o.os}</b></td><td>${o.abertura}</td><td>${o.setor?'SETOR '+o.setor:'—'}</td><td>${o.depto||'—'}</td><td>${o.bairro}</td><td>${o.endereco}</td><td><b>${o.dias}</b></td><td>${tagPrior(o.prior)}</td><td>${(/vazamento/i.test(o.tipo)&&!/pesquisa|vistoria/i.test(o.tipo)&&o.dias>=C.prazo_execucao)?'<span class="tag sim">FORA 48H</span>':''}</td><td>${o.atr?'<span class="tag sim">SIM</span>':''}</td><td>${o.sit}</td></tr>`).join('');
+
+const vistOrd = [...vistorias].sort((a,b)=>b.dias-a.dias);
+document.getElementById('tabVist').innerHTML =
+ '<table><tr><th>O.S.</th><th>Abertura</th><th>Bairro</th><th>Endereço</th><th>Dias na fila</th><th>Prazo ('+C.prazo_vistoria+'d)</th><th>Status</th></tr>' +
+ vistOrd.map(o=>{
+  const restam = C.prazo_vistoria - o.dias;
+  const st = o.dias>=C.prazo_vistoria ? '<span class="tag sim">FORA DO PRAZO</span>'
+    : restam<=1 ? '<span class="tag media">VENCE AMANHÃ</span>'
+    : `<span class="tag baixa">NO PRAZO (${restam.toFixed(1).replace('.',',')}d)</span>`;
+  return `<tr><td><b>${o.os}</b></td><td>${o.abertura}</td><td>${o.bairro}</td><td>${o.endereco}</td><td><b>${o.dias}</b></td><td>${st}</td></tr>`;
+ }).join('') +
+ '</table>' + (vistorias.length? '' : '<p style="color:#34D399;font-weight:700">✅ Nenhuma vistoria pendente.</p>')
+ + (vistConvertidas.length? '<h3 style="font-size:12px;color:#E2E8F0;text-transform:uppercase;letter-spacing:.7px;margin:16px 0 8px">✅ Vistorias JÁ REALIZADAS pelo fiscal — convertidas em Vazamento de Água (aguardam execução): '+vistConvertidas.length+'</h3>'
+    + '<table><tr><th>O.S.</th><th>Abertura</th><th>Bairro</th><th>Endereço</th><th>Dias desde o evento</th></tr>'
+    + [...vistConvertidas].sort((a,b)=>b.dias-a.dias).map(o=>`<tr><td><b>${o.os}</b></td><td>${o.abertura}</td><td>${o.bairro}</td><td>${o.endereco}</td><td>${o.dias}</td></tr>`).join('')+'</table>'
+    : '');
+
+const pesqOrd = [...pesq].sort((a,b)=>b.dias-a.dias);
+document.getElementById('tabPesq').innerHTML =
+ '<table><tr><th>O.S.</th><th>Abertura</th><th>Bairro</th><th>Endereço</th><th>Dias</th><th>Solicitante</th></tr>' +
+ pesqOrd.map(o=>`<tr><td><b>${o.os}</b></td><td>${o.abertura}</td><td>${o.bairro}</td><td>${o.endereco}</td><td><b>${o.dias}</b></td><td>${o.sol||'—'}</td></tr>`).join('') +
+ '</table>' + (pesq.length? '' : '<p style="color:#34D399;font-weight:700">✅ Nenhum vazamento de pesquisa em aberto.</p>');
+
+let hs='<table><tr><th>Setor</th><th>OS em aberto</th><th>Atrasadas</th><th>Pre-alerta (5-9d)</th><th>Mais antiga</th></tr>';
+Object.keys(porSetor).forEach(s=>{
+ const ds = OS.filter(o=>(o.setor?'SETOR '+o.setor:'Sem setor')===s);
+ const atr = ds.filter(o=>o.atr).length, pre = ds.filter(o=>o.dias>=5&&o.dias<10).length;
+ const mx = ds.length?Math.max(...ds.map(o=>o.dias)):0;
+ hs+=`<tr><td><b>${s}</b></td><td>${ds.length}</td><td>${atr?`<span class="tag sim">${atr}</span>`:'—'}</td><td>${pre||'—'}</td><td>${mx}d</td></tr>`;});
+document.getElementById('tabSetores').innerHTML=hs+'</table>';
+
+let hd='<table><tr><th>Departamento atual</th><th>OS em aberto</th><th>% do backlog</th></tr>';
+Object.entries(porDepto).sort((a,b)=>b[1]-a[1]).forEach(([d,n])=>{
+ hd+=`<tr><td>${d}</td><td><b>${n}</b></td><td>${Math.round(n/total*100)}%</td></tr>`;});
+document.getElementById('tabDepto').innerHTML=hd+'</table>';
+
+document.getElementById('pauta').innerHTML = `
+ <table>
+  <tr><th>#</th><th>Ponto da pauta</th><th>Valor</th></tr>
+  <tr><td>1</td><td>Situação geral do backlog</td><td><b>${total} OS em aberto</b></td></tr>
+  <tr><td>2</td><td>OS atrasadas por setor (cada setor explica e apresenta plano)</td><td><b>${atrasadas.length}</b></td></tr>
+  <tr><td>3</td><td>Idade média do backlog</td><td><b>${idadeMedia.toFixed(1)} dias</b></td></tr>
+  <tr><td>4</td><td>Vistorias aguardando fiscal</td><td><b>${vistorias.length}</b></td></tr>
+  <tr><td>5</td><td>OS mais antiga da divisão</td><td><b>${maisAntiga} dias</b></td></tr>
+  <tr><td>6</td><td>Retrabalho (reabertas) — meta &lt; 5%</td><td><b>${pct(I.reab)}%</b></td></tr>
+  <tr><td>7</td><td>Entradas × conclusões (14 dias)</td><td><b>${D.entradas.reduce((s,e)=>s+e[1],0)} × ${D.conclusoes.reduce((s,c)=>s+c[1],0)}</b></td></tr>
+ </table>
+ <div class="alerta ${total<C.regra6?'amarelo':'verde'}" style="margin-top:14px">
+  ${total<C.regra6?'⚠️ REGRA ATIVA: backlog abaixo de '+C.regra6+' OS — cada setor deve apresentar PELO MENOS 6 SERVIÇOS DE MANUTENÇÃO do seu setor (concluídos ou em andamento, com local e situação).':'Backlog ≥ '+C.regra6+' OS — regra dos 6 serviços não aplicável nesta semana.'}
+ </div>`;
+</script>
+
+
+
+  else { const ta=document.createElement('textarea'); ta.value=t; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta); btn.textContent='✅ Copiado!'; setTimeout(()=>btn.textContent='📋 Copiar', 2000); }
+}
+<script>
+/* ===== UPLOAD + BANNER ===== */
+(function(){
+  const info = window.__PDF_INFO__;
+  if(info && window.__PDF_OS__){
+    const box = document.querySelector('.upload-box');
+    box.dataset.original = box.innerHTML;
+    box.style.borderColor = '#10B981';
+    box.style.background = 'rgba(16,185,129,.12)';
+    box.innerHTML = '<strong style="color:#34D399">✅ PDF carregado: '+info.nome+' — '+window.__PDF_OS__.length+' OS em aberto</strong><br><small>Indicadores de backlog recalculados com o setor da base · KPIs históricos (MTTR, %≤3d, retrabalho) mantidos · <a href="#" id="limparPdf" style="color:#F5A623;font-weight:800">↩️ voltar aos dados da base</a></small>';
+    document.getElementById('limparPdf').onclick = function(ev){ ev.preventDefault(); try{localStorage.removeItem('painel_os_pdf_v2');}catch(e){} try{sessionStorage.removeItem('painel_os_pdf_v2');}catch(e){} location.hash=''; location.reload(); };
+  }
+})();
+document.getElementById('filePdf').addEventListener('change', async function(e){
+  const file = e.target.files[0]; if(!file) return;
+  const box = document.querySelector('.upload-box');
+  if(!box.dataset.original) box.dataset.original = box.innerHTML;
+  box.innerHTML = '<strong>⏳ Lendo o PDF no navegador...</strong><br><small>'+file.name+'</small>';
+  try{
+    const linhas = await lerPdfCebi(file);
+    const novas = parsePdfCebi(linhas);
+    if(!novas.length) throw new Error('Nenhuma OS encontrada — confira se é o relatório de Eventos Pendentes do CEBI.');
+    const conv = novas.map(o=>{
+      const m = (o.abertura||'').match(/(\d{2})\/(\d{2})\/(\d{4})/);
+      let dias = 0;
+      if(m){ const dt = new Date(+m[3], +m[2]-1, +m[1]); dias = Math.max(0, Math.round(((Date.now()-dt.getTime())/86400000)*10)/10); }
+      return {os:o.os, abertura:o.abertura, tipo:o.tipo, depto:'', cdc:o.cdc||'', bairro:o.bairro||'', endereco:o.end||'', sit:o.sit||'Nova', dias, setor:null, sol:o.sol||''};
+    });
+    let salvo=false;
+    try{ localStorage.setItem('painel_os_pdf_v2', JSON.stringify({quando: Date.now(), nome: file.name, os: conv})); salvo=true; }catch(le){}
+    if(!salvo){ try{ sessionStorage.setItem('painel_os_pdf_v2', JSON.stringify({quando: Date.now(), nome: file.name, os: conv})); salvo=true; }catch(le2){} }
+    if(!salvo){ location.hash = '#pdfdata='+encodeURIComponent(JSON.stringify({quando: Date.now(), nome: file.name, os: conv})); }
+    location.reload();
+  }catch(err){
+    box.innerHTML = '<strong style="color:#F87171">❌ '+err.message+'</strong>';
+    setTimeout(()=>{ box.innerHTML = box.dataset.original; }, 6000);
+  }
+})();
+/* ===== ANÁLISE DE PROGRAMAÇÃO MANUAL ===== */
+function equipeDe(depto){
+  const d = (depto||'').toUpperCase();
+  if(d.indexOf('NORTE SUL')>=0 || d.indexOf('DOSA')>=0) return '🔧 Norte Sul (terceirizada)';
+  if(d.indexOf('RECOMPOSIÇÃO')>=0 || d.indexOf('PAVIMENT')>=0) return '🛣️ Potenza (recapeamento)';
+  if(d.indexOf('CIVIL')>=0) return '🧱 Manutenção Civil';
+  if(d.indexOf('REDES')>=0 && d.indexOf('ÁGUA')>=0) return '🚰 Equipe própria (Redes Água)';
+  if(d.indexOf('VISTORIA')>=0) return '🔍 Fiscal (vistoria pendente)';
+  return depto;
+}
+function analisarProg(){
+  const txt = document.getElementById('progInput').value.trim();
+  const out = document.getElementById('progResult');
+  if(!txt){ out.innerHTML = '<div class="alerta amarelo">⚠️ Cole a programação do dia primeiro.</div>'; return; }
+  // parse: equipe + nº OS (livre)
+  const prog = []; // {eq, os}
+  txt.split(/\n+/).forEach(l=>{
+    l = l.trim(); if(!l) return;
+    const eqM = l.match(/AG-?\s*(\d)/i);
+    const oss = (l.match(/\b2026\d{6}\b/g)||[]);
+    if(eqM && oss.length){ oss.forEach(o=>prog.push({eq:'AG-'+eqM[1], os:o})); }
+    else if(oss.length){ oss.forEach(o=>prog.push({eq:'—', os:o})); }
+  });
+  if(!prog.length){ out.innerHTML = '<div class="alerta vermelho">❌ Nenhuma OS (número de 10 dígitos) encontrada na lista. Formato: "AG-1 2026140383" por linha.</div>'; return; }
+  const idxOS = {}; OS.forEach(o=>idxOS[o.os]=o);
+  const progOS = new Set(prog.map(p=>p.os));
+  // 1) programadas
+  let t1 = '<h3 style="font-size:12px;color:#E2E8F0;text-transform:uppercase;letter-spacing:.7px;margin:14px 0 8px">✅ Programadas ('+prog.length+')</h3><table><tr><th>Equipe</th><th>OS</th><th>Setor</th><th>Onde está o serviço</th><th>Bairro</th><th>Endereço</th><th>Dias</th><th>Situação</th></tr>';
+  let semBase = 0;
+  prog.forEach(p=>{
+    const o = idxOS[p.os];
+    if(o){ const onde = o.depto ? equipeDe(o.depto) : '—'; t1 += '<tr><td><b>'+p.eq+'</b></td><td><b>'+p.os+'</b></td><td>'+(o.setor?'S'+o.setor:'—')+'</td><td>'+onde+'</td><td>'+o.bairro+'</td><td>'+o.endereco+'</td><td>'+o.dias+'</td><td>'+(o.dias>=C.prazo_execucao?'<span class="tag sim">FORA 48H</span>':'<span class="tag baixa">OK</span>')+'</td></tr>'; }
+    else { semBase++; t1 += '<tr><td><b>'+p.eq+'</b></td><td><b>'+p.os+'</b></td><td colspan="6"><span class="tag sim">NÃO ESTÁ NA BASE EM ABERTO</span> (concluída/cancelada ou não existe)</td></tr>'; }
+  });
+  t1 += '</table>';
+  // 2) em aberto sem programação (exclui pesquisa e vistoria convertida)
+  const semLista = OS.filter(o=>!progOS.has(o.os) && !/pesquisa/i.test(o.tipo) && !( /vistoria/i.test(o.tipo) && o.sit==='Convertida'));
+  let t2 = '<h3 style="font-size:12px;color:#FCA5A5;text-transform:uppercase;letter-spacing:.7px;margin:18px 0 8px">⚠️ Em aberto SEM programação ('+semLista.length+')</h3><table><tr><th>OS</th><th>Setor</th><th>Onde está o serviço</th><th>Equipe sugerida</th><th>Bairro</th><th>Endereço</th><th>Dias</th><th>Tipo</th></tr>';
+  const nomeSetor = {1:'AG-1',2:'AG-2',3:'AG-3',4:'AG-4'};
+  semLista.sort((a,b)=>b.dias-a.dias).slice(0,40).forEach(o=>{
+    const onde = o.depto ? equipeDe(o.depto) : '—';
+    t2 += '<tr><td><b>'+o.os+'</b></td><td>'+(o.setor?'S'+o.setor:'—')+'</td><td>'+onde+'</td><td>'+(o.setor?(nomeSetor[o.setor]||'—'):'—')+'</td><td>'+o.bairro+'</td><td>'+o.endereco+'</td><td><b>'+o.dias+'</b></td><td>'+o.tipo.slice(0,28)+'</td></tr>';
+  });
+  t2 += '</table>' + (semLista.length>40?'<div class="nota">Mostrando as 40 mais antigas de '+semLista.length+'.</div>':'');
+  // 3) resumo por equipe
+  const porEq = {};
+  prog.forEach(p=>{ porEq[p.eq]=(porEq[p.eq]||0)+1; });
+  let t3 = '<h3 style="font-size:12px;color:#E2E8F0;text-transform:uppercase;letter-spacing:.7px;margin:18px 0 8px">👥 Carga por equipe</h3><table><tr><th>Equipe</th><th>OS programadas</th></tr>';
+  Object.keys(porEq).sort().forEach(e=>{ t3 += '<tr><td><b>'+e+'</b></td><td><b>'+porEq[e]+'</b></td></tr>'; });
+  t3 += '</table>';
+  // 4) cobrança por setor (em aberto sem programação)
+  const porSetorC = {};
+  semLista.forEach(o=>{ const s=o.setor||0; (porSetorC[s]=porSetorC[s]||[]).push(o); });
+  let t4 = '<h3 style="font-size:12px;color:#FCD34D;text-transform:uppercase;letter-spacing:.7px;margin:18px 0 8px">📲 Cobrança pronta — OS em aberto fora da programação</h3>';
+  const nomeFiscal = {1:'SETOR 1 (Hugo)',2:'SETOR 2 (Massaroto)',3:'SETOR 3 (Pedro Frois)',4:'SETOR 4 (Moisés)',0:'SEM SETOR'};
+  Object.keys(porSetorC).sort().forEach(s=>{
+    const lista = porSetorC[s].sort((a,b)=>b.dias-a.dias);
+    let msg = '*'+(nomeFiscal[s]||('SETOR '+s))+'* — OS em aberto fora da programação de hoje:\n';
+    lista.slice(0,15).forEach(o=>{ msg += '• OS '+o.os+' — '+o.dias+'d — '+o.endereco.slice(0,38)+', '+o.bairro.slice(0,20)+'\n'; });
+    if(lista.length>15) msg += '… e mais '+(lista.length-15)+' OS\n';
+    t4 += '<div style="background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.35);border-radius:8px;padding:12px;margin-bottom:10px">';
+    t4 += '<div style="font-size:11px;color:#FCD34D;font-weight:700;margin-bottom:6px">'+(nomeFiscal[s]||('SETOR '+s))+' — '+lista.length+' OS</div>';
+    t4 += '<div style="font-size:12px;white-space:pre-wrap;color:#E8EDF4;background:#0D1424;padding:10px;border-radius:6px">'+msg+'</div>';
+    t4 += '<button class="btn" style="margin-top:8px;padding:6px 14px;font-size:11px" onclick="copiar(this, '+JSON.stringify(JSON.stringify(msg))+')">📋 Copiar</button></div>';
+  });
+  out.innerHTML = t1 + t2 + t3 + t4;
+}
+</script>
+<script>
+/* ===== COBRANÇA WHATSAPP POR SETOR ===== */
+(function(){
+  const nomeSetor = {1:'SETOR 1 (Hugo)',2:'SETOR 2 (Massaroto)',3:'SETOR 3 (Pedro Frois)',4:'SETOR 4 (Moisés)',0:'SEM SETOR'};
+  const fora = vistorias.filter(o=>o.dias>=C.prazo_vistoria);
+  const prox = vistorias.filter(o=>o.dias>=C.prazo_vistoria-1 && o.dias<C.prazo_vistoria);
+  const porSetorCob = {};
+  fora.forEach(o=>{ const s=o.setor||0; (porSetorCob[s]=porSetorCob[s]||[]).push(o); });
+  let wh = '<h3 style="font-size:12px;color:#E2E8F0;text-transform:uppercase;letter-spacing:.7px;margin:18px 0 8px">📲 Cobrança pronta para WhatsApp — por setor</h3>';
+  let msgGeral = `*COBRANÇA — VISTORIAS PENDENTES (prazo: 24h)*\nEquipes, há *${fora.length} vistoria(s) fora do prazo* de 24 horas.\nFavor vistoriar hoje e destinar no CEBI: confirmado → Vazamento de Água · outro setor → encaminha · não confirmado → baixa c/ justificativa.\n\n⚠️ Após a vistoria, a NS tem *48h contratuais* (Edital 001/2024, TR seção 5) para executar a partir do acatamento — a vistoria em 24h garante o atendimento ao munícipe em até 72h.`;
+  wh += `<div style="background:rgba(16,185,129,.08);border:1px solid rgba(16,185,129,.35);border-radius:8px;padding:12px;margin-bottom:10px">`;
+  wh += `<div style="font-size:11px;color:#6EE7B7;font-weight:700;margin-bottom:6px">MENSAGEM GERAL (todos os setores)</div>`;
+  wh += `<div style="font-size:12px;white-space:pre-wrap;color:#E8EDF4;background:#0D1424;padding:10px;border-radius:6px">${msgGeral}</div>`;
+  wh += `<button class="btn" style="margin-top:8px;padding:6px 14px;font-size:11px" onclick="copiar(this, ${JSON.stringify(JSON.stringify(msgGeral))})">📋 Copiar</button></div>`;
+  Object.keys(porSetorCob).sort().forEach(s=>{
+    const os_ = porSetorCob[s].sort((a,b)=>b.dias-a.dias);
+    let msg = `*${nomeSetor[s]||('SETOR '+s)}* — vistorias fora do prazo de 24h:\n`;
+    os_.forEach(o=>{ msg += `• OS ${o.os} — ${o.dias.toFixed(0)} dias — ${o.endereco.slice(0,40)}, ${o.bairro.slice(0,22)}\n`; });
+    wh += `<div style="background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.35);border-radius:8px;padding:12px;margin-bottom:10px">`;
+    wh += `<div style="font-size:11px;color:#FCA5A5;font-weight:700;margin-bottom:6px">${nomeSetor[s]||('SETOR '+s)} — ${os_.length} vistoria(s)</div>`;
+    wh += `<div style="font-size:12px;white-space:pre-wrap;color:#E8EDF4;background:#0D1424;padding:10px;border-radius:6px">${msg}</div>`;
+    wh += `<button class="btn" style="margin-top:8px;padding:6px 14px;font-size:11px" onclick="copiar(this, ${JSON.stringify(JSON.stringify(msg))})">📋 Copiar</button></div>`;
+  });
+  if(prox.length){
+    let msg2 = '*VENCE AMANHÃ — ATENÇÃO:*\n';
+    prox.sort((a,b)=>b.dias-a.dias).forEach(o=>{ msg2 += `• OS ${o.os} — ${nomeSetor[o.setor||0]||'S'+(o.setor||0)} — ${o.dias.toFixed(1)}d — ${o.endereco.slice(0,38)}, ${o.bairro.slice(0,20)}\n`; });
+    wh += `<div style="background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.35);border-radius:8px;padding:12px;margin-bottom:10px">`;
+    wh += `<div style="font-size:11px;color:#FCD34D;font-weight:700;margin-bottom:6px">VENCE AMANHÃ (${prox.length})</div>`;
+    wh += `<div style="font-size:12px;white-space:pre-wrap;color:#E8EDF4;background:#0D1424;padding:10px;border-radius:6px">${msg2}</div>`;
+    wh += `<button class="btn" style="margin-top:8px;padding:6px 14px;font-size:11px" onclick="copiar(this, ${JSON.stringify(JSON.stringify(msg2))})">📋 Copiar</button></div>`;
+  }
+  document.getElementById('cobrancaVist').innerHTML = wh;
+})();
+function copiar(btn, texto){
+  const t = JSON.parse(texto);
+  if(navigator.clipboard){ navigator.clipboard.writeText(t).then(()=>{ btn.textContent='✅ Copiado!'; setTimeout(()=>btn.textContent='📋 Copiar', 2000); }); }
+  else { const ta=document.createElement('textarea'); ta.value=t; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta); btn.textContent='✅ Copiado!'; setTimeout(()=>btn.textContent='📋 Copiar', 2000); }
+}
+</script>
+
+
+</body>
+</html>

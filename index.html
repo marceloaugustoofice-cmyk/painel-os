@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0A0A0B">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Painel OS">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="icon" type="image/png" href="icons/icon-192.png">
+<link rel="manifest" href="manifest.json">
+
+<title>PAINEL EXECUTIVO OS — SEMAE Manutenção de Água</title>
+<style>
+:root{
+ --bg:#0A0A0B; --bg2:#121214; --painel:#1A1A1D; --painel2:#202024; --borda:#2E2E33;
+ --texto:#FFFFFF; --texto2:#C9CDD3; --texto3:#8A8F98;
+ --laranja:#F59E0B; --roxo:#8B5CF6; --rosa:#EC4899; --verde:#10B981; --azul:#3B82F6;
+ --ciano:#22D3EE; --verm:#EF4444; --amarelo:#FBBF24;
+}
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',Arial,sans-serif}
+body{background:linear-gradient(180deg,var(--bg) 0%,var(--bg2) 100%);min-height:100vh;padding:16px;color:var(--texto)}
+header{background:linear-gradient(120deg,#17171A 0%,#1F1F23 100%);color:#fff;padding:18px 26px;border-radius:12px;margin-bottom:14px;
+ display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;border:1px solid var(--borda);position:relative;overflow:hidden}
+header::after{content:'';position:absolute;left:0;right:0;bottom:0;height:3px;background:linear-gradient(90deg,var(--laranja),var(--rosa),var(--roxo))}
+header h1{font-size:19px;font-weight:800;letter-spacing:.4px;text-transform:uppercase}
+header h1 span{color:var(--laranja)}
+header .sub{font-size:11.5px;color:var(--texto2);margin-top:3px}
+.botoes{display:flex;gap:8px;flex-wrap:wrap}
+.btn{background:linear-gradient(90deg,var(--laranja),#F97316);color:#0B1120;border:none;padding:10px 18px;border-radius:8px;
+ font-weight:800;font-size:12.5px;cursor:pointer;transition:.15s;letter-spacing:.3px}
+.btn:hover{filter:brightness(1.12)}
+.btn.sec{background:rgba(168,85,247,.12);border:1px solid rgba(168,85,247,.55);color:#D8B4FE}
+.btn.sec:hover{background:rgba(168,85,247,.22)}
+.tabs{display:flex;gap:4px;flex-wrap:wrap;padding:0 6px}
+.tab{padding:11px 18px;border-radius:10px 10px 0 0;background:rgba(255,255,255,.05);color:var(--texto2);
+ font-weight:600;font-size:12.5px;cursor:pointer;transition:.15s;border:1px solid transparent;border-bottom:none}
+.tab:hover{background:rgba(255,255,255,.09);color:#fff}
+.tab.ativa{background:var(--painel);color:#fff;border-color:var(--borda)}
+.pagina{display:none;background:var(--painel);border:1px solid var(--borda);border-radius:0 12px 12px 12px;padding:20px}
+.pagina.ativa{display:block}
+.grid-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:18px}
+.card{background:var(--painel2);border-radius:12px;padding:16px 12px;text-align:center;border:1px solid var(--borda);box-shadow:0 2px 10px rgba(0,0,0,.45)}
+.card .lbl{font-size:9.5px;font-weight:700;color:var(--texto2);text-transform:uppercase;letter-spacing:.7px}
+.card .val{font-size:30px;font-weight:800;color:#fff;margin-top:4px;line-height:1}
+.card .det{font-size:9.5px;color:var(--texto3);margin-top:3px;font-weight:600}
+.card.c-navy{border-left-color:var(--ciano)}.card.c-navy .val{color:#fff}
+@keyframes pulsaVerm{
+ 0%,100%{color:#F87171; text-shadow:0 0 0 rgba(239,68,68,0)}
+ 50%{color:#EF4444; text-shadow:0 0 14px rgba(239,68,68,.55)}
+}
+.card.c-vermelho{border-color:rgba(239,68,68,.4);animation:pulsaCard 1.6s ease-in-out infinite}
+@keyframes pulsaCard{
+ 0%,100%{box-shadow:0 2px 10px rgba(0,0,0,.45); border-color:rgba(239,68,68,.35)}
+ 50%{box-shadow:0 0 18px rgba(239,68,68,.35); border-color:rgba(239,68,68,.75)}
+}
+.card.c-vermelho{border-left-color:var(--verm)}.card.c-vermelho .val{color:#fff;animation:pulsaVerm 1.6s ease-in-out infinite}
+.card.c-vermelho .det{color:#FCA5A5}
+.card.c-verde{border-left-color:var(--verde)}.card.c-verde .val{color:#fff}
+.card.c-dourado{border-left-color:var(--amarelo)}.card.c-dourado .val{color:#fff}
+.card.c-ciano{border-left-color:var(--ciano)}.card.c-ciano .val{color:#fff}
+.card.c-branco{border-left-color:#475569}.card.c-branco .val{color:#fff}
+.card.c-roxo{border-left-color:var(--roxo)}.card.c-roxo .val{color:#fff}
+.alertas{margin-bottom:18px;display:grid;gap:7px}
+.alerta{padding:10px 14px;border-radius:8px;font-size:12.5px;font-weight:600;border-left:4px solid;display:flex;align-items:center;gap:8px}
+.alerta.vermelho{background:rgba(239,68,68,.12);border-color:var(--verm);color:#FCA5A5;animation:pulsaAlerta 1.6s ease-in-out infinite}
+@keyframes pulsaAlerta{
+ 0%,100%{background:rgba(239,68,68,.08)}
+ 50%{background:rgba(239,68,68,.22);box-shadow:0 0 12px rgba(239,68,68,.25)}
+}
+.alerta.amarelo{background:rgba(245,158,11,.10);border-color:var(--laranja);color:#FCD34D}
+.alerta.verde{background:rgba(16,185,129,.10);border-color:var(--verde);color:#6EE7B7}
+.alerta.azul{background:rgba(59,130,246,.10);border-color:var(--azul);color:#93C5FD}
+.q4{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+@media(max-width:980px){.q4{grid-template-columns:1fr}}
+.painel{background:var(--painel);border-radius:12px;padding:16px;border:1px solid var(--borda);border-top:3px solid #3F3F46}
+.painel h3{font-size:12px;color:#E2E8F0;margin-bottom:10px;text-transform:uppercase;letter-spacing:.7px;font-weight:700}
+.painel .nota{font-size:10px;color:var(--texto3);margin-top:8px;font-weight:600}
+table{width:100%;border-collapse:collapse;font-size:12px}
+th{background:#1E293B;color:#CBD5E1;padding:9px 8px;text-align:left;font-weight:700;font-size:10.5px;text-transform:uppercase;letter-spacing:.4px}
+th:first-child{border-radius:8px 0 0 0}th:last-child{border-radius:0 8px 0 0}
+td{padding:8px;border-bottom:1px solid #22304A;color:var(--texto)}
+tr:nth-child(even) td{background:rgba(255,255,255,.03)}
+.tag{display:inline-block;padding:2px 9px;border-radius:5px;font-size:10px;font-weight:800;color:#fff}
+.tag.alta{background:var(--verm)}
+.tag.media{background:var(--laranja)}
+.tag.baixa{background:var(--verde)}
+.tag.sim{background:var(--verm);animation:pulse 1.5s infinite}
+.tag.info{background:var(--azul)}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.45}}
+canvas{max-width:100%;display:block}
+.kpi-linha{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:18px}
+.kpi-box{flex:1;min-width:200px;background:var(--painel2);border-radius:10px;padding:14px 16px;border:1px solid var(--borda);border-left:4px solid var(--azul)}
+.kpi-box .t{font-size:9.5px;font-weight:700;color:var(--texto2);text-transform:uppercase;letter-spacing:.6px}
+.kpi-box .v{font-size:26px;font-weight:800;color:#fff;margin-top:3px}
+.kpi-box .m{font-size:10px;font-weight:600;margin-top:3px;color:var(--texto2)}
+.kpi-box.ok{border-left-color:var(--verde)}.kpi-box.ok .m{color:#34D399}
+.kpi-box.ruim{border-left-color:var(--verm)}.kpi-box.ruim .m{color:#F87171}
+.kpi-box.aten{border-left-color:var(--amarelo)}.kpi-box.aten .m{color:#FBBF24}
+.barra-ext{height:8px;background:#22304A;border-radius:4px;margin-top:7px;overflow:hidden}
+.barra-ext>div{height:100%;border-radius:4px}
+.rodape{margin-top:22px;padding:12px 16px;background:rgba(255,255,255,.03);border:1px solid var(--borda);border-radius:8px;font-size:10.5px;color:var(--texto3);text-align:center}
+.upload-box{border:2px dashed rgba(168,85,247,.55);border-radius:12px;padding:20px;text-align:center;background:rgba(168,85,247,.06);margin-bottom:18px;cursor:pointer}
+.upload-box strong{color:#D8B4FE;font-size:14.5px}
+.upload-box small{color:var(--texto2)}
+input[type=file]{display:none}
+.calor{width:100%;border-collapse:separate;border-spacing:3px}
+.calor td,.calor th{padding:8px 6px;text-align:center;font-size:10.5px;border-radius:5px}
+.calor th{background:#1E293B;color:#CBD5E1}
+.calor td:first-child{text-align:left;font-weight:600;background:var(--painel2);font-size:10.5px}
+@media print{
+ body{background:#0D1424;padding:0}
+ .botoes,.tabs,.upload-box,.nao-imprimir{display:none!important}
+ .pagina{display:block!important;page-break-after:always;border-radius:0;padding:10px}
+ .painel{page-break-inside:avoid}
+ *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+</style>
+</head>
+<body>
+<header>
+ <div>
+  <h1>PAINEL EXECUTIVO <span>OS</span> — MANUTENÇÃO DE ÁGUA</h1>
+  <div class="sub">SEMAE Mogi das Cruzes • Divisão de Manutenção • <span id="dataAtual"></span></div>
+ </div>
+ <div class="botoes">
+  <label class="btn" for="filePdf">📄 Subir PDF do CEBI</label>
+  <input type="file" id="filePdf" accept=".pdf">
+  <button class="btn sec" onclick="window.print()">🖨️ Exportar PDF</button>
+ </div>
+</header>
+
+<div class="nao-imprimir" style="background:linear-gradient(90deg,rgba(245,158,11,.22),rgba(236,72,153,.18));border:2px solid #F59E0B;border-radius:10px;padding:12px 18px;margin:0 0 14px;display:flex;align-items:center;gap:12px">
+ <span style="font-size:22px">🕒</span>
+ <div>
+  <div style="font-weight:900;font-size:15px;color:#FCD34D;letter-spacing:.4px">ATUALIZAÇÃO DE SEGUNDA A SÁBADO ÀS 09h DA MANHÃ</div>
+  <div style="font-size:11.5px;color:#E8EDF4;margin-top:2px">Dados extraídos direto do CEBI pela rotina automática</div>
+ </div>
+</div>
+<div class="upload-box nao-imprimir" onclick="document.getElementById('filePdf').click()">
+ <strong>📄 Subir relatório PDF do CEBI</strong><br>
+ <small>Leitura 100% local no navegador — recalcula todos os indicadores e gráficos. Formatos novo e antigo.</small>
+</div>
+
+<div class="tabs">
+ <div class="tab ativa" onclick="aba('p1',this)">📊 VISÃO GERAL</div>
+ <div class="tab" onclick="aba('p2',this)">📈 FLUXO &amp; PRODUTIVIDADE</div>
+ <div class="tab" onclick="aba('p3',this)">🏭 SETORES</div>
+ <div class="tab" onclick="aba('p4',this)">📋 OS EM ABERTO</div>
+ <div class="tab" onclick="aba('p5',this)">🔍 VISTORIAS</div>
+ <div class="tab" onclick="aba('p6',this)">📍 TERRITÓRIO</div>
+ <div class="tab" onclick="aba('p7',this)">🗓️ REUNIÃO</div>
+ <div class="tab" onclick="aba('p8',this)">🔎 PESQUISA</div>
+ <div class="tab" onclick="aba('p9',this)">🗺️ SETORES &amp; BAIRROS</div>
+ <div class="tab" onclick="aba('p11',this)">📅 PROGRAMAÇÃO</div>
+ <div class="tab" onclick="aba('p12',this)">⏱️ VAZAMENTOS EXECUTADOS</div>
+</div>
+
+<div id="p1" class="pagina ativa">
+ <div class="grid-cards" id="cards"></div>
+ <div class="alertas" id="alertas"></div>
+ <div class="kpi-linha" id="kpis"></div>
+ <div class="q4">
+  <div class="painel"><h3>Backlog por prioridade</h3><canvas id="gPrior"></canvas></div>
+  <div class="painel"><h3>Backlog por setor</h3><canvas id="gSetor"></canvas></div>
+ </div>
+ <div class="q4">
+  <div class="painel"><h3>Faixa de aging das OS em aberto</h3><canvas id="gAging"></canvas></div>
+  <div class="painel"><h3>OS em aberto por tipo de chamado</h3><canvas id="gTipo"></canvas></div>
+ </div>
+</div>
+
+<div id="p2" class="pagina">
+ <div class="painel" style="margin-bottom:16px"><h3>📈 Entradas × Conclusões — últimos 14 dias</h3><canvas id="gFluxo"></canvas>
+  <div class="nota">Barras laranja = OS que entraram no dia · Barras verdes = OS concluídas no dia. Verde maior que laranja = backlog caindo.</div></div>
+ <div class="painel" style="margin-bottom:16px"><h3>⚖️ Saldo diário do backlog — o backlog cresceu ou caiu?</h3><canvas id="gSaldo"></canvas>
+  <div class="nota">Verde = concluímos mais do que entrou (backlog caiu) · Vermelho = entraram mais do que concluímos (backlog cresceu)</div></div>
+ <div class="q4">
+  <div class="painel"><h3>✅ Produtividade da divisão</h3><div id="prodBox"></div></div>
+  <div class="painel"><h3>🗓️ Backlog por semana de abertura — o que está envelhecendo</h3><canvas id="gBackSem"></canvas>
+   <div class="nota">Barras antigas altas = OS velhas paradas · ideal: tudo concentrado nas semanas recentes</div></div>
+ </div>
+</div>
+
+<div id="p3" class="pagina">
+ <div class="q4">
+  <div class="painel"><h3>Backlog por SETOR (em aberto)</h3><canvas id="gSetores2"></canvas></div>
+  <div class="painel"><h3>Backlog por departamento atual</h3><canvas id="gDepto"></canvas></div>
+ </div>
+ <div class="painel" style="margin-bottom:18px"><h3>Detalhamento por setor</h3><div id="tabSetores"></div></div>
+ <div class="painel"><h3>OS em aberto por departamento</h3><div id="tabDepto"></div></div>
+</div>
+
+<div id="p4" class="pagina">
+ <div class="painel"><h3>OS em aberto — da mais antiga para a mais recente</h3>
+ <div style="max-height:64vh;overflow:auto"><table id="tabOS"></table></div></div>
+</div>
+
+<div id="p5" class="pagina">
+ <div class="painel"><h3>🔍 Vistorias — lista de cobrança dos fiscais (prazo: 24h)</h3>
+ <div id="tabVist"></div>
+ <div id="cobrancaVist"></div>
+ <p style="font-size:12px;color:#C9CDD3;margin-top:12px;background:rgba(59,130,246,.08);padding:10px;border-radius:8px">
+ <b>Fluxo da vistoria:</b> fiscal vistoria → <b>confirmou</b> = converte em "Vazamento de Água" (execução) ·
+ <b>outro setor</b> = encaminha ao responsável · <b>não confirmou</b> = baixa com justificativa.</p></div>
+</div>
+
+<div id="p8" class="pagina">
+ <div class="painel"><h3>🔎 Vazamentos produto de pesquisa — contagem à parte</h3>
+ <div id="tabPesq"></div>
+ <p style="font-size:12px;color:#C9CDD3;margin-top:12px;background:rgba(168,85,247,.08);padding:10px;border-radius:8px">
+ Estes vazamentos NÃO entram no backlog operacional das equipes — são produto da pesquisa de vazamento (equipe técnica).
+ Contados à parte para não inflar os indicadores da divisão.</p></div>
+</div>
+
+<div id="p6" class="pagina">
+ <div class="q4">
+  <div class="painel"><h3>TOP bairros — histórico completo da base</h3><canvas id="gBairros"></canvas></div>
+  <div class="painel"><h3>Curva ABC — concentração das OS por bairro</h3><canvas id="gABC"></canvas>
+   <div class="nota">Classe A = poucos bairros concentram a maior parte das OS → foco de prevenção</div></div>
+ </div>
+ <div class="q4">
+  <div class="painel"><h3>Origem do chamado — Geofone × População</h3><canvas id="gGeofone"></canvas></div>
+  <div class="painel"><h3>TOP CDC — imóveis com OS recorrentes</h3><canvas id="gCdc"></canvas></div>
+ </div>
+ <div class="painel"><h3>🔥 Mapa de calor — entradas por bairro × semana (últimas semanas)</h3><div id="tabCalor"></div></div>
+</div>
+
+<div id="p7" class="pagina">
+ <div class="painel"><h3>Pauta da reunião semanal — gerada automaticamente</h3><div id="pauta"></div></div>
+</div>
+
+<div id="p9" class="pagina">
+ <div class="painel" style="margin-bottom:16px"><h3>🗺️ Divisão da cidade em 4 setores — bairros agrupados por setor hidro</h3>
+  <div class="nota">Cada bloco = um setor e seu fiscal responsável. Bairros em vermelho têm OS em aberto (número ao lado). Base: histórico completo do CEBI + mapa bairro→setor.</div></div>
+ <div id="mapaSetores"></div>
+ <div class="painel" style="margin-top:8px"><h3>🔥 Mapa de calor — VISTORIAS de vazamento de água por bairro × dia</h3>
+  <div class="nota">Amarelo claro → laranja = mais vistorias no dia · coluna "Pendentes" = vistorias aguardando o fiscal agora</div>
+  <div id="calorVist"></div></div>
+</div>
+
+<div id="p11" class="pagina">
+ <div class="painel" style="margin-bottom:16px"><h3>📅 Programação manual das equipes — cole aqui a lista do dia</h3>
+  <div class="nota">Formato livre: uma OS por linha (ex.: "AG-1 2026140383" ou "AG-1: 2026140383, 2026140371"). O painel cruza com a base e mostra: OS programadas × em aberto, OS fora de lista, equipes sem carga, execução >48h e cobrança por setor.</div>
+  <textarea id="progInput" rows="9" placeholder="AG-1 2026140383&#10;AG-1 2026140371&#10;AG-2 2026140347&#10;..." style="width:100%;background:#0D1424;color:#E8EDF4;border:1px solid #2E2E33;border-radius:8px;padding:10px;font-family:Consolas,monospace;font-size:12px"></textarea>
+  <button class="btn" style="margin-top:10px;padding:8px 18px" onclick="analisarProg()">▶️ Analisar programação</button>
+  <button class="btn sec" style="margin-top:10px;padding:8px 18px" onclick="document.getElementById('progInput').value='';document.getElementById('progResult').innerHTML=''">🧹 Limpar</button>
+ </div>
+ <div id="progResult"></div>
+</div>
+
+<div id="p12" class="pagina">
+ <div class="painel" style="margin-bottom:16px"><h3>⏱️ OS de vazamento executadas — tempo de resposta × meta ≤ 8% em atraso</h3>
+  <div class="nota">Acompanha o conceito dos relatórios mensais: % de OS de vazamento de água executadas EM ATRASO (>48h) sobre o total executado no mês. Meta da divisão: voltar a ≤ 8% (índice de ago/2025). Atraso conta da abertura no CEBI até a execução.</div></div>
+ <div id="execCards"></div>
+ <div class="painel" style="margin-bottom:16px"><h3>📈 Taxa de execução em atraso por mês (%) — meta ≤ 8%</h3><canvas id="gExecTaxa"></canvas>
+  <div class="nota">Linha vermelha = meta de 8% · barras vermelhas = mês fora da meta · verdes = dentro da meta</div></div>
+ <div class="painel" style="margin-bottom:16px"><h3>📊 Volume executado por mês — total × em atraso</h3><canvas id="gExecVol"></canvas></div>
+ <div class="painel"><h3>📅 Comparativo com o mês anterior — mesma data de corte (dia 10)</h3>
+ <div id="tabComparativo"></div>
+ <div class="nota">Comparação justa: acumulado de 1º até o dia 10 de cada mês (mesma janela). ago/26 aparece como referência do mês completo (a base histórica de agosto inicia em 26/08).</div></div>
+</div>
+
+<div class="rodape">
+ PAINEL EXECUTIVO OS v8 — 7 abas • 14 gráficos • motor de alertas automático • processamento 100% local no navegador • suba o PDF do CEBI para atualizar • exporte com 🖨️ ou Ctrl+P
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="app1.js"></script>
+<script src="app2.js"></script>
+<script src="app3.js"></script>
+<script src="app4.js"></script>
+<script src="app5.js"></script>
+<script src="app6.js"></script>
+
+
+
+
+
+
+  else { const ta=document.createElement('textarea'); ta.value=t; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta); btn.textContent='✅ Copiado!'; setTimeout(()=>btn.textContent='📋 Copiar', 2000); }
+}
+
+
+
+
+
+<script>
+if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js').catch(function(){});});}
+let deferredPrompt=null;
+window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();deferredPrompt=e;mostrarBanner();});
+function mostrarBanner(){var b=document.getElementById('bannerInstalar');if(b&&!localStorage.getItem('pwa_banner_visto'))b.style.display='flex';}
+function instalarApp(){if(deferredPrompt){deferredPrompt.prompt();deferredPrompt.userChoice.then(function(){deferredPrompt=null;});}fecharBanner();}
+function fecharBanner(){localStorage.setItem('pwa_banner_visto','1');var b=document.getElementById('bannerInstalar');if(b)b.style.display='none';}
+</script>
+<div id="bannerInstalar" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:9999;background:#121214;border-top:2px solid #22D3EE;padding:14px 16px;flex-direction:column;gap:10px;box-shadow:0 -4px 24px rgba(0,0,0,.6)">
+  <div style="display:flex;align-items:center;gap:12px">
+    <img src="icons/icon-192.png" alt="" style="width:44px;height:44px;border-radius:10px">
+    <div style="flex:1;color:#E8EDF4;font-family:Segoe UI,Arial,sans-serif">
+      <div style="font-weight:800;font-size:14px">Instalar o Painel OS</div>
+      <div style="font-size:12px;color:#9BA0A8">Ícone na tela do celular, abre em tela cheia e funciona sem internet</div>
+    </div>
+  </div>
+  <div style="display:flex;gap:8px">
+    <button onclick="instalarApp()" style="flex:1;background:#22D3EE;color:#0A0A0B;border:0;border-radius:8px;padding:10px;font-weight:800;font-size:13px;font-family:inherit">INSTALAR</button>
+    <button onclick="fecharBanner()" style="background:transparent;color:#9BA0A8;border:1px solid #2E2E33;border-radius:8px;padding:10px 16px;font-weight:600;font-size:13px;font-family:inherit">Agora não</button>
+  </div>
+</div>
+</body>
+</html>

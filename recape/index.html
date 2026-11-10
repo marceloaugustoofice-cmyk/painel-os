@@ -1,0 +1,1935 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Recape · Verificação · Solo · SEMAE · 10/11/2026 09:10</title>
+<style>/* ==========================================================================
+   GAP · Dashboard de Recapeamento — folha de estilo
+   Tema grafite executivo. Sem dependência externa.
+   ========================================================================== */
+:root{
+  --bg:#050507; --bg2:#0a0c10; --panel:#0f1218; --panel2:#141821; --panel3:#191e28;
+  --line:#20262f; --line2:#2c3441; --line3:#3a4453;
+  --tx:#eef2f7; --tx2:#98a2b3; --tx3:#667085; --tx4:#475467;
+  --ok:#2dd4a7; --ok2:#0f9e7a;
+  --warn:#f5b942; --warn2:#b7791f;
+  --bad:#f97066; --bad2:#b42318;
+  --info:#38bdf8; --info2:#0b7fa8;
+  --aco:#f59e0b; --aco2:#a15c07;
+  --esp:#a78bfa; --esp2:#6d28d9;
+  --pink:#f472b6; --lime:#a3e635;
+  --r:12px; --r2:8px;
+  --sh:0 1px 2px rgba(0,0,0,.4), 0 8px 24px -12px rgba(0,0,0,.6);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{
+  background:var(--bg); color:var(--tx);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,"Helvetica Neue",sans-serif;
+  font-size:14px; line-height:1.5; -webkit-font-smoothing:antialiased;
+  padding-bottom:64px;
+  background-image:radial-gradient(ellipse 80% 50% at 50% -20%,rgba(245,158,11,.06),transparent);
+  background-repeat:no-repeat;
+}
+.wrap{max-width:1480px;margin:0 auto;padding:0 24px}
+.mb{margin-bottom:16px}
+.mt{margin-top:16px}
+
+/* ---------------------------------------------------------------- header */
+header{
+  border-bottom:1px solid var(--line);
+  background:rgba(5,5,7,.88);
+  backdrop-filter:blur(16px) saturate(180%);
+  position:sticky; top:0; z-index:60;
+  padding-top:20px;
+}
+.htop{display:flex;align-items:flex-start;justify-content:space-between;gap:24px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:14px;min-width:0}
+.logo{
+  width:44px;height:44px;border-radius:12px;flex:0 0 44px;
+  background:linear-gradient(140deg,#f59e0b,#b45309 70%);
+  display:grid;place-items:center;font-weight:900;font-size:14px;color:#0a0c10;
+  letter-spacing:-.4px; box-shadow:0 4px 14px -4px rgba(245,158,11,.55);
+}
+.bh h1{font-size:20px;font-weight:700;letter-spacing:-.4px;line-height:1.2}
+.sub{font-size:12px;color:var(--tx2);margin-top:3px}
+.hmeta{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.pill{
+  display:inline-flex;align-items:center;gap:7px;padding:6px 12px;border-radius:99px;
+  font-size:11px;font-weight:600;letter-spacing:.2px;
+  border:1px solid var(--line2);background:var(--panel);color:var(--tx2);
+  white-space:nowrap;
+}
+.pill.bad{color:var(--bad);border-color:rgba(249,112,102,.35);background:rgba(249,112,102,.08)}
+.dot{width:6px;height:6px;border-radius:50%;background:var(--ok);
+  box-shadow:0 0 0 3px rgba(45,212,167,.16)}
+
+/* ------------------------------------------------------------------- nav */
+nav{display:flex;gap:1px;margin-top:18px;overflow-x:auto;scrollbar-width:none}
+nav::-webkit-scrollbar{display:none}
+nav button{
+  background:none;border:none;border-bottom:2px solid transparent;
+  color:var(--tx3);font:inherit;font-size:13px;font-weight:600;
+  padding:12px 15px;cursor:pointer;white-space:nowrap;transition:color .15s,border-color .15s;
+  display:flex;align-items:center;gap:7px;
+}
+nav button:hover{color:var(--tx2)}
+nav button.on{color:var(--tx);border-bottom-color:var(--aco)}
+nav button .cnt{
+  display:inline-block;min-width:18px;padding:0 5px;border-radius:10px;
+  background:var(--line2);color:var(--tx3);
+  font-size:10px;line-height:17px;text-align:center;font-weight:700;
+}
+nav button.on .cnt{background:var(--aco);color:#0a0c10}
+
+/* ------------------------------------------------------------------ pane */
+.pane{display:none;padding-top:22px}
+.pane.on{display:block;animation:fade .24s cubic-bezier(.4,0,.2,1)}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+/* ------------------------------------------------------------------- kpi */
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(172px,1fr));gap:12px;margin-bottom:18px}
+.kpi{
+  background:linear-gradient(160deg,var(--panel2),var(--panel));
+  border:1px solid var(--line);border-radius:var(--r);
+  padding:16px 17px;position:relative;overflow:hidden;
+  transition:border-color .18s, transform .18s;
+}
+.kpi:hover{border-color:var(--line3);transform:translateY(-1px)}
+.kpi::before{content:"";position:absolute;inset:0 auto 0 0;width:3px;background:var(--tx4)}
+.kpi::after{content:"";position:absolute;top:-40%;right:-20%;width:100px;height:100px;
+  border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.03),transparent 70%)}
+.kpi.bad::before{background:var(--bad)}
+.kpi.warn::before{background:var(--warn)}
+.kpi.ok::before{background:var(--ok)}
+.kpi.info::before{background:var(--info)}
+.kpi.aco::before{background:var(--aco)}
+.kl{font-size:10px;text-transform:uppercase;letter-spacing:.85px;color:var(--tx3);font-weight:800}
+.kv{font-size:30px;font-weight:800;letter-spacing:-1.4px;margin:7px 0 2px;line-height:1;
+  font-variant-numeric:tabular-nums}
+.kv small{font-size:13px;font-weight:600;color:var(--tx2);letter-spacing:0;margin-left:3px}
+.kd{font-size:11.5px;color:var(--tx2);line-height:1.4}
+
+/* ------------------------------------------------------------------ grid */
+.grid{display:grid;gap:14px;margin-bottom:16px}
+.g2{grid-template-columns:repeat(auto-fit,minmax(430px,1fr))}
+.g3{grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
+@media(max-width:920px){.g2{grid-template-columns:1fr}}
+
+/* ------------------------------------------------------------------ card */
+.card{
+  background:var(--panel);border:1px solid var(--line);border-radius:var(--r);
+  padding:18px 20px;box-shadow:var(--sh);
+}
+.card h2{
+  font-size:13.5px;font-weight:700;letter-spacing:-.15px;
+  display:flex;align-items:center;gap:9px;flex-wrap:wrap;
+}
+.card h2 .n{margin-left:auto;font-size:11px;font-weight:600;color:var(--tx3);
+  font-variant-numeric:tabular-nums}
+.card .cap{font-size:11.5px;color:var(--tx3);margin:3px 0 15px;line-height:1.45}
+
+/* ---------------------------------------------------------------- tabela */
+.tbwrap{overflow-x:auto;border-radius:var(--r2);border:1px solid var(--line)}
+.tbwrap.tall{max-height:660px;overflow-y:auto}
+table{width:100%;border-collapse:collapse;font-size:12.5px}
+thead th{
+  background:var(--panel3);color:var(--tx3);font-size:9.5px;font-weight:800;
+  text-transform:uppercase;letter-spacing:.7px;text-align:left;
+  padding:10px 12px;border-bottom:1px solid var(--line2);white-space:nowrap;
+  position:sticky;top:0;z-index:2;
+}
+thead th[data-s]:hover{color:var(--tx2);cursor:pointer}
+thead th.num{text-align:center}
+tbody td{padding:9px 12px;border-bottom:1px solid rgba(32,38,47,.65);vertical-align:middle}
+tbody tr:last-child td{border-bottom:none}
+tbody tr:hover{background:rgba(56,189,248,.045)}
+tfoot td{padding:11px 12px;font-weight:700;border-top:2px solid var(--line2);background:var(--panel2)}
+td.num{text-align:center;font-variant-numeric:tabular-nums}
+td.os,.mono{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;font-size:11.5px}
+
+/* ----------------------------------------------------------------- badge */
+.du{
+  display:inline-grid;place-items:center;min-width:32px;height:25px;padding:0 8px;
+  border-radius:7px;font-weight:800;font-size:12.5px;font-variant-numeric:tabular-nums;
+  border:1px solid transparent;
+}
+.du.g{background:rgba(45,212,167,.12);color:var(--ok);border-color:rgba(45,212,167,.28)}
+.du.y{background:rgba(245,185,66,.12);color:var(--warn);border-color:rgba(245,185,66,.28)}
+.du.o{background:rgba(251,146,60,.13);color:#fb923c;border-color:rgba(251,146,60,.3)}
+.du.r{background:rgba(249,112,102,.13);color:var(--bad);border-color:rgba(249,112,102,.3)}
+
+.tag{
+  display:inline-block;padding:2.5px 8px;border-radius:5px;font-size:10.5px;
+  font-weight:700;letter-spacing:.15px;white-space:nowrap;
+  background:var(--line);color:var(--tx2);
+}
+.tag.agua{background:rgba(245,158,11,.14);color:var(--aco)}
+.tag.esgoto{background:rgba(167,139,250,.14);color:var(--esp)}
+.tag.lig{background:rgba(56,189,248,.13);color:var(--info)}
+.tag.ok{background:rgba(45,212,167,.13);color:var(--ok)}
+.tag.bad{background:rgba(249,112,102,.13);color:var(--bad)}
+.tag.warn{background:rgba(245,185,66,.13);color:var(--warn)}
+.tag.info{background:rgba(56,189,248,.13);color:var(--info)}
+
+/* --------------------------------------------------------------- filtros */
+.filtros{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:15px;align-items:center}
+.filtros input[type=search],.filtros select{
+  background:var(--panel2);border:1px solid var(--line2);color:var(--tx);
+  font:inherit;font-size:12.5px;padding:8px 12px;border-radius:var(--r2);outline:none;
+  transition:border-color .15s;
+}
+.filtros input[type=search]{min-width:260px;flex:1;max-width:420px}
+.filtros input:focus,.filtros select:focus{border-color:var(--aco)}
+.chip{
+  background:var(--panel2);border:1px solid var(--line2);color:var(--tx2);
+  font:inherit;font-size:11.5px;font-weight:600;padding:7px 13px;
+  border-radius:99px;cursor:pointer;transition:.15s;white-space:nowrap;
+}
+.chip:hover{color:var(--tx);border-color:var(--line3)}
+.chip.on{background:var(--aco);border-color:var(--aco);color:#0a0c10}
+.chip .k{opacity:.7;margin-left:4px}
+
+/* ------------------------------------------------------------- barras */
+.bars{display:flex;flex-direction:column;gap:10px}
+.bar{display:grid;grid-template-columns:1fr;gap:5px}
+.bar .lbl{font-size:12px;color:var(--tx2);display:flex;justify-content:space-between;gap:10px;align-items:baseline}
+.bar .lbl b{color:var(--tx);font-variant-numeric:tabular-nums;font-size:12.5px;white-space:nowrap}
+.track{height:8px;background:var(--panel3);border-radius:99px;overflow:hidden;position:relative}
+.fill{height:100%;border-radius:99px;transition:width .55s cubic-bezier(.4,0,.2,1)}
+.fill.ok{background:linear-gradient(90deg,var(--ok2),var(--ok))}
+.fill.warn{background:linear-gradient(90deg,var(--warn2),var(--warn))}
+.fill.bad{background:linear-gradient(90deg,var(--bad2),var(--bad))}
+.fill.aco{background:linear-gradient(90deg,var(--aco2),var(--aco))}
+.fill.info{background:linear-gradient(90deg,var(--info2),var(--info))}
+.fill.esp{background:linear-gradient(90deg,var(--esp2),var(--esp))}
+
+/* ----------------------------------------------------- colunas verticais */
+.cols{display:flex;align-items:flex-end;gap:3px;height:118px;padding-top:20px;
+  border-bottom:1px solid var(--line2);position:relative}
+.cols .c{flex:1;position:relative;display:flex;flex-direction:column;justify-content:flex-end;
+  align-items:center;gap:4px;min-width:0}
+.cols .c .v{font-size:10px;color:var(--tx2);font-variant-numeric:tabular-nums;font-weight:700}
+.cols .c .bar2{width:100%;border-radius:3px 3px 0 0;
+  background:linear-gradient(180deg,var(--aco),#92400e);min-height:2px;
+  transition:height .55s cubic-bezier(.4,0,.2,1)}
+.xl{display:flex;gap:3px;margin-top:7px}
+.xl span{flex:1;text-align:center;font-size:9px;color:var(--tx3);min-width:0;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+/* --------------------------------------------------------------- alertas */
+.alert{
+  display:flex;gap:13px;padding:14px 16px;border-radius:var(--r2);
+  border:1px solid;margin-bottom:11px;align-items:flex-start;
+  background:var(--panel2);
+}
+.alert:last-child{margin-bottom:0}
+.alert .ic{font-size:13px;font-weight:800;line-height:1.5;flex:0 0 22px;text-align:center}
+.alert .bd{flex:1;min-width:0}
+.alert .tt{font-weight:700;font-size:12.5px;margin-bottom:4px;line-height:1.35}
+.alert .ds{font-size:12px;color:var(--tx2);line-height:1.55}
+.alert .ds b{color:var(--tx)}
+.alert.bad{background:rgba(249,112,102,.055);border-color:rgba(249,112,102,.26)}
+.alert.bad .tt{color:var(--bad)}
+.alert.bad .ic{color:var(--bad)}
+.alert.warn{background:rgba(245,185,66,.055);border-color:rgba(245,185,66,.25)}
+.alert.warn .tt{color:var(--warn)}
+.alert.warn .ic{color:var(--warn)}
+.alert.info{background:rgba(56,189,248,.045);border-color:rgba(56,189,248,.22)}
+.alert.info .tt{color:var(--info)}
+.alert.info .ic{color:var(--info)}
+.alert.ok{background:rgba(45,212,167,.045);border-color:rgba(45,212,167,.22)}
+.alert.ok .tt{color:var(--ok)}
+.alert.ok .ic{color:var(--ok)}
+
+/* ------------------------------------------------------------- mensagens */
+.msg{background:var(--panel2);border:1px solid var(--line2);border-radius:var(--r2);
+  padding:14px 16px;margin-bottom:11px;position:relative}
+.msg:last-child{margin-bottom:0}
+.msg .hd{display:flex;align-items:center;gap:9px;margin-bottom:9px;flex-wrap:wrap}
+.msg .tx{color:var(--tx2);white-space:pre-wrap;font-size:12.5px;line-height:1.6}
+.msg .cp{
+  margin-left:auto;background:var(--panel3);border:1px solid var(--line2);color:var(--tx2);
+  font:inherit;font-size:10.5px;font-weight:700;padding:5px 11px;border-radius:6px;
+  cursor:pointer;transition:.15s;
+}
+.msg .cp:hover{background:var(--aco);border-color:var(--aco);color:#0a0c10}
+
+/* -------------------------------------------------------------- providências */
+.prov{
+  border:1px solid var(--line);border-radius:var(--r2);padding:15px 17px;
+  margin-bottom:11px;background:var(--panel2);position:relative;
+  border-left:3px solid var(--tx4);
+}
+.prov.p1{border-left-color:var(--bad)}
+.prov.p2{border-left-color:var(--warn)}
+.prov.p3{border-left-color:var(--info)}
+.prov.p4{border-left-color:var(--ok)}
+.prov .ph{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:7px}
+.prov .num{
+  min-width:26px;height:26px;border-radius:7px;display:grid;place-items:center;
+  font-size:12px;font-weight:800;background:var(--panel3);color:var(--tx2);
+}
+.prov .pt{font-weight:700;font-size:13.5px;flex:1;min-width:200px;letter-spacing:-.1px}
+.prov .pd{font-size:12.5px;color:var(--tx2);line-height:1.6;margin-bottom:9px}
+.prov .pd b{color:var(--tx)}
+.prov .pf{display:flex;gap:16px;flex-wrap:wrap;font-size:11px;color:var(--tx3)}
+.prov .pf span b{color:var(--tx2);font-weight:700}
+
+/* ------------------------------------------------------------------ rota */
+.rota{display:flex;flex-direction:column;gap:0;position:relative}
+.stop{
+  display:grid;grid-template-columns:38px 1fr auto;gap:14px;align-items:start;
+  padding:15px 4px;border-bottom:1px solid rgba(32,38,47,.7);position:relative;
+}
+.stop:last-child{border-bottom:none}
+.stop .pin{
+  width:34px;height:34px;border-radius:50%;display:grid;place-items:center;
+  font-weight:800;font-size:13px;background:var(--panel3);
+  border:2px solid var(--line3);color:var(--tx2);position:relative;z-index:1;
+  flex:0 0 34px;
+}
+.stop.urg .pin{border-color:var(--bad);color:var(--bad);background:rgba(249,112,102,.1)}
+.stop.warn .pin{border-color:var(--warn);color:var(--warn);background:rgba(245,185,66,.1)}
+.stop.ok .pin{border-color:var(--ok);color:var(--ok);background:rgba(45,212,167,.1)}
+.stop .sb{min-width:0}
+.stop .st{font-weight:700;font-size:13px;margin-bottom:3px;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.stop .sa{font-size:12px;color:var(--tx2);line-height:1.5}
+.stop .sm{display:flex;gap:14px;flex-wrap:wrap;margin-top:6px;font-size:11px;color:var(--tx3)}
+.stop .sm b{color:var(--tx2)}
+.stop .sd{text-align:right;white-space:nowrap}
+
+/* ------------------------------------------------------------- mapa svg */
+#mapa svg{width:100%;height:auto;display:block;border-radius:var(--r2)}
+.legend{display:flex;gap:18px;flex-wrap:wrap;margin-top:12px;font-size:11px;color:var(--tx3)}
+.legend .li{display:flex;align-items:center;gap:6px}
+.legend .sw{width:10px;height:10px;border-radius:50%}
+
+/* ------------------------------------------------------------- questões */
+.ques{
+  border:1px solid var(--line);border-radius:var(--r2);padding:14px 16px;
+  margin-bottom:10px;background:var(--panel2);border-left:3px solid var(--line3);
+  transition:border-color .15s;
+}
+.ques.on{border-left-color:var(--aco);background:rgba(245,158,11,.045)}
+.ques .qh{display:flex;align-items:flex-start;gap:11px;margin-bottom:6px}
+.ques .cb{
+  width:18px;height:18px;border-radius:5px;border:2px solid var(--line3);
+  flex:0 0 18px;cursor:pointer;display:grid;place-items:center;
+  font-size:11px;color:transparent;transition:.15s;margin-top:1px;
+}
+.ques.on .cb{background:var(--aco);border-color:var(--aco);color:#0a0c10}
+.ques .qt{font-weight:700;font-size:13px;line-height:1.4;flex:1;cursor:pointer}
+.ques .qd{font-size:12px;color:var(--tx2);line-height:1.55;padding-left:29px}
+.ques .qd b{color:var(--tx)}
+.ques .qtag{padding-left:29px;margin-top:8px;display:flex;gap:7px;flex-wrap:wrap}
+
+/* ------------------------------------------------------------------ misc */
+.vazio{padding:44px;text-align:center;color:var(--tx3);font-size:13px}
+.spark{display:inline-block;vertical-align:middle}
+
+footer{
+  margin-top:40px;padding:22px 0 8px;border-top:1px solid var(--line);
+  display:flex;flex-direction:column;gap:9px;
+}
+.frow{display:grid;grid-template-columns:130px 1fr;gap:16px;font-size:11px;
+  color:var(--tx3);line-height:1.6}
+.frow b{color:var(--tx2);font-weight:700;text-transform:uppercase;letter-spacing:.5px;font-size:10px}
+@media(max-width:640px){
+  .frow{grid-template-columns:1fr;gap:3px}
+  .wrap{padding:0 14px}
+  h1{font-size:16px}
+  .kv{font-size:25px}
+  .stop{grid-template-columns:30px 1fr;gap:10px}
+  .stop .sd{grid-column:2;text-align:left}
+}
+@media print{
+  header{position:static;background:#fff}
+  nav,.filtros,.chip{display:none}
+  .pane{display:block!important;page-break-inside:avoid;margin-bottom:24px}
+  body{background:#fff;color:#111}
+  .card{background:#fff;border-color:#ddd;box-shadow:none}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="htop">
+      <div class="brand">
+        <div class="logo">GAP</div>
+        <div class="bh">
+          <h1>Recapeamento, Verificação e Troca de Solo</h1>
+          <div class="sub">SEMAE Mogi das Cruzes · Contrato Potenza 007/2023 · CEBI de 10/11/2026 09:10 · atualização automática 08h e 15h</div>
+        </div>
+      </div>
+      <div class="hmeta">
+        <span class="pill"><span class="dot"></span>Referência 2026-11-10 11:10</span>
+        <span class="pill bad" id="pill-fora">—</span>
+      </div>
+    </div>
+    <nav id="nav">
+      <button class="on" data-p="visao">Visão geral</button>
+      <button data-p="providencias">Providências <span class="cnt" id="c-prov">—</span></button>
+      <button data-p="rota">Roteiro <span class="cnt" id="c-rota">—</span></button>
+      <button data-p="analises">Análises</button>
+      <button data-p="fila">Fila <span class="cnt" id="c-fila"></span></button>
+      <button data-p="prazo">Prazo</button>
+      <button data-p="geo">Território</button>
+      <button data-p="tonelagem">Tonelagem <span class="cnt" id="c-ton"></span></button>
+      <button data-p="verificacao">Verificação e Solo <span class="cnt" id="c-extra">—</span></button>
+      <button data-p="potenza">Potenza</button>
+      <button data-p="cobranca">Cobrança</button>
+      <button data-p="base">Base e método</button>
+    </nav>
+  </div>
+</header>
+
+<div class="wrap">
+
+<!-- ======================= VISÃO GERAL ======================= -->
+<section class="pane on" id="p-visao">
+  <div class="kpis" id="kpis"></div>
+  <div class="grid g2">
+    <div class="card">
+      <h2>Distribuição por tipo <span class="n" id="n1"></span></h2>
+      <div class="cap">Eventos de recape em aberto por natureza do serviço</div>
+      <div class="bars" id="g-nat"></div>
+    </div>
+    <div class="card">
+      <h2>Idade dos eventos <span class="n" id="n2"></span></h2>
+      <div class="cap">Dias úteis desde a abertura do evento de recape</div>
+      <div class="bars" id="g-faixa"></div>
+    </div>
+  </div>
+  <div class="card mb">
+    <h2>Entrada de eventos por dia <span class="n" id="n-lote"></span></h2>
+    <div class="cap">Quando cada evento entrou na fila — picos são lote liberado de uma vez</div>
+    <div class="cols" id="g-serie"></div>
+    <div class="xl" id="g-serie-x"></div>
+  </div>
+  <div class="card">
+    <h2>Leitura executiva</h2>
+    <div class="cap">O que os números dizem, na ordem em que importa decidir</div>
+    <div id="leitura"></div>
+  </div>
+</section>
+
+<!-- ======================= PROVIDÊNCIAS ======================= -->
+<section class="pane" id="p-providencias">
+  <div class="card mb">
+    <h2>Plano de providências</h2>
+    <div class="cap">Ordenado por impacto e urgência. Cada ação tem dono, prazo e a evidência que a sustenta.</div>
+    <div class="filtros">
+      <button class="chip on" data-pf="all">Todas</button>
+      <button class="chip" data-pf="imediata">Imediatas</button>
+      <button class="chip" data-pf="estrutural">Estruturais</button>
+      <button class="chip" data-pf="gestao">De gestão</button>
+    </div>
+    <div id="prov-lista"></div>
+  </div>
+  <div class="card">
+    <h2>O que NÃO fazer</h2>
+    <div class="cap">Armadilhas que parecem solução e criam problema maior</div>
+    <div id="prov-evitar"></div>
+  </div>
+</section>
+
+<!-- ======================= ROTEIRO ======================= -->
+<section class="pane" id="p-rota">
+  <div class="card mb">
+    <h2>Roteiro de execução — das OS mais antigas às mais novas</h2>
+    <div class="cap">Duas ordens para as mesmas 8 OS: por antiguidade (a régua da cobrança) e otimizada (a régua do custo). Escolha a que o dia pede.</div>
+    <div class="filtros">
+      <button class="chip on" data-rf="antiga">Por antiguidade</button>
+      <button class="chip" data-rf="otim">Otimizada por distância</button>
+    </div>
+    <div id="rota-resumo"></div>
+    <div class="rota" id="rota-lista"></div>
+  </div>
+  <div class="grid g2">
+    <div class="card">
+      <h2>Comparação de percurso</h2>
+      <div class="cap">Km em linha reta — o trajeto real é maior, mas a proporção se mantém</div>
+      <div id="ch-rota"></div>
+    </div>
+    <div class="card">
+      <h2>Fases sugeridas</h2>
+      <div class="cap">Agrupamento geográfico: o que dá para resolver na mesma saída</div>
+      <div id="rota-fases"></div>
+    </div>
+  </div>
+  <div class="card mt">
+    <h2>Como usar este roteiro</h2>
+    <div class="cap">Regras práticas para o fiscal e para o encarregado</div>
+    <div id="rota-regras"></div>
+  </div>
+</section>
+
+<!-- ======================= ANÁLISES ======================= -->
+<section class="pane" id="p-analises">
+  <div class="card mb">
+    <h2>Leitura analítica</h2>
+    <div class="cap">Dezesseis cortes sobre os 68 eventos e sobre a tonelagem aplicada.</div>
+    <div id="analise-topo"></div>
+  </div>
+  <div class="grid g2">
+    <div class="card"><h2>1 · Volume por tipo</h2><div class="cap">Eventos por natureza</div><div id="ch1"></div></div>
+    <div class="card"><h2>2 · Participação no total</h2><div class="cap">Peso percentual de cada tipo</div><div id="ch2"></div></div>
+  </div>
+  <div class="grid g2">
+    <div class="card"><h2>3 · Idade dos eventos</h2><div class="cap">Faixas de dias úteis</div><div id="ch3"></div></div>
+    <div class="card"><h2>4 · Conformidade por tipo</h2><div class="cap">% dentro dos 2 dias úteis</div><div id="ch4"></div></div>
+  </div>
+  <div class="card mb"><h2>5 · Entrada ao longo do período</h2><div class="cap">Cada ponto é um dia — o pico de 09/11 é lote liberado</div><div id="ch5"></div></div>
+  <div class="grid g2">
+    <div class="card"><h2>6 · Concentração por bairro</h2><div class="cap">Top 12</div><div id="ch6"></div></div>
+    <div class="card"><h2>7 · Origem do recape</h2><div class="cap">Tipo de chamado que originou</div><div id="ch7"></div></div>
+  </div>
+  <div class="card mb"><h2>8 · Mapa de calor: tipo × bairro</h2><div class="cap">Onde cada tipo se concentra</div><div id="ch8"></div></div>
+  <div class="grid g2">
+    <div class="card"><h2>9 · Atraso por evento</h2><div class="cap">Dias úteis de cada OS fora do prazo</div><div id="ch9"></div></div>
+    <div class="card"><h2>10 · Situação na base</h2><div class="cap">Como cada OS está registrada hoje</div><div id="ch10"></div></div>
+  </div>
+  <div class="grid g2">
+    <div class="card"><h2>11 · Hora de entrada</h2><div class="cap">Distribuição por hora do dia</div><div id="ch11"></div></div>
+    <div class="card"><h2>12 · Dia da semana</h2><div class="cap">Concentração na segunda-feira</div><div id="ch12"></div></div>
+  </div>
+  <div class="card mb"><h2>13 · Perfil de cada bairro</h2><div class="cap">Composição por tipo, barra empilhada</div><div id="ch13"></div></div>
+  <div class="grid g2">
+    <div class="card"><h2>14 · Tonelagem por caminhão</h2><div class="cap">03 a 06/11</div><div id="ch14"></div></div>
+    <div class="card"><h2>15 · Tonelagem por dia</h2><div class="cap">Ritmo diário de saída da usina</div><div id="ch15"></div></div>
+  </div>
+  <div class="card mb"><h2>16 · Prazo × volume por bairro</h2><div class="cap">Canto superior direito é o problema</div><div id="ch16"></div></div>
+  <div class="card"><h2>Conclusões</h2><div class="cap">O que os dezesseis cortes sustentam</div><div id="analise-fim"></div></div>
+</section>
+
+<!-- ======================= FILA ======================= -->
+<section class="pane" id="p-fila">
+  <div class="card">
+    <h2>Fila de execução <span class="n" id="n-fila"></span></h2>
+    <div class="cap">Clique no cabeçalho para ordenar. Busque por OS, rua, bairro ou solicitante.</div>
+    <div class="filtros">
+      <input type="search" id="busca" placeholder="Buscar OS, endereço, bairro, solicitante…">
+      <button class="chip on" data-f="all">Tudo</button>
+      <button class="chip" data-f="fora">Fora do prazo</button>
+      <button class="chip" data-f="agua">Água</button>
+      <button class="chip" data-f="esgoto">Esgoto</button>
+      <button class="chip" data-f="lig">Ligações</button>
+      <select id="f-sit">
+        <option value="">Situação: todas</option>
+        <option value="Fora da base">Fora da base</option>
+        <option value="Concluída">Concluída (divergente)</option>
+        <option value="Cancelada">Cancelada (divergente)</option>
+        <option value="Nova">Nova</option>
+        <option value="Reaberta">Reaberta</option>
+      </select>
+    </div>
+    <div class="tbwrap tall">
+      <table id="tb">
+        <thead><tr>
+          <th class="num" data-s="idade">Dias úteis</th>
+          <th data-s="os">OS</th>
+          <th data-s="nat">Tipo</th>
+          <th data-s="data">Evento em</th>
+          <th data-s="end">Endereço</th>
+          <th data-s="bairro">Bairro</th>
+          <th data-s="tipo">Origem</th>
+          <th data-s="sit">Na base</th>
+        </tr></thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
+    <div class="vazio" id="vazio" style="display:none">Nenhum registro com esse filtro.</div>
+  </div>
+</section>
+
+<!-- ======================= PRAZO ======================= -->
+<section class="pane" id="p-prazo">
+  <div class="card mb">
+    <h2>Régua contratual</h2>
+    <div class="cap">TR 3.7: máximo de 2 dias úteis por OS · TR 3.1: média de 48 h no conjunto</div>
+    <div id="regua"></div>
+  </div>
+  <div class="grid g2">
+    <div class="card"><h2>Conformidade por tipo</h2><div class="cap">% dentro do prazo</div><div id="g-conf"></div></div>
+    <div class="card"><h2>Quem está fora</h2><div class="cap">Ordenado pelo atraso</div><div id="g-fora"></div></div>
+  </div>
+  <div class="card mt"><h2>Análise dos atrasos</h2><div class="cap">Causa provável e ação por caso</div><div id="analise"></div></div>
+</section>
+
+<!-- ======================= TERRITÓRIO ======================= -->
+<section class="pane" id="p-geo">
+  <div class="card mb">
+    <h2>Mapa dos eventos</h2>
+    <div class="cap">Posição geocodificada de cada OS. Cor = urgência; tamanho = dias úteis de atraso.</div>
+    <div id="mapa"></div>
+    <div class="legend" id="mapa-leg"></div>
+  </div>
+  <div class="grid g2">
+    <div class="card"><h2>Concentração por bairro</h2><div class="cap">Top 12 — vermelho é atraso</div><div id="g-bairro"></div></div>
+    <div class="card"><h2>Origem do recape</h2><div class="cap">Tipo de chamado</div><div id="g-origem"></div></div>
+  </div>
+  <div class="card mt"><h2>Leitura territorial</h2><div class="cap">O que a distribuição revela</div><div id="geo-leitura"></div></div>
+</section>
+
+<!-- ======================= TONELAGEM ======================= -->
+<section class="pane" id="p-tonelagem">
+  <div class="kpis" id="kpi-ton"></div>
+  <div class="grid g2">
+    <div class="card"><h2>Carregamentos por dia <span class="n" id="n-ton-dia"></span></h2><div class="cap">Toneladas líquidas que saíram da usina</div><div class="bars" id="g-ton-dia"></div></div>
+    <div class="card"><h2>Por caminhão <span class="n" id="n-ton-veic"></span></h2><div class="cap">Volume por veículo no período</div><div class="bars" id="g-ton-veic"></div></div>
+  </div>
+  <div class="card mb"><h2>Conferência da medição × valor</h2><div class="cap">A conta que fecha o mês</div><div id="conta-ton"></div></div>
+  <div class="card">
+    <h2>Carga a carga</h2>
+    <div class="cap">Cada linha é uma nota fiscal. A conferência bruto − tara = líquido é automática.</div>
+    <div class="tbwrap">
+      <table>
+        <thead><tr>
+          <th>Dia</th><th>Veículo</th><th>Nota fiscal</th>
+          <th class="num">Tara (kg)</th><th class="num">Bruto (kg)</th><th class="num">Líquido (kg)</th>
+          <th class="num">Líquido (t)</th><th class="num">Valor (R$)</th><th class="num">Conf.</th>
+        </tr></thead>
+        <tbody id="tbody-ton"></tbody>
+        <tfoot><tr id="foot-ton"></tr></tfoot>
+      </table>
+    </div>
+  </div>
+  <div class="card mt"><h2>Leitura da medição</h2><div class="cap">O que a tonelagem diz além do valor</div><div id="leitura-ton"></div></div>
+</section>
+
+<!-- ================= VERIFICAÇÃO E TROCA DE SOLO ================= -->
+<section class="pane" id="p-verificacao">
+  <div class="card mb">
+    <h2>Escopo ampliado — o que passou a ser acompanhado</h2>
+    <div class="cap">Além do recape, dois tipos entraram no controle: verificação de serviços pendentes (somente o tipo 822 — Manut. Água) e troca de solo / remoção de entulho</div>
+    <div id="extra-escopo"></div>
+  </div>
+  <div class="kpis" id="kpi-extra"></div>
+  <div class="card mb">
+    <h2>Verificação de Serviços Pendentes — Manutenção de Água <span class="n" id="n-verif"></span></h2>
+    <div class="cap">A checagem de que o serviço de água foi concluído antes de liberar o pavimento</div>
+    <div id="lista-verif"></div>
+  </div>
+  <div class="card mb">
+    <h2>Troca de solo e remoção de entulho <span class="n" id="n-solo"></span></h2>
+    <div class="cap">Quando a vala não tem base para receber o CBUQ, o solo é trocado antes da recomposição</div>
+    <div id="lista-solo"></div>
+  </div>
+  <div class="grid g2">
+    <div class="card">
+      <h2>Onde estão os três grupos</h2>
+      <div class="cap">Por departamento atual — mostra se a OS já chegou à frente de pavimento</div>
+      <div class="bars" id="g-posse"></div>
+    </div>
+    <div class="card">
+      <h2>De onde veio cada registro</h2>
+      <div class="cap">PDF = evento pendente; API = OS com evento aberto</div>
+      <div class="bars" id="g-fonte"></div>
+    </div>
+  </div>
+  <div class="card">
+    <h2>Leitura</h2>
+    <div class="cap">O que a inclusão desses dois tipos revela sobre a fila</div>
+    <div id="extra-leitura"></div>
+  </div>
+</section>
+
+<!-- ======================= POTENZA ======================= -->
+<section class="pane" id="p-potenza">
+  <div class="card mb">
+    <h2>Questionamentos ao encarregado da Potenza</h2>
+    <div class="cap">Perguntas objetivas, cada uma com o motivo e a evidência que a sustenta. Marque as que vai enviar.</div>
+    <div class="filtros">
+      <button class="chip on" data-qf="all">Todas</button>
+      <button class="chip" data-qf="A">Prazo</button>
+      <button class="chip" data-qf="B">Produção</button>
+      <button class="chip" data-qf="C">Medição</button>
+      <button class="chip" data-qf="D">Qualidade</button>
+      <button class="chip" data-qf="E">Gestão</button>
+      <span style="flex:1"></span>
+      <button class="chip" id="btn-msg">Gerar mensagem única</button>
+    </div>
+    <div id="ques-lista"></div>
+  </div>
+  <div class="card">
+    <h2>Mensagem consolidada</h2>
+    <div class="cap">Gerada a partir das perguntas marcadas — copie e envie ao encarregado</div>
+    <div class="msg"><div class="hd"><span class="tag info">WhatsApp / e-mail</span>
+      <button class="cp" onclick="copiar(this,'msg-final')">copiar</button></div>
+      <div class="tx" id="msg-final">Marque as perguntas acima e clique em "Gerar mensagem única".</div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= COBRANÇA ======================= -->
+<section class="pane" id="p-cobranca">
+  <div class="card mb">
+    <h2>Cobrança formal por OS</h2>
+    <div class="cap">Fundamento no TR 3.7. Copie e envie.</div>
+    <div class="alert info"><span class="ic">i</span><div class="bd">
+      <div class="tt">Antes de disparar</div>
+      <div class="ds">O relatório não traz a data em que a contratada recebeu a OS. O prazo conta do recebimento — o atraso aqui é um <b>piso</b>, nunca exagero.</div></div></div>
+    <div id="msgs"></div>
+  </div>
+  <div class="card">
+    <h2>Resumo para a diretoria</h2>
+    <div class="cap">Parágrafo único, pronto para encaminhar</div>
+    <div class="msg"><div class="hd"><span class="tag bad">Resumo do dia</span>
+      <button class="cp" onclick="copiar(this,'resumo')">copiar</button></div>
+      <div class="tx" id="resumo"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= BASE ======================= -->
+<section class="pane" id="p-base">
+  <div class="card mb">
+    <h2>Divergência entre relatório e base viva</h2>
+    <div class="cap">O relatório mostra o evento aberto; a base pode ter a OS fechada. Isso muda a cobrança.</div>
+    <div id="divergencia"></div>
+    <div class="tbwrap">
+      <table>
+        <thead><tr><th>OS</th><th class="num">Dias úteis</th><th>Evento em</th><th>Base diz</th><th>API diz</th><th>Consequência</th></tr></thead>
+        <tbody id="tbody-div"></tbody>
+      </table>
+    </div>
+  </div>
+  <div class="grid g2">
+    <div class="card"><h2>Situação na base</h2><div class="cap">As 68 OS hoje</div><div class="bars" id="g-sit"></div></div>
+    <div class="card"><h2>Método</h2><div class="cap">Para reproduzir ou contestar qualquer número</div><div id="metodo"></div></div>
+  </div>
+</section>
+
+<footer>
+  <div class="frow"><b>Fonte</b><span>CEBI — "Ordens de Serviço / Eventos Pendentes", extraído em 10/11/2026 09:10, período 29/06/2025 a 10/11/2026. Base viva: Painel_OSM_CEBI.xlsx, extração de 10/11/2026 07:58. API CEBI: raw de 2026/11/10 11:10.</span></div>
+  <div class="frow"><b>Régua de prazo</b><span>Contrato 007/2023, TR 3.1 (média 48 h) e 3.7 (máximo 2 dias úteis por OS). Dias úteis = seg–sex, descontados feriados nacionais de 2026; feriados municipais não confirmados.</span></div>
+  <div class="frow"><b>Tonelagem</b><span>Planilha "RECOMPOSIÇÃO ASFÁLTICA — NOVEMBRO/2026", frente de 03 a 06/11. Conferida por bruto − tara = líquido, pela soma (66,490 t) e pelo valor (R$ 95.222,32 a R$ 1.432,13/t).</span></div>
+  <div class="frow"><b>Geocodificação</b><span>Google Maps. 40 endereços por rua (precisão de porta) e 28 por bairro (centroide). Distâncias em linha reta — o trajeto real é maior, mas a proporção entre as rotas se mantém.</span></div>
+  <div class="frow"><b>Limite</b><span>O relatório de OS não traz metragem nem tonelagem por OS; a planilha de tonelagem não traz número de OS. O valor é do período, não rateado por OS.</span></div>
+  <div class="frow"><b>Gerado por</b><span>GAP — Gestor de Asfalto e Pavimentação · SEMAE</span></div>
+</footer>
+
+</div>
+
+<script>
+/* ============================================================================
+   GAP · biblioteca de gráficos SVG — sem dependência externa.
+   Cada função recebe um elemento host e devolve SVG montado por string.
+   Paleta alinhada ao tema grafite do dashboard.
+   ========================================================================== */
+const C = {
+  tx: "#e8ecf2", tx2: "#8b93a3", tx3: "#5a6272",
+  line: "#232936", line2: "#2f3746", panel: "#11141a", panel2: "#151921",
+  aco: "#f59e0b", aco2: "#b45309",
+  esp: "#a78bfa", esp2: "#6d28d9",
+  info: "#22d3ee", info2: "#0e7490",
+  ok: "#34d399", ok2: "#059669",
+  warn: "#fbbf24", warn2: "#b45309",
+  bad: "#f87171", bad2: "#b91c1c",
+  pink: "#f472b6", lime: "#a3e635", sky: "#38bdf8", rose: "#fb7185",
+};
+const PALETA = [C.aco, C.info, C.esp, C.ok, C.bad, C.sky, C.pink, C.lime, C.warn, C.rose];
+const alvo = (h) => (typeof h === "string" ? document.getElementById(h) : h);
+const esc2 = (s) => String(s == null ? "" : s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const fmtN = (n, d) => Number(n).toLocaleString("pt-BR", { minimumFractionDigits: d || 0, maximumFractionDigits: d || 0 });
+
+/* casca comum do svg */
+function svg(w, h, inner, cls) {
+  return `<svg viewBox="0 0 ${w} ${h}" width="100%" style="display:block;overflow:visible" class="${cls || ""}" preserveAspectRatio="xMidYMid meet">${inner}</svg>`;
+}
+function txt(x, y, s, o = {}) {
+  return `<text x="${x}" y="${y}" fill="${o.fill || C.tx2}" font-size="${o.size || 10}" font-weight="${o.weight || 400}" text-anchor="${o.anchor || "start"}" ${o.rot ? `transform="rotate(${o.rot} ${x} ${y})"` : ""} font-family="${o.mono ? "ui-monospace,Menlo,monospace" : "inherit"}" ${o.op ? `opacity="${o.op}"` : ""}>${esc2(s)}</text>`;
+}
+function linha(x1, y1, x2, y2, o = {}) {
+  return `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${o.stroke || C.line}" stroke-width="${o.w || 1}" ${o.dash ? `stroke-dasharray="${o.dash}"` : ""} ${o.op ? `opacity="${o.op}"` : ""}/>`;
+}
+function rect(x, y, w, h, o = {}) {
+  return `<rect x="${x}" y="${y}" width="${Math.max(0, w)}" height="${Math.max(0, h)}" fill="${o.fill || C.aco}" rx="${o.rx || 0}" ${o.op ? `opacity="${o.op}"` : ""} ${o.stroke ? `stroke="${o.stroke}" stroke-width="${o.sw || 1}"` : ""}/>`;
+}
+function circ(cx, cy, r, o = {}) {
+  return `<circle cx="${cx}" cy="${cy}" r="${r}" fill="${o.fill || C.aco}" ${o.stroke ? `stroke="${o.stroke}" stroke-width="${o.sw || 1.5}"` : ""} ${o.op ? `opacity="${o.op}"` : ""}/>`;
+}
+function path(d, o = {}) {
+  return `<path d="${d}" fill="${o.fill || "none"}" stroke="${o.stroke || C.aco}" stroke-width="${o.w || 2}" stroke-linecap="round" stroke-linejoin="round" ${o.dash ? `stroke-dasharray="${o.dash}"` : ""} ${o.op ? `opacity="${o.op}"` : ""}/>`;
+}
+
+/* topo de escala legivel: 1/2/5 x 10^n, sempre >= o maior valor */
+function escalaBonita(v) {
+  if (v <= 5) return 5;
+  const pot = Math.pow(10, Math.floor(Math.log10(v)));
+  for (const m of [1, 1.5, 2, 2.5, 3, 4, 5, 6, 8, 10]) {
+    const cand = m * pot;
+    if (cand >= v) return cand;
+  }
+  return 10 * pot;
+}
+
+/* ---------------------------------------------------------------- 1 BARRAS */
+function cBarras(host, labels, valores, o = {}) {
+  const W = 620, H = o.h || 190, pl = 34, pr = 8, pt = 18, pb = 34;
+  const iw = W - pl - pr, ih = H - pt - pb;
+  const max = Math.max(...valores, 1);
+  const bw = iw / valores.length;
+  let s = "";
+  for (let i = 0; i <= 4; i++) {
+    const y = pt + ih - (ih * i / 4);
+    s += linha(pl, y, W - pr, y, { stroke: C.line, op: 0.55 });
+    s += txt(pl - 6, y + 3, fmtN(max * i / 4), { anchor: "end", size: 9, fill: C.tx3 });
+  }
+  valores.forEach((v, i) => {
+    const h = (v / max) * ih;
+    const x = pl + i * bw + bw * 0.2;
+    const cor = o.cores ? o.cores[i] : (o.cor || C.aco);
+    s += rect(x, pt + ih - h, bw * 0.6, h, { fill: cor, rx: 2 });
+    s += txt(x + bw * 0.3, pt + ih - h - 4, o.rotulo ? o.rotulo(v, i) : fmtN(v), { anchor: "middle", size: 9, fill: C.tx, weight: 700 });
+    s += txt(x + bw * 0.3, H - pb + 13, labels[i], { anchor: "middle", size: 8.5, fill: C.tx3, rot: labels[i].length > 9 ? -28 : 0 });
+  });
+  s += linha(pl, pt + ih, W - pr, pt + ih, { stroke: C.line2 });
+  alvo(host).innerHTML = svg(W, H, s);
+}
+
+/* --------------------------------------------------- 2 BARRAS HORIZONTAIS */
+function cBarrasH(host, itens, o = {}) {
+  const W = 620, lh = o.lh || 22, pt = 6;
+  const H = itens.length * lh + pt + 8;
+  const max = Math.max(...itens.map(i => i.v), 1);
+  const lw = o.lw || 150;
+  const aw = W - lw - 58;
+  let s = "";
+  itens.forEach((it, i) => {
+    const y = pt + i * lh;
+    s += txt(0, y + lh * 0.62, it.n, { size: 10, fill: C.tx2 });
+    const w = (it.v / max) * aw;
+    s += rect(lw, y + lh * 0.22, aw, lh * 0.5, { fill: C.panel2, rx: 3 });
+    s += rect(lw, y + lh * 0.22, w, lh * 0.5, { fill: it.c || o.cor || C.aco, rx: 3 });
+    s += txt(lw + aw + 6, y + lh * 0.62, it.t != null ? it.t : fmtN(it.v), { size: 10, fill: C.tx, weight: 700 });
+  });
+  alvo(host).innerHTML = svg(W, H, s);
+}
+
+/* ------------------------------------------------------------- 3 BARRAS EMPILHADAS */
+function cEmpilhado(host, labels, series, o = {}) {
+  const W = 620, H = o.h || 200, pl = 30, pr = 8, pt = 16, pb = 36;
+  const iw = W - pl - pr, ih = H - pt - pb;
+  const totais = labels.map((_, i) => series.reduce((a, s) => a + s.v[i], 0));
+  const max = Math.max(...totais, 1);
+  const bw = iw / labels.length;
+  let s = "";
+  for (let i = 0; i <= 4; i++) {
+    const y = pt + ih - ih * i / 4;
+    s += linha(pl, y, W - pr, y, { stroke: C.line, op: .5 });
+    s += txt(pl - 5, y + 3, fmtN(max * i / 4), { anchor: "end", size: 9, fill: C.tx3 });
+  }
+  labels.forEach((lb, i) => {
+    let acc = 0;
+    series.forEach((se) => {
+      const v = se.v[i];
+      if (!v) return;
+      const h = v / max * ih;
+      const y = pt + ih - acc - h;
+      s += rect(pl + i * bw + bw * .22, y, bw * .56, h, { fill: se.c, rx: 1.5 });
+      if (h > 12) s += txt(pl + i * bw + bw * .5, y + h / 2 + 3, v, { anchor: "middle", size: 8.5, fill: "#0b0d12", weight: 800 });
+      acc += h;
+    });
+    s += txt(pl + i * bw + bw * .5, H - pb + 13, lb, { anchor: "middle", size: 8.5, fill: C.tx3, rot: lb.length > 9 ? -28 : 0 });
+  });
+  s += linha(pl, pt + ih, W - pr, pt + ih, { stroke: C.line2 });
+  alvo(host).innerHTML = svg(W, H, s);
+}
+
+/* ------------------------------------------------------------------- 4 LINHA */
+function cLinha(host, labels, valores, o = {}) {
+  const W = 620, H = o.h || 185, pl = 34, pr = 10, pt = 20, pb = 36;
+  const iw = W - pl - pr, ih = H - pt - pb;
+  const max = escalaBonita(Math.max(...valores, 1));
+  const px = (i) => labels.length === 1 ? pl + iw / 2 : pl + (iw * i) / (labels.length - 1);
+  const py = (v) => pt + ih - (v / max) * ih;
+  let s = "";
+  for (let i = 0; i <= 4; i++) {
+    const y = pt + ih - ih * i / 4;
+    s += linha(pl, y, W - pr, y, { stroke: C.line, op: .5 });
+    s += txt(pl - 5, y + 3, fmtN(max * i / 4, o.dy || 0), { anchor: "end", size: 9, fill: C.tx3 });
+  }
+  // area
+  let dA = `M ${px(0)} ${pt + ih}`;
+  valores.forEach((v, i) => { dA += ` L ${px(i)} ${py(v)}`; });
+  dA += ` L ${px(valores.length - 1)} ${pt + ih} Z`;
+  s += path(dA, { fill: o.fill || "rgba(245,158,11,.13)", stroke: "none" });
+  // linha
+  let d = "";
+  valores.forEach((v, i) => { d += (i ? " L " : "M ") + px(i) + " " + py(v); });
+  s += path(d, { stroke: o.cor || C.aco, w: 2.4 });
+  valores.forEach((v, i) => {
+    s += circ(px(i), py(v), 3.4, { fill: C.panel, stroke: o.cor || C.aco, sw: 2 });
+    s += txt(px(i), py(v) - 9, o.rot ? o.rot(v) : fmtN(v), { anchor: "middle", size: 9, fill: C.tx, weight: 700 });
+    s += txt(px(i), H - pb + 14, labels[i], { anchor: "middle", size: 8.5, fill: C.tx3, rot: labels[i].length > 9 ? -28 : 0 });
+  });
+  s += linha(pl, pt + ih, W - pr, pt + ih, { stroke: C.line2 });
+  alvo(host).innerHTML = svg(W, H, s);
+}
+
+/* ------------------------------------------------------------------- 5 PIZZA */
+function cPizza(host, itens, o = {}) {
+  const W = 620, H = o.h || 210, cx = o.cx || 120, cy = H / 2, R = o.r || 82, r = o.rr || 50;
+  const total = itens.reduce((a, i) => a + i.v, 0) || 1;
+  let ang = -Math.PI / 2, s = "";
+  itens.forEach((it, i) => {
+    const frac = it.v / total;
+    const a2 = ang + frac * Math.PI * 2;
+    const x1 = cx + R * Math.cos(ang), y1 = cy + R * Math.sin(ang);
+    const x2 = cx + R * Math.cos(a2), y2 = cy + R * Math.sin(a2);
+    const xi = cx + r * Math.cos(a2), yi = cy + r * Math.sin(a2);
+    const xj = cx + r * Math.cos(ang), yj = cy + r * Math.sin(ang);
+    const big = frac > .5 ? 1 : 0;
+    const d = frac >= .999
+      ? `M ${cx} ${cy - R} A ${R} ${R} 0 1 1 ${cx - .01} ${cy - R} Z M ${cx} ${cy - r} A ${r} ${r} 0 1 0 ${cx - .01} ${cy - r} Z`
+      : `M ${x1} ${y1} A ${R} ${R} 0 ${big} 1 ${x2} ${y2} L ${xi} ${yi} A ${r} ${r} 0 ${big} 0 ${xj} ${yj} Z`;
+    s += `<path d="${d}" fill="${it.c || PALETA[i % PALETA.length]}" opacity=".92"/>`;
+    if (frac > .045) {
+      const mid = (ang + a2) / 2, rr = (R + r) / 2;
+      s += txt(cx + rr * Math.cos(mid), cy + rr * Math.sin(mid) + 3, Math.round(frac * 100) + "%", { anchor: "middle", size: 9.5, fill: "#0b0d12", weight: 800 });
+    }
+    ang = a2;
+  });
+  s += txt(cx, cy - 4, total, { anchor: "middle", size: 25, fill: C.tx, weight: 800 });
+  s += txt(cx, cy + 14, o.sub || "total", { anchor: "middle", size: 9, fill: C.tx3 });
+  // legenda
+  const lx = cx + R + 42;
+  itens.forEach((it, i) => {
+    const y = cy - itens.length * 9 + i * 19;
+    s += rect(lx, y - 7, 9, 9, { fill: it.c || PALETA[i % PALETA.length], rx: 2 });
+    s += txt(lx + 15, y + 1, it.n, { size: 10, fill: C.tx2 });
+    s += txt(lx + 15, y + 13, `${it.v} · ${Math.round(it.v / total * 100)}%`, { size: 9, fill: C.tx3 });
+  });
+  alvo(host).innerHTML = svg(W, H, s);
+}
+
+/* ------------------------------------------------------------ 6 ROSCA FINA */
+function cRosca(host, itens, o = {}) {
+  const W = 620, H = o.h || 150, cx = 78, cy = H / 2, R = 60, r = 42;
+  const total = itens.reduce((a, i) => a + i.v, 0) || 1;
+  let ang = -Math.PI / 2, s = "";
+  itens.forEach((it, i) => {
+    const frac = it.v / total, a2 = ang + frac * Math.PI * 2;
+    const x1 = cx + R * Math.cos(ang), y1 = cy + R * Math.sin(ang);
+    const x2 = cx + R * Math.cos(a2), y2 = cy + R * Math.sin(a2);
+    const xi = cx + r * Math.cos(a2), yi = cy + r * Math.sin(a2);
+    const xj = cx + r * Math.cos(ang), yj = cy + r * Math.sin(ang);
+    s += `<path d="M ${x1} ${y1} A ${R} ${R} 0 ${frac > .5 ? 1 : 0} 1 ${x2} ${y2} L ${xi} ${yi} A ${r} ${r} 0 ${frac > .5 ? 1 : 0} 0 ${xj} ${yj} Z" fill="${it.c || PALETA[i % PALETA.length]}" opacity=".92"/>`;
+    ang = a2;
+  });
+  s += txt(cx, cy + 1, total, { anchor: "middle", size: 20, fill: C.tx, weight: 800 });
+  s += txt(cx, cy + 16, o.sub || "total", { anchor: "middle", size: 8.5, fill: C.tx3 });
+  let lx = cx + R + 26, ly = cy - (itens.length - 1) * 9;
+  itens.forEach((it, i) => {
+    const y = ly + i * 18;
+    s += rect(lx, y - 7, 8, 8, { fill: it.c || PALETA[i % PALETA.length], rx: 2 });
+    s += txt(lx + 13, y + 1, `${it.n} — ${it.v}`, { size: 10, fill: C.tx2 });
+  });
+  alvo(host).innerHTML = svg(W, H, s);
+}
+
+/* --------------------------------------------------------------- 7 DISPERSÃO */
+function cDispersao(host, pts, o = {}) {
+  const W = 620, H = o.h || 220, pl = 42, pr = 12, pt = 18, pb = 38;
+  const iw = W - pl - pr, ih = H - pt - pb;
+  const xs = pts.map(p => p.x), ys = pts.map(p => p.y);
+  const xmin = Math.min(...xs, 0), xmax = Math.max(...xs, 1);
+  const ymin = Math.min(...ys, 0), ymax = Math.max(...ys, 1);
+  const X = v => pl + (v - xmin) / (xmax - xmin || 1) * iw;
+  const Y = v => pt + ih - (v - ymin) / (ymax - ymin || 1) * ih;
+  let s = "";
+  for (let i = 0; i <= 4; i++) {
+    const y = pt + ih - ih * i / 4;
+    s += linha(pl, y, W - pr, y, { stroke: C.line, op: .5 });
+    s += txt(pl - 5, y + 3, fmtN(ymin + (ymax - ymin) * i / 4, o.dy || 0), { anchor: "end", size: 9, fill: C.tx3 });
+  }
+  for (let i = 0; i <= 4; i++) {
+    const x = pl + iw * i / 4;
+    s += linha(x, pt, x, pt + ih, { stroke: C.line, op: .3 });
+    s += txt(x, H - pb + 14, fmtN(xmin + (xmax - xmin) * i / 4, o.dx || 0), { anchor: "middle", size: 9, fill: C.tx3 });
+  }
+  pts.forEach(p => {
+    s += circ(X(p.x), Y(p.y), p.r || 5, { fill: p.c || C.aco, op: .72, stroke: p.c || C.aco, sw: 1 });
+  });
+  if (o.xl) s += txt(pl + iw / 2, H - 4, o.xl, { anchor: "middle", size: 9.5, fill: C.tx3 });
+  if (o.yl) s += txt(12, pt + ih / 2, o.yl, { anchor: "middle", size: 9.5, fill: C.tx3, rot: -90 });
+  s += linha(pl, pt + ih, W - pr, pt + ih, { stroke: C.line2 });
+  alvo(host).innerHTML = svg(W, H, s);
+}
+
+/* ---------------------------------------------------------------- 8 RADAR */
+function cRadar(host, eixos, series, o = {}) {
+  const W = 620, H = o.h || 300, cx = W / 2, cy = H / 2 - 4, R = Math.min(W, H) * 0.33;
+  const n = eixos.length;
+  const max = o.max || Math.max(...series.flatMap(s => s.v), 1);
+  const pt = (i, v) => {
+    const a = -Math.PI / 2 + (i * Math.PI * 2) / n;
+    const rr = (v / max) * R;
+    return [cx + rr * Math.cos(a), cy + rr * Math.sin(a)];
+  };
+  let s = "";
+  for (let anel = 1; anel <= 4; anel++) {
+    let d = "";
+    for (let i = 0; i < n; i++) {
+      const [x, y] = pt(i, max * anel / 4);
+      d += (i ? " L " : "M ") + x + " " + y;
+    }
+    s += path(d + " Z", { stroke: C.line, w: 1 });
+  }
+  for (let i = 0; i < n; i++) {
+    const [x, y] = pt(i, max);
+    s += linha(cx, cy, x, y, { stroke: C.line, op: .8 });
+    const [lx, ly] = pt(i, max * 1.19);
+    s += txt(lx, ly + 3, eixos[i], { anchor: Math.abs(lx - cx) < 12 ? "middle" : (lx > cx ? "start" : "end"), size: 9, fill: C.tx3 });
+  }
+  series.forEach(se => {
+    let d = "";
+    se.v.forEach((v, i) => { const [x, y] = pt(i, v); d += (i ? " L " : "M ") + x + " " + y; });
+    s += path(d + " Z", { fill: se.fill || "rgba(245,158,11,.14)", stroke: se.c, w: 2 });
+    se.v.forEach((v, i) => { const [x, y] = pt(i, v); s += circ(x, y, 3, { fill: se.c, stroke: C.panel, sw: 1.5 }); });
+  });
+  let ly = H - series.length * 17 - 2;
+  series.forEach((se, i) => {
+    s += rect(16, ly + i * 17 - 8, 9, 9, { fill: se.c, rx: 2 });
+    s += txt(30, ly + i * 17, se.n, { size: 10, fill: C.tx2 });
+  });
+  alvo(host).innerHTML = svg(W, H, s);
+}
+
+/* ------------------------------------------------------ 9 BARRAS DIVERGENTES */
+function cDivergente(host, itens, o = {}) {
+  const W = 620, lh = 24, H = itens.length * lh + 20;
+  const max = Math.max(...itens.map(i => Math.abs(i.v)), 1);
+  const meio = W / 2, aw = W / 2 - 120;
+  let s = "";
+  s += linha(meio, 4, meio, H - 10, { stroke: C.line2 });
+  itens.forEach((it, i) => {
+    const y = 10 + i * lh;
+    s += txt(meio - 8, y + 11, it.n, { anchor: "end", size: 10, fill: C.tx2 });
+    const w = Math.abs(it.v) / max * aw;
+    const cor = it.c || (it.v >= 0 ? C.ok : C.bad);
+    s += rect(meio + 4, y + 2, w, lh * .6, { fill: cor, rx: 2 });
+    s += txt(meio + 10 + w, y + 12, fmtN(it.v), { size: 9.5, fill: C.tx, weight: 700 });
+  });
+  alvo(host).innerHTML = svg(W, H, s);
+}
+
+/* ---------------------------------------------------------- 10 HEATMAP */
+function cHeat(host, linhas, cols, matriz, o = {}) {
+  const W = 620, lw = o.lw || 120, ch = o.ch || 26, pt = 26;
+  const cw = (W - lw - 8) / cols.length;
+  const H = linhas.length * ch + pt + 8;
+  const max = Math.max(...matriz.flat(), 1);
+  let s = "";
+  cols.forEach((c, j) => {
+    s += txt(lw + j * cw + cw / 2, 14, c, { anchor: "middle", size: 8.5, fill: C.tx3 });
+  });
+  linhas.forEach((l, i) => {
+    s += txt(lw - 8, pt + i * ch + ch * .62, l, { anchor: "end", size: 9.5, fill: C.tx2 });
+    cols.forEach((c, j) => {
+      const v = matriz[i][j];
+      const a = v ? .12 + (v / max) * .82 : 0;
+      s += rect(lw + j * cw + 1.5, pt + i * ch + 1.5, cw - 3, ch - 3, {
+        fill: v ? (o.cor || C.aco) : C.panel2, rx: 3, op: v ? a : 1,
+      });
+      if (v) s += txt(lw + j * cw + cw / 2, pt + i * ch + ch * .64, v, { anchor: "middle", size: 9.5, fill: v / max > .55 ? "#0b0d12" : C.tx, weight: 700 });
+    });
+  });
+  alvo(host).innerHTML = svg(W, H, s);
+}
+
+/* --------------------------------------------------- 11 MEDIDOR (gauge) */
+function cMedidor(host, pct, o = {}) {
+  const W = 300, H = o.h || 168, cx = W / 2, cy = H - 28, R = 96, r = 66;
+  const ang0 = Math.PI, ang1 = Math.PI + Math.PI * (pct / 100);
+  const p = (a, rad) => [cx + rad * Math.cos(a), cy + rad * Math.sin(a)];
+  let s = "";
+  // trilha
+  const [x0, y0] = p(ang0, R), [x1, y1] = p(Math.PI * 2, R);
+  const [xi0, yi0] = p(Math.PI * 2, r), [xi1, yi1] = p(ang0, r);
+  s += `<path d="M ${x0} ${y0} A ${R} ${R} 0 0 1 ${x1} ${y1} L ${xi0} ${yi0} A ${r} ${r} 0 0 0 ${xi1} ${yi1} Z" fill="${C.panel2}"/>`;
+  if (pct > 0) {
+    const [e0, e1] = p(ang0, R), [e2, e3] = p(ang1, R);
+    const [f0, f1] = p(ang1, r), [f2, f3] = p(ang0, r);
+    const big = pct > 50 ? 1 : 0;
+    s += `<path d="M ${e0} ${e1} A ${R} ${R} 0 ${big} 1 ${e2} ${e3} L ${f0} ${f1} A ${r} ${r} 0 ${big} 0 ${f2} ${f3} Z" fill="${o.cor || C.ok}" opacity=".9"/>`;
+  }
+  s += txt(cx, cy - 8, pct.toFixed(0) + "%", { anchor: "middle", size: 34, fill: C.tx, weight: 800 });
+  s += txt(cx, cy + 14, o.sub || "", { anchor: "middle", size: 10, fill: C.tx3 });
+  alvo(host).innerHTML = svg(W, H, s);
+}
+
+/* ------------------------------------------------- 12 BARRA ÚNICA EMPILHADA */
+function cBarraUnica(host, itens, o = {}) {
+  const W = 620, H = 74, bh = 30, y = 10;
+  const total = itens.reduce((a, i) => a + i.v, 0) || 1;
+  let s = "", x = 0;
+  itens.forEach((it, i) => {
+    const w = it.v / total * W;
+    s += rect(x, y, w, bh, { fill: it.c || PALETA[i % PALETA.length], rx: i === 0 ? 4 : 0 });
+    if (w > 34) s += txt(x + w / 2, y + 19, it.v, { anchor: "middle", size: 11, fill: "#0b0d12", weight: 800 });
+    x += w;
+  });
+  let lx = 0;
+  itens.forEach((it, i) => {
+    const w = it.v / total * W;
+    s += rect(lx, H - 22, 8, 8, { fill: it.c || PALETA[i % PALETA.length], rx: 2 });
+    s += txt(lx + 12, H - 14, `${it.n} ${it.v}`, { size: 9.5, fill: C.tx3 });
+    lx += (W / itens.length);
+  });
+  alvo(host).innerHTML = svg(W, H, s);
+}
+
+/* --------------------------------------------- 13 BARRAS COM LINHA (combo) */
+function cCombo(host, labels, barras, linhaV, o = {}) {
+  const W = 620, H = o.h || 220, pl = 40, pr = 44, pt = 20, pb = 36;
+  const iw = W - pl - pr, ih = H - pt - pb;
+  const maxB = Math.max(...barras, 1), maxL = Math.max(...linhaV, 1) * 1.2;
+  const bw = iw / barras.length;
+  let s = "";
+  for (let i = 0; i <= 4; i++) {
+    const y = pt + ih - ih * i / 4;
+    s += linha(pl, y, W - pr, y, { stroke: C.line, op: .5 });
+    s += txt(pl - 5, y + 3, fmtN(maxB * i / 4), { anchor: "end", size: 9, fill: C.tx3 });
+    s += txt(W - pr + 5, y + 3, fmtN(maxL * i / 4, o.dl || 0), { size: 9, fill: C.info });
+  }
+  barras.forEach((v, i) => {
+    const h = v / maxB * ih;
+    s += rect(pl + i * bw + bw * .22, pt + ih - h, bw * .56, h, { fill: o.cor || C.aco, rx: 2, op: .85 });
+    s += txt(pl + i * bw + bw * .5, H - pb + 13, labels[i], { anchor: "middle", size: 8.5, fill: C.tx3, rot: labels[i].length > 9 ? -28 : 0 });
+  });
+  let d = "";
+  linhaV.forEach((v, i) => {
+    const x = pl + i * bw + bw * .5, y = pt + ih - v / maxL * ih;
+    d += (i ? " L " : "M ") + x + " " + y;
+  });
+  s += path(d, { stroke: C.info, w: 2.4 });
+  linhaV.forEach((v, i) => {
+    const x = pl + i * bw + bw * .5, y = pt + ih - v / maxL * ih;
+    s += circ(x, y, 3.2, { fill: C.panel, stroke: C.info, sw: 2 });
+  });
+  s += linha(pl, pt + ih, W - pr, pt + ih, { stroke: C.line2 });
+  alvo(host).innerHTML = svg(W, H, s);
+}
+
+/* --------------------------------------------------------- 14 TREEMAP simples */
+function cTreemap(host, itens, o = {}) {
+  const W = 620, H = o.h || 250;
+  const total = itens.reduce((a, i) => a + i.v, 0) || 1;
+  // squarify simples
+  const rects = [];
+  let x = 0, y = 0, w = W, h = H, rest = itens.slice().sort((a, b) => b.v - a.v);
+  while (rest.length) {
+    const linha = [rest.shift()];
+    const soma = linha.reduce((a, i) => a + i.v, 0);
+    let areaW = (soma / total) * (w * h);
+    let lado = Math.min(w, h);
+    // largura do bloco desta linha
+    let bw = Math.min(w, Math.max(areaW / h, 40));
+    let yy = y;
+    linha.forEach(it => {
+      const hh = (it.v / soma) * h;
+      rects.push({ ...it, x, y: yy, w: bw, h: hh });
+      yy += hh;
+    });
+    x += bw; w -= bw;
+    if (w < 4) break;
+  }
+  let s = "";
+  rects.forEach((r, i) => {
+    s += rect(r.x + 1, r.y + 1, r.w - 2, r.h - 2, { fill: r.c || PALETA[i % PALETA.length], op: .82, rx: 3 });
+    if (r.w > 62 && r.h > 30) {
+      s += txt(r.x + 7, r.y + 17, r.n, { size: 10, fill: "#0b0d12", weight: 800 });
+      s += txt(r.x + 7, r.y + 30, r.v, { size: 9, fill: "rgba(11,13,18,.72)", weight: 700 });
+    }
+  });
+  alvo(host).innerHTML = svg(W, H, s);
+}
+
+/* ------------------------------------------------------- 15 ÁREA EMPILHADA */
+function cAreaEmp(host, labels, series, o = {}) {
+  const W = 620, H = o.h || 200, pl = 32, pr = 10, pt = 16, pb = 34;
+  const iw = W - pl - pr, ih = H - pt - pb;
+  const totais = labels.map((_, i) => series.reduce((a, s) => a + s.v[i], 0));
+  const max = Math.max(...totais, 1);
+  const px = i => pl + (labels.length === 1 ? iw / 2 : iw * i / (labels.length - 1));
+  const py = v => pt + ih - v / max * ih;
+  let s = "";
+  for (let i = 0; i <= 4; i++) {
+    const y = pt + ih - ih * i / 4;
+    s += linha(pl, y, W - pr, y, { stroke: C.line, op: .45 });
+    s += txt(pl - 5, y + 3, fmtN(max * i / 4), { anchor: "end", size: 9, fill: C.tx3 });
+  }
+  const base = labels.map(() => 0);
+  series.forEach(se => {
+    let d = "";
+    labels.forEach((_, i) => { d += (i ? " L " : "M ") + px(i) + " " + py(base[i]); });
+    labels.forEach((_, i) => { base[i] += se.v[i]; });
+    for (let i = labels.length - 1; i >= 0; i--) d += " L " + px(i) + " " + py(base[i]);
+    s += path(d + " Z", { fill: se.c, stroke: se.c, w: 1, op: .78 });
+  });
+  labels.forEach((lb, i) => {
+    s += txt(px(i), H - pb + 13, lb, { anchor: "middle", size: 8.5, fill: C.tx3, rot: lb.length > 9 ? -28 : 0 });
+  });
+  s += linha(pl, pt + ih, W - pr, pt + ih, { stroke: C.line2 });
+  alvo(host).innerHTML = svg(W, H, s);
+}
+
+/* ------------------------------------------------ 16 MINI SPARKLINE em linha */
+function spark(vals, o = {}) {
+  const W = o.w || 110, H = o.h || 26;
+  const max = Math.max(...vals, 1), min = Math.min(...vals, 0);
+  const px = i => (W * i) / (vals.length - 1 || 1);
+  const py = v => H - 2 - ((v - min) / (max - min || 1)) * (H - 4);
+  let d = "";
+  vals.forEach((v, i) => { d += (i ? " L " : "M ") + px(i) + " " + py(v); });
+  return svg(W, H, path(d, { stroke: o.c || C.aco, w: 1.8 }), "spark");
+}
+
+/* ----------------------------------------------------- 17 BARRAS DE PROGRESSO */
+function cBarrasProg(host, itens, o = {}) {
+  const W = 620, lh = 30, H = itens.length * lh + 10, lw = o.lw || 170;
+  let s = "";
+  itens.forEach((it, i) => {
+    const y = 6 + i * lh;
+    s += txt(0, y + 15, it.n, { size: 10, fill: C.tx2 });
+    s += rect(lw, y + 5, W - lw - 70, 13, { fill: C.panel2, rx: 7 });
+    s += rect(lw, y + 5, (W - lw - 70) * (it.pct / 100), 13, { fill: it.c || C.aco, rx: 7 });
+    s += txt(W - 62, y + 16, it.pct.toFixed(0) + "%", { size: 10.5, fill: C.tx, weight: 700 });
+    s += txt(W - 62, y + 26, it.sub || "", { size: 8.5, fill: C.tx3 });
+  });
+  alvo(host).innerHTML = svg(W, H, s);
+}
+
+/* --------------------------------------------------------- 18 BOLHAS */
+function cBolhas(host, pts, o = {}) {
+  const W = 620, H = o.h || 260, pl = 40, pr = 16, pt = 16, pb = 34;
+  const iw = W - pl - pr, ih = H - pt - pb;
+  const xs = pts.map(p => p.x), ys = pts.map(p => p.y);
+  const xmin = Math.min(...xs), xmax = Math.max(...xs, xmin + 1);
+  const ymin = Math.min(...ys), ymax = Math.max(...ys, ymin + 1);
+  const X = v => pl + (v - xmin) / (xmax - xmin) * iw;
+  const Y = v => pt + ih - (v - ymin) / (ymax - ymin) * ih;
+  let s = "";
+  for (let i = 0; i <= 3; i++) {
+    const y = pt + ih - ih * i / 3;
+    s += linha(pl, y, W - pr, y, { stroke: C.line, op: .45 });
+    s += txt(pl - 5, y + 3, fmtN(ymin + (ymax - ymin) * i / 3, o.dy || 0), { anchor: "end", size: 9, fill: C.tx3 });
+  }
+  pts.forEach(p => {
+    s += circ(X(p.x), Y(p.y), p.r, { fill: p.c || C.aco, op: .35 });
+    s += circ(X(p.x), Y(p.y), p.r * .42, { fill: p.c || C.aco, op: .95 });
+    if (p.r > 22) s += txt(X(p.x), Y(p.y) + 3, p.n, { anchor: "middle", size: 8.5, fill: "#0b0d12", weight: 700 });
+  });
+  if (o.xl) s += txt(pl + iw / 2, H - 3, o.xl, { anchor: "middle", size: 9, fill: C.tx3 });
+  alvo(host).innerHTML = svg(W, H, s);
+}
+
+/* ============================================================================
+   GAP · Dashboard de Recapeamento — aplicação
+   Depende de gap_charts.js (cMedidor, cBarras, cBarrasH, cPizza, cRosca, cLinha,
+   cHeat, cEmpilhado, cBolhas, cBarraUnica, cBarrasProg).
+   ========================================================================== */
+const DADOS = [{"os":"2026142578","cdc":"139677","solic":"ALEXANDRE DIAS TEIXEIRA","tipo":"2 - Vazamento de Esgoto","end":"RUA REGIS PLINIO BATALHA","nro":"1137","bairro":"VILA SAO PAULO","data":"14/10/2026 14:56","iso":"2026-10-14T14:56","nat":"Esgoto","rot":"Recapeamento — Esgoto","cod":"123","grupo":"RECAPE","idade":18,"fora":true,"sit":"Fora da base","depto":"","depto_curto":"—","api":"—","fonte":"PDF","lat":-23.4788421,"lon":-46.1255716,"geo":"rua"},{"os":"2026151708","cdc":"119606","solic":"ENORSUL","tipo":"1077 - Vazamento de água produto de pesquisa","end":"RUA NISHIO TADASI","nro":"638","bairro":"JARDIM NOVE DE JULHO","data":"26/10/2026 09:05","iso":"2026-10-26T09:05","nat":"Água","rot":"Recapeamento — Água","cod":"101","grupo":"RECAPE","idade":10,"fora":true,"sit":"Concluída","depto":"MANUTENÇÃO CIVIL","depto_curto":"Manutenção Civil","api":"Em Execução","fonte":"PDF","lat":-23.6103444,"lon":-46.2522028,"geo":"rua"},{"os":"2026152631","cdc":"58247","solic":"RODRIGO CARDOSO LEITE","tipo":"1 - Vazamento de Água","end":"RUA QUINZE DE NOVEMBRO","nro":"145","bairro":"VILA SAO PAULO","data":"26/10/2026 09:05","iso":"2026-10-26T09:05","nat":"Água","rot":"Recapeamento — Água","cod":"101","grupo":"RECAPE","idade":10,"fora":true,"sit":"Concluída","depto":"","depto_curto":"—","api":"—","fonte":"PDF","lat":-23.4796331,"lon":-46.1378833,"geo":"rua"},{"os":"2026152557","cdc":"82420","solic":"ADELINO DOS SANTOS","tipo":"1033 - Vistoria de Vazamento de Água","end":"RUA QUINZE DE NOVEMBRO","nro":"390","bairro":"VILA SAO PAULO","data":"26/10/2026 10:37","iso":"2026-10-26T10:37","nat":"Água","rot":"Recapeamento — Água","cod":"101","grupo":"RECAPE","idade":10,"fora":true,"sit":"Concluída","depto":"","depto_curto":"—","api":"—","fonte":"PDF","lat":-23.4796331,"lon":-46.1378833,"geo":"rua"},{"os":"2026152556","cdc":"43926","solic":"JORGE ARTUR SERNADA","tipo":"1033 - Vistoria de Vazamento de Água","end":"RUA GASTAO COSTA","nro":"735","bairro":"VILA MOGI MODERNO","data":"26/10/2026 11:20","iso":"2026-10-26T11:20","nat":"Água","rot":"Recapeamento — Água","cod":"101","grupo":"RECAPE","idade":10,"fora":true,"sit":"Concluída","depto":"","depto_curto":"—","api":"—","fonte":"PDF","lat":-23.5357533,"lon":-46.1930767,"geo":"rua"},{"os":"2026065674","cdc":"9937","solic":"","tipo":"32 - Substituição de Ligação de Esgoto","end":"PC JESUINO FRANCO","nro":"78","bairro":"SABAUNA","data":"29/10/2026 08:25","iso":"2026-10-29T08:25","nat":"Ligação de Esgoto","rot":"Recapeamento — Ligação de Esgoto","cod":"126","grupo":"RECAPE","idade":7,"fora":true,"sit":"Fora da base","depto":"","depto_curto":"—","api":"—","fonte":"PDF","lat":-23.4804,"lon":-46.0867,"geo":"bairro"},{"os":"2026151570","cdc":"","solic":"SIDNEI","tipo":"325 - Sondagem","end":"RUA JOAO RIBEIRO","nro":"210","bairro":"VILA SUISSA","data":"30/10/2026 11:05","iso":"2026-10-30T11:05","nat":"Esgoto","rot":"Recapeamento — Esgoto","cod":"123","grupo":"RECAPE","idade":6,"fora":true,"sit":"Concluída","depto":"POTENZA (Empreiteria de Recomposição e Reaterro de Valas)","depto_curto":"Potenza","api":"Em Execução","fonte":"PDF","lat":-23.4943512,"lon":-46.1474653,"geo":"rua"},{"os":"2026157442","cdc":"175957","solic":"CARLA ALINE DE SOUZA","tipo":"1033 - Vistoria de Vazamento de Água","end":"RUA RICARDO RODRIGUES DE SOUZA","nro":"907","bairro":"VILA JUNDIAPEBA","data":"05/11/2026 09:30","iso":"2026-11-05T09:30","nat":"Água","rot":"Recapeamento — Água","cod":"101","grupo":"RECAPE","idade":3,"fora":true,"sit":"Concluída","depto":"","depto_curto":"—","api":"—","fonte":"PDF","lat":-23.5516467,"lon":-46.2515797,"geo":"rua"},{"os":"2026159738","cdc":"","solic":"Gilson Pontes","tipo":"1077 - Vazamento de água produto de pesquisa","end":"RUA JOAO BAPTISTA MONTEIRO","nro":"64","bairro":"VILA MELCHIZEDEC","data":"06/11/2026 10:55","iso":"2026-11-06T10:55","nat":"Água","rot":"Recapeamento — Água","cod":"101","grupo":"RECAPE","idade":2,"fora":false,"sit":"Concluída","depto":"","depto_curto":"—","api":"—","fonte":"PDF","lat":-23.5573,"lon":-46.1954,"geo":"bairro"},{"os":"2026146883","cdc":"45466","solic":"NATHALIA TOMAZ CORREIA DE OLIVEIRA VELARDO","tipo":"2 - Vazamento de Esgoto","end":"RUA DOLORES DE AQUINO","nro":"915","bairro":"VILA JUNDIAPEBA","data":"06/11/2026 13:00","iso":"2026-11-06T13:00","nat":"Esgoto","rot":"Recapeamento — Esgoto","cod":"123","grupo":"RECAPE","idade":2,"fora":false,"sit":"Concluída","depto":"POTENZA (Empreiteria de Recomposição e Reaterro de Valas)","depto_curto":"Potenza","api":"Em Execução","fonte":"PDF","lat":-23.5456616,"lon":-46.2540767,"geo":"rua"},{"os":"2026160122","cdc":"","solic":"DOSES","tipo":"123 - Recapeamento - Asfalto - Esgoto","end":"AV. DA. AUREA MARTINS DOS ANJOS","nro":"1309","bairro":"VILA JUNDIAPEBA","data":"07/11/2026 10:55","iso":"2026-11-07T10:55","nat":"Esgoto","rot":"Recapeamento — Esgoto","cod":"123","grupo":"RECAPE","idade":2,"fora":false,"sit":"Concluída","depto":"POTENZA (Empreiteria de Recomposição e Reaterro de Valas)","depto_curto":"Potenza","api":"Em Execução","fonte":"PDF","lat":-23.5495,"lon":-46.248,"geo":"bairro"},{"os":"2026158128","cdc":"82600","solic":"SUELI DE OLIVEIRA MONTEIRO","tipo":"1033 - Vistoria de Vazamento de Água","end":"RUA MARIA APARECIDA LOPES FAURY","nro":"95","bairro":"VILA SAO PAULO","data":"07/11/2026 12:25","iso":"2026-11-07T12:25","nat":"Água","rot":"Recapeamento — Água","cod":"101","grupo":"RECAPE","idade":2,"fora":false,"sit":"Concluída","depto":"","depto_curto":"—","api":"—","fonte":"PDF","lat":-23.479,"lon":-46.13,"geo":"bairro"},{"os":"2026158453","cdc":"23391","solic":"PEDRO DO PRADO DE FARIA","tipo":"10 - Pressão Baixa","end":"RUA DR. CORREA NETO","nro":"345","bairro":"VILA MOGILAR","data":"08/11/2026 12:15","iso":"2026-11-08T12:15","nat":"Água","rot":"Recapeamento — Água","cod":"101","grupo":"RECAPE","idade":2,"fora":false,"sit":"Concluída","depto":"","depto_curto":"—","api":"—","fonte":"PDF","lat":-23.5131,"lon":-46.196,"geo":"bairro"},{"os":"2026156642","cdc":"75858","solic":"PLANTONISTA APOIO MANUTENÇÃO DE ÁGUA","tipo":"1 - Vazamento de Água","end":"RUA LAURINDO PEREIRA","nro":"569","bairro":"VILA JUNDIAPEBA","data":"08/11/2026 15:35","iso":"2026-11-08T15:35","nat":"Água","rot":"Recapeamento — Água","cod":"101","grupo":"RECAPE","idade":2,"fora":false,"sit":"Cancelada","depto":"","depto_curto":"—","api":"—","fonte":"PDF","lat":-23.5495,"lon":-46.248,"geo":"bairro"},{"os":"2026098252","cdc":"","solic":"ADONIAS ALMEIDA DA SILVA","tipo":"701 - Estudo de Ligação Predial de Água","end":"RUA DR. FREITAS VALE","nro":"513","bairro":"VILA MOGI MODERNO","data":"09/11/2026 08:56","iso":"2026-11-09T08:56","nat":"Ligação de Água","rot":"Recapeamento — Ligação de Água","cod":"121","grupo":"RECAPE","idade":1,"fora":false,"sit":"Fora da base","depto":"","depto_curto":"—","api":"—","fonte":"PDF","lat":-23.5437581,"lon":-46.1928664,"geo":"rua"},{"os":"2026156570","cdc":"1698","solic":"PLANTÃO MANUTENÇÃO DE ÁGUA","tipo":"1 - Vazamento de Água","end":"RUA DR DEODATO WERTHEIMER","nro":"1946","bairro":"CENTRO","data":"09/11/2026 09:02","iso":"2026-11-09T09:02","nat":"Água","rot":"Recapeamento — Água","cod":"101","grupo":"RECAPE","idade":1,"fora":false,"sit":"Reaberta","depto":"","depto_curto":"—","api":"—","fonte":"PDF","lat":-23.5249,"lon":-46.1924,"geo":"bairro"},{"os":"2026160694","cdc":"","solic":"SEMAE Ligações","tipo":"114 - Verificação de Serviços Pendentes - Ligações","end":"RUA JOAO GARCIA DOS SANTOS","nro":"","bairro":"VILA SARAH AVIGNON","data":"09/11/2026 09:07","iso":"2026-11-09T09:07","nat":"Ligação de Esgoto","rot":"Recapeamento — Ligação de Esgoto","cod":"126","grupo":"RECAPE","idade":1,"fora":false,"sit":"Reaberta","depto":"POTENZA (Empreiteria de Recomposição e Reaterro de Valas)","depto_curto":"Potenza","api":"Em Execução","fonte":"PDF","lat":-23.5179,"lon":-46.1908,"geo":"bairro"},{"os":"2026085030","cdc":"4133","solic":"INSTITUTO DONA PLACIDINA","tipo":"952 - Reativação da Ligação","end":"RUA JOSE BONIFACIO","nro":"212","bairro":"CENTRO","data":"09/11/2026 09:08","iso":"2026-11-09T09:08","nat":"Ligação de Água","rot":"Recapeamento — Ligação de Água","cod":"121","grupo":"RECAPE","idade":1,"fora":false,"sit":"Fora da base","depto":"","depto_curto":"—","api":"—","fonte":"PDF","lat":-23.5234497,"lon":-46.1917658,"geo":"rua"},{"os":"2026098233","cdc":"","solic":"ADONIAS ALMEIDA DA SILVA","tipo":"701 - Estudo de Ligação Predial de Água","end":"RUA DR. FREITAS VALE","nro":"513","bairro":"VILA MOGI MODERNO","data":"09/11/2026 09:09","iso":"2026-11-09T09:09","nat":"Ligação de Água","rot":"Recapeamento — Ligação de Água","cod":"121","grupo":"RECAPE","idade":1,"fora":false,"sit":"Fora da base","depto":"","depto_curto":"—","api":"—","fonte":"PDF","lat":-23.5437581,"lon":-46.1928664,"geo":"rua"},{"os":"2026104803","cdc":"","solic":"WELLINGTON TEIXEIRA","tipo":"703 - Estudo de Ligação Predial de Água e Esgoto","end":"RUA LUZIA DOS SANTOS CARDOSO","nro":"304","bairro":"VILA SAO PAULO","data":"09/11/2026 09:52","iso":"2026-11-09T09:52","nat":"Ligação de Água","rot":"Recapeamento — Ligação de Água","cod":"121","grupo":"RECAPE","idade":1,"fora":false,"sit":"Fora da base","depto":"","depto_curto":"—","api":"—","fonte":"PDF","lat":-23.479,"lon":-46.13,"geo":"bairro"},{"os":"2026160165","cdc":"67303","solic":"SANDRA REGINA ROCHA GOMES","tipo":"1033 - Vistoria de Vazamento de Água","end":"RUA MOACYR BARBOSA TRIBONI","nro":"445","bairro":"VILA MATHIAS","data":"09/11/2026 10:15","iso":"2026-11-09T10:15","nat":"Água","rot":"Recapeamento — Água","cod":"101","grupo":"RECAPE","idade":1,"fora":false,"sit":"Concluída","depto":"SERVIÇOS DE MANUTENÇÃO DE REDES ÁGUA","depto_curto":"Redes Água","api":"Em Execução","fonte":"PDF","lat":-23.4827,"lon":-46.0808,"geo":"bairro"},{"os":"2026158672","cdc":"","solic":"SIDNEI","tipo":"129 - Aterro / Reaterro / Recorte - Esgoto","end":"RUA CONCORDIA","nro":"","bairro":"VILA SAO PAULO","data":"09/11/2026 10:25","iso":"2026-11-09T10:25","nat":"Esgoto","rot":"Recapeamento — Esgoto","cod":"123","grupo":"RECAPE","idade":1,"fora":false,"sit":"Reaberta","depto":"POTENZA (Empreiteria de Recomposição e Reaterro de Valas)","depto_curto":"Potenza","api":"Em Execução","fonte":"PDF","lat":-23.4781308,"lon":-46.126489,"geo":"rua"},{"os":"2026159896","cdc":"154802","solic":"Gilson pontes geofone","tipo":"1077 - Vazamento de água produto de pesquisa","end":"RUA JOAO BENEGAS ORTIZ","nro":"784","bairro":"CONJ RESIDENCIAL JARDIM MARICA","data":"09/11/2026 10:35","iso":"2026-11-09T10:35","nat":"Água","rot":"Recapeamento — Água","cod":"101","grupo":"RECAPE","idade":1,"fora":false,"sit":"Nova","depto":"POTENZA (Empreiteria de Recomposição e Reaterro de Valas)","depto_curto":"Potenza","api":"Em Execução","fonte":"PDF","lat":-23.4947,"lon":-46.184,"geo":"bairro"},{"os":"2026125854","cdc":"","solic":"Ouvidoria 912338","tipo":"235 - Verificação/Parecer da Equipe de Apoio","end":"RUA JOSE BONIFACIO","nro":"276","bairro":"CENTRO","data":"09/11/2026 11:02","iso":"2026-11-09T11:02","nat":"Ligação de Esgoto","rot":"Recapeamento — Ligação de Esgoto","cod":"126","grupo":"RECAPE","idade":1,"fora":false,"sit":"Fora da base","depto":"","depto_curto":"—","api":"—","fonte":"PDF","lat":-23.5234497,"lon":-46.1917658,"geo":"rua"},{"os":"2026147402","cdc":"","solic":"MARIA HELENA SANTOS","tipo":"701 - Estudo de Ligação Predial de Água","end":"RUA TEN. MANOEL ALVES DOS ANJOS","nro":"926","bairro":"VILA JUNDIAPEBA","data":"09/11/2026 11:14","iso":"2026-11-09T11:14","nat":"Ligação de Água","rot":"Recapeamento — Ligação de Água","cod":"121","grupo":"RECAPE","idade":1,"fora":false,"sit":"Reaberta","depto":"MANUTENÇÃO CIVIL","depto_curto":"Manutenção Civil","api":"Em Execução","fonte":"PDF","lat":-23.5474775,"lon":-46.2624547,"geo":"rua"},{"os":"2026157990","cdc":"79336","solic":"MARIA GERALDA FERREIRA BARBOSA","tipo":"1033 - Vistoria de Vazamento de Água","end":"RUA STO. ANDRE","nro":"90","bairro":"VILA LAVINIA","data":"09/11/2026 11:20","iso":"2026-11-09T11:20","nat":"Água","rot":"Recapeamento — Água","cod":"101","grupo":"RECAPE","idade":1,"fora":false,"sit":"Concluída","depto":"","depto_curto":"—","api":"—","fonte":"PDF","lat":-23.543078,"lon":-46.2078145,"geo":"rua"},{"os":"2026159102","cdc":"156549","solic":"MARIA DA CONCEICAO CELESTINO","tipo":"1 - Vazamento de Água","end":"RUA CONCORDIA","nro":"405","bairro":"VILA SAO PAULO","data":"09/11/2026 11:20","iso":"2026-11-09T11:20","nat":"Água","rot":"Recapeamento — Água","cod":"101","grupo":"RECAPE","idade":1,"fora":false,"sit":"Nova","depto":"","depto_curto":"—","api":"—","fonte":"PDF","lat":-23.4781308,"lon":-46.126489,"geo":"rua"},{"os":"2026160173","cdc":"9040","solic":"Plantão Manutenção de Água","tipo":"1 - Vazamento de Água","end":"RUA S JOAO","nro":"537","bairro":"CENTRO","data":"09/11/2026 11:35","iso":"2026-11-09T11:35","nat":"Água","rot":"Recapeamento — Água","cod":"101","grupo":"RECAPE","idade":1,"fora":false,"sit":"Nova","depto":"","depto_curto":"—","api":"—","fonte":"PDF","lat":-23.5249,"lon":-46.1924,"geo":"bairro"},{"os":"2026148330","cdc":"37927","solic":"MONIQUE CAETANO RODRIGUES","tipo":"822 - Verificação de Serviços Pendentes - Manut. Água","end":"RUA PE DR MARCILIO SIMOES R DE MELO","nro":"82","bairro":"JARDIM RODEIO-GB II","data":"09/11/2026 11:35","iso":"2026-11-09T11:35","nat":"Ligação de Água","rot":"Recapeamento — Ligação de Água","cod":"121","grupo":"RECAPE","idade":1,"fora":false,"sit":"Cancelada","depto":"","depto_curto":"—","api":"—","fonte":"PDF","lat":-23.5043,"lon":-46.1912,"geo":"bairro"},{"os":"2026147401","cdc":"","solic":"MARIA HELENA SANTOS","tipo":"701 - Estudo de Ligação Predial de Água","end":"RUA TEN. MANOEL ALVES DOS ANJOS","nro":"926","bairro":"VILA JUNDIAPEBA","data":"09/11/2026 11:37","iso":"2026-11-09T11:37","nat":"Ligação de Água","rot":"Recapeamento — Ligação de Água","cod":"121","grupo":"RECAPE","idade":1,"fora":false,"sit":"Concluída","depto":"MANUTENÇÃO CIVIL","depto_curto":"Manutenção Civil","api":"Em Execução","fonte":"PDF","lat":-23.5474775,"lon":-46.2624547,"geo":"rua"},{"os":"2026084934","cdc":"","solic":"JORGE AKINOBU NAKAMURA","tipo":"701 - Estudo de Ligação Predial de Água","end":"RUA CONCORDIA","nro":"1235","bairro":"VILA SAO PAULO","data":"09/11/2026 11:57","iso":"2026-11-09T11:57","nat":"Ligação de Água","rot":"Recapeamento — Ligação de Água","cod":"121","grupo":"RECAPE","idade":1,"fora":false,"sit":"Fora da base","depto":"","depto_curto":"—","api":"—","fonte":"PDF","lat":-23.4781308,"lon":-46.126489,"geo":"rua"},{"os":"2026159894","cdc":"80122","solic":"JESSICA LIMA MACIEL CANDIDO","tipo":"1 - Vazamento de Água","end":"RUA AMARO CORREA","nro":"36","bairro":"JARDIM SANTA TEREZA","data":"09/11/2026 12:10","iso":"2026-11-09T12:10","nat":"Água","rot":"Recapeamento — Água","cod":"101","grupo":"RECAPE","idade":1,"fora":false,"sit":"Nova","depto":"MANUTENÇÃO CIVIL","depto_curto":"Manutenção Civil","api":"Em Execução","fonte":"PDF","lat":-23.555,"lon":-46.2157,"geo":"bairro"},{"os":"2026022534","cdc":"","solic":"ANTONIO ALBERTO GOMES HERIQUES","tipo":"701 - Estudo de Ligação Predial de Água","end":"AV. PEDRO MACHADO","nro":"462","bairro":"VILA MOGI MODERNO","data":"09/11/2026 12:25","iso":"2026-11-09T12:25","nat":"Ligação de Água","rot":"Recapeamento — Ligação de Água","cod":"121","grupo":"RECAPE","idade":1,"fora":false,"sit":"Fora da base","depto":"","depto_curto":"—","api":"—","fonte":"PDF","lat":-23.5409423,"lon":-46.1935436,"geo":"rua"},{"os":"2026157806","cdc":"158249","solic":"GLAUCO RICARDO STOLEMBERGER","tipo":"1033 - Vistoria de Vazamento de Água","end":"RUA VER. BENEDICTO DE OLIVEIRA FLORES","nro":"709","bairro":"JARDIM ESPERANCA","data":"09/11/2026 12:25","iso":"2026-11-09T12:25","nat":"Água","rot":"Recapeamento — Água","cod":"101","grupo":"RECAPE","idade":1,"fora":false,"sit":"Nova","depto":"","depto_curto":"—","api":"—","fonte":"PDF","lat":-23.5593,"lon":-46.2127,"geo":"bairro"},{"os":"2026022541","cdc":"","solic":"ANTONIO ALBERTO GOMES HERIQUES","tipo":"701 - Estudo de Ligação Predial de Água","end":"AV. PEDRO MACHADO","nro":"462","bairro":"VILA MOGI MODERNO","data":"09/11/2026 12:29","iso":"2026-11-09T12:29","nat":"Ligação de Água","rot":"Recapeamento — Ligação de Água","cod":"121","grupo":"RECAPE","idade":1,"fora":false,"sit":"Fora da base","depto":"","depto_curto":"—","api":"—","fonte":"PDF","lat":-23.5409423,"lon":-46.1935436,"geo":"rua"},{"os":"2026157094","cdc":"","solic":"MARCIO MAGELLA","tipo":"324 - Construção e Reconstrução de PV","end":"RUA BRG. NEWTON BRAGA","nro":"","bairro":"JARDIM AEROPORTO III","data":"09/11/2026 13:30","iso":"2026-11-09T13:30","nat":"Esgoto","rot":"Recapeamento — Esgoto","cod":"123","grupo":"RECAPE","idade":1,"fora":false,"sit":"Reaberta","depto":"POTENZA (Empreiteria de Recomposição e Reaterro de Valas)","depto_curto":"Potenza","api":"Em Execução","fonte":"PDF","lat":-23.5626,"lon":-46.2223,"geo":"bairro"},{"os":"2026161177","cdc":"","solic":"William","tipo":"843 - Recapeamento - Asfalto - Esgoto (DOSES)","end":"RUA BRAZ CUBAS","nro":"","bairro":"CENTRO","data":"09/11/2026 13:32","iso":"2026-11-09T13:32","nat":"Esgoto","rot":"Recapeamento — Esgoto","cod":"123","grupo":"RECAPE","idade":1,"fora":false,"sit":"Reaberta","depto":"POTENZA (Empreiteria de Recomposição e Reaterro de Valas)","depto_curto":"Potenza","api":"Em Execução","fonte":"PDF","lat":-23.5249,"lon":-46.1924,"geo":"bairro"},{"os":"2026157375","cdc":"166708","solic":"LEONARDO NOVAIS ROCHA","tipo":"1033 - Vistoria de Vazamento de Água","end":"RUA MONTE GOLLAN","nro":"355","bairro":"PARQUE MORUMBI","data":"09/11/2026 13:32","iso":"2026-11-09T13:32","nat":"Água","rot":"Recapeamento — Água","cod":"101","grupo":"RECAPE","idade":1,"fora":false,"sit":"Concluída","depto":"","depto_curto":"—","api":"—","fonte":"PDF","lat":-23.5629849,"lon":-46.1794356,"geo":"rua"},{"os":"2026157362","cdc":"152243","solic":"RESIDENCIAL ALTO DA GLORIA II","tipo":"1033 - Vistoria de Vazamento de Água","end":"RUA MONTE GOLLAN","nro":"355","bairro":"PARQUE MORUMBI","data":"09/11/2026 13:34","iso":"2026-11-09T13:34","nat":"Água","rot":"Recapeamento — Água","cod":"101","grupo":"RECAPE","idade":1,"fora":false,"sit":"Concluída","depto":"POTENZA (Empreiteria de Recomposição e Reaterro de Valas)","depto_curto":"Potenza","api":"Em Execução","fonte":"PDF","lat":-23.5629849,"lon":-46.1794356,"geo":"rua"},{"os":"2026161100","cdc":"597","solic":"ANA CLAUDIA DE MELLO OLIVEIRA","tipo":"1 - Vazamento de Água","end":"AV. BRASIL","nro":"189","bairro":"VILA MOGI MODERNO","data":"09/11/2026 14:20","iso":"2026-11-09T14:20","nat":"Água","rot":"Recapeamento — Água","cod":"101","grupo":"RECAPE","idade":1,"fora":false,"sit":"Nova","depto":"","depto_curto":"—","api":"—","fonte":"PDF","lat":-23.5361338,"lon":-46.1886748,"geo":"rua"},{"os":"2026134628","cdc":"","solic":"William","tipo":"322 - Nivelamento de PV","end":"RUA PRF. HERVAL BRASIL","nro":"251","bairro":"JOAO VILLANOVA","data":"09/11/2026 14:23","iso":"2026-11-09T14:23","nat":"Esgoto","rot":"Recapeamento — Esgoto","cod":"123","grupo":"RECAPE","idade":1,"fora":false,"sit":"Fora da base","depto":"","depto_curto":"—","api":"—","fonte":"PDF","lat":-23.5208,"lon":-46.2062,"geo":"bairro"},{"os":"2026158851","cdc":"56221","solic":"DILZA DELAVIE MENDES","tipo":"1033 - Vistoria de Vazamento de Água","end":"RUA DR PEDRO DE ALMEIDA DIAS","nro":"82","bairro":"VILA LAVINIA","data":"09/11/2026 14:40","iso":"2026-11-09T14:40","nat":"Água","rot":"Recapeamento — Água","cod":"101","grupo":"RECAPE","idade":1,"fora":false,"sit":"Nova","depto":"","depto_curto":"—","api":"—","fonte":"PDF","lat":-23.5363,"lon":-46.2115,"geo":"bairro"},{"os":"2026158805","cdc":"40186","solic":"PAULO SERGIO MOREIRA FERREIRA","tipo":"2 - Vazamento de Esgoto","end":"RUA D. LUIZ DE SOUZA","nro":"240","bairro":"JARDIM UNIVERSO","data":"09/11/2026 14:56","iso":"2026-11-09T14:56","nat":"Esgoto","rot":"Recapeamento — Esgoto","cod":"123","grupo":"RECAPE","idade":1,"fora":false,"sit":"Reaberta","depto":"POTENZA (Empreiteria de Recomposição e Reaterro de Valas)","depto_curto":"Potenza","api":"Em Execução","fonte":"PDF","lat":-23.5486024,"lon":-46.2080834,"geo":"rua"},{"os":"2026161043","cdc":"","solic":"Man. Doses Ananias","tipo":"325 - Sondagem","end":"RUA JOSE VIRGILIO DA SILVA","nro":"134","bairro":"VILA JUNDIAI","data":"09/11/2026 15:55","iso":"2026-11-09T15:55","nat":"Esgoto","rot":"Recapeamento — Esgoto","cod":"123","grupo":"RECAPE","idade":1,"fora":false,"sit":"Reaberta","depto":"POTENZA (Empreiteria de Recomposição e Reaterro de Valas)","depto_curto":"Potenza","api":"Em Execução","fonte":"PDF","lat":-23.544,"lon":-46.2367,"geo":"bairro"},{"os":"2026154933","cdc":"153111","solic":"ANDERSON LEANDRO DE OLIVEIRA","tipo":"2 - Vazamento de Esgoto","end":"AV. ALFREDO CRESTANA","nro":"28","bairro":"VILA JUNDIAPEBA","data":"09/11/2026 15:55","iso":"2026-11-09T15:55","nat":"Esgoto","rot":"Recapeamento — Esgoto","cod":"123","grupo":"RECAPE","idade":1,"fora":false,"sit":"Reaberta","depto":"POTENZA (Empreiteria de Recomposição e Reaterro de Valas)","depto_curto":"Potenza","api":"Em Execução","fonte":"PDF","lat":-23.5495,"lon":-46.248,"geo":"bairro"},{"os":"2026159210","cdc":"68672","solic":"ENORSUL","tipo":"1077 - Vazamento de água produto de pesquisa","end":"RUA CAETANO DE CAMPOS","nro":"119","bairro":"VILA MOGI MODERNO","data":"09/11/2026 16:15","iso":"2026-11-09T16:15","nat":"Água","rot":"Recapeamento — Água","cod":"101","grupo":"RECAPE","idade":1,"fora":false,"sit":"Nova","depto":"MANUTENÇÃO CIVIL","depto_curto":"Manutenção Civil","api":"Em Execução","fonte":"PDF","lat":-23.5385,"lon":-46.191,"geo":"bairro"},{"os":"2026160564","cdc":"41672","solic":"ADRIANA DE BARROS SOUZA","tipo":"1033 - Vistoria de Vazamento de Água","end":"RUA EMILIO LEOPOLDO DA CRUZ","nro":"53","bairro":"CONJ. RESIDENCIAL JARDIM SAO JOAO","data":"09/11/2026 17:10","iso":"2026-11-09T17:10","nat":"Água","rot":"Recapeamento — Água","cod":"101","grupo":"RECAPE","idade":1,"fora":false,"sit":"Nova","depto":"","depto_curto":"—","api":"—","fonte":"PDF","lat":-23.5393,"lon":-46.2217,"geo":"bairro"},{"os":"2026161143","cdc":"71533","solic":"JOSE HUMBERTO PEREIRA DA SILVA","tipo":"1 - Vazamento de Água","end":"RUA STO. ANDRE","nro":"91","bairro":"VILA LAVINIA","data":"09/11/2026 17:40","iso":"2026-11-09T17:40","nat":"Água","rot":"Recapeamento — Água","cod":"101","grupo":"RECAPE","idade":1,"fora":false,"sit":"Nova","depto":"","depto_curto":"—","api":"—","fonte":"PDF","lat":-23.543078,"lon":-46.2078145,"geo":"rua"},{"os":"2026160053","cdc":"19557","solic":"SOLANGE FELIX ARMOND","tipo":"10 - Pressão Baixa","end":"RUA DESIDERIO JORGE","nro":"927","bairro":"VILA NATAL","data":"09/11/2026 17:45","iso":"2026-11-09T17:45","nat":"Água","rot":"Recapeamento — Água","cod":"101","grupo":"RECAPE","idade":1,"fora":false,"sit":"Reaberta","depto":"","depto_curto":"—","api":"—","fonte":"PDF","lat":-23.5348,"lon":-46.1769,"geo":"bairro"},{"os":"2026159708","cdc":"","solic":"AGENTE REGINAL SANDER","tipo":"30 - Hidrojateamento","end":"RUA CARMELINO JORDANO","nro":"250","bairro":"LOTEAMENTO RESIDENCIAL MIRAGE","data":"09/11/2026 20:35","iso":"2026-11-09T20:35","nat":"Esgoto","rot":"Recapeamento — Esgoto","cod":"123","grupo":"RECAPE","idade":1,"fora":false,"sit":"Nova","depto":"POTENZA (Empreiteria de Recomposição e Reaterro de Valas)","depto_curto":"Potenza","api":"Em Execução","fonte":"PDF","lat":-23.5548,"lon":-46.2289,"geo":"bairro"},{"os":"2026161399","cdc":"","solic":"PORTAL DOS PASSAROS MOGI PAVAN DESENVOLVIMENTO URBANO","tipo":"701 - Estudo de Ligação Predial de Água","end":"AV. JAPAO","nro":"3951","bairro":"BRAZ CUBAS","data":"10/11/2026 07:44","iso":"2026-11-10T07:44","nat":"Ligação de Água","rot":"Recapeamento — Ligação de Água","cod":"121","grupo":"RECAPE","idade":0,"fora":false,"sit":"Nova","depto":"POTENZA (Empreiteria de Recomposição e Reaterro de Valas)","depto_curto":"Potenza","api":"Em Execução","fonte":"PDF","lat":-23.5393,"lon":-46.2217,"geo":"bairro"},{"os":"2026131376","cdc":"180583","solic":"LUZIMAR ALMEIDA AQUINO BRITO","tipo":"701 - Estudo de Ligação Predial de Água","end":"RUA DOLORES DE AQUINO","nro":"45","bairro":"VILA JUNDIAPEBA","data":"10/11/2026 07:47","iso":"2026-11-10T07:47","nat":"Ligação de Água","rot":"Recapeamento — Ligação de Água","cod":"121","grupo":"RECAPE","idade":0,"fora":false,"sit":"Fora da base","depto":"","depto_curto":"—","api":"—","fonte":"PDF","lat":-23.5456616,"lon":-46.2540767,"geo":"rua"},{"os":"2026151571","cdc":"","solic":"JORGE ESTEVAM DA SILVA NETO","tipo":"701 - Estudo de Ligação Predial de Água","end":"RUA NISHIO TADASI","nro":"12","bairro":"JARDIM NOVE DE JULHO","data":"10/11/2026 07:49","iso":"2026-11-10T07:49","nat":"Ligação de Água","rot":"Recapeamento — Ligação de Água","cod":"121","grupo":"RECAPE","idade":0,"fora":false,"sit":"Nova","depto":"MANUTENÇÃO CIVIL","depto_curto":"Manutenção Civil","api":"Em Execução","fonte":"PDF","lat":-23.6103444,"lon":-46.2522028,"geo":"rua"},{"os":"2026151569","cdc":"","solic":"JORGE ESTEVAM DA SILVA NETO","tipo":"701 - Estudo de Ligação Predial de Água","end":"RUA NISHIO TADASI","nro":"12","bairro":"JARDIM NOVE DE JULHO","data":"10/11/2026 07:49","iso":"2026-11-10T07:49","nat":"Ligação de Água","rot":"Recapeamento — Ligação de Água","cod":"121","grupo":"RECAPE","idade":0,"fora":false,"sit":"Nova","depto":"MANUTENÇÃO CIVIL","depto_curto":"Manutenção Civil","api":"Em Execução","fonte":"PDF","lat":-23.6103444,"lon":-46.2522028,"geo":"rua"},{"os":"2026151574","cdc":"","solic":"JORGE ESTEVAM DA SILVA NETO","tipo":"701 - Estudo de Ligação Predial de Água","end":"RUA NISHIO TADASI","nro":"9","bairro":"JARDIM NOVE DE JULHO","data":"10/11/2026 07:50","iso":"2026-11-10T07:50","nat":"Ligação de Água","rot":"Recapeamento — Ligação de Água","cod":"121","grupo":"RECAPE","idade":0,"fora":false,"sit":"Nova","depto":"POTENZA (Empreiteria de Recomposição e Reaterro de Valas)","depto_curto":"Potenza","api":"Em Execução","fonte":"PDF","lat":-23.6103444,"lon":-46.2522028,"geo":"rua"},{"os":"2026151575","cdc":"","solic":"JORGE ESTEVAM DA SILVA NETO","tipo":"701 - Estudo de Ligação Predial de Água","end":"RUA NISHIO TADASI","nro":"9","bairro":"JARDIM NOVE DE JULHO","data":"10/11/2026 07:51","iso":"2026-11-10T07:51","nat":"Ligação de Água","rot":"Recapeamento — Ligação de Água","cod":"121","grupo":"RECAPE","idade":0,"fora":false,"sit":"Nova","depto":"POTENZA (Empreiteria de Recomposição e Reaterro de Valas)","depto_curto":"Potenza","api":"Em Execução","fonte":"PDF","lat":-23.6103444,"lon":-46.2522028,"geo":"rua"},{"os":"2026140214","cdc":"48213","solic":"JOSE CARLOS ALEXANDRE","tipo":"106 - Reativação com Substituição da Ligação","end":"RUA EUDOXIA CASTELLO BRANCO","nro":"743","bairro":"VILA SUISSA","data":"10/11/2026 08:05","iso":"2026-11-10T08:05","nat":"Ligação de Água","rot":"Recapeamento — Ligação de Água","cod":"121","grupo":"RECAPE","idade":0,"fora":false,"sit":"Fora da base","depto":"","depto_curto":"—","api":"—","fonte":"PDF","lat":-23.4944,"lon":-46.1475,"geo":"bairro"},{"os":"2026146333","cdc":"","solic":"CLAUDIONOR JÚNIOR DE SOUZA","tipo":"701 - Estudo de Ligação Predial de Água","end":"AV. JOAO DE SOUZA FRANCO","nro":"1000","bairro":"VILA JUNDIAPEBA","data":"10/11/2026 08:20","iso":"2026-11-10T08:20","nat":"Ligação de Água","rot":"Recapeamento — Ligação de Água","cod":"121","grupo":"RECAPE","idade":0,"fora":false,"sit":"Nova","depto":"MANUTENÇÃO CIVIL","depto_curto":"Manutenção Civil","api":"Em Execução","fonte":"PDF","lat":-23.5495493,"lon":-46.2468798,"geo":"rua"},{"os":"2026113133","cdc":"58867","solic":"JULIANA FONSECA DE SOUZA","tipo":"106 - Reativação com Substituição da Ligação","end":"AV. TALETE MACCIO","nro":"121","bairro":"VILA JUNDIAPEBA","data":"10/11/2026 08:20","iso":"2026-11-10T08:20","nat":"Ligação de Água","rot":"Recapeamento — Ligação de Água","cod":"121","grupo":"RECAPE","idade":0,"fora":false,"sit":"Fora da base","depto":"","depto_curto":"—","api":"—","fonte":"PDF","lat":-23.5501897,"lon":-46.2441515,"geo":"rua"},{"os":"2026161128","cdc":"20941","solic":"MARIO BLOISE JR","tipo":"822 - Verificação de Serviços Pendentes - Manut. Água","end":"RUA PRES CAMPOS SALLES","nro":"164","bairro":"VILA INDUSTRIAL","data":"10/11/2026 08:23","iso":"2026-11-10T08:23","nat":"Esgoto","rot":"Recapeamento — Esgoto","cod":"123","grupo":"RECAPE","idade":0,"fora":false,"sit":"Reaberta","depto":"","depto_curto":"—","api":"—","fonte":"PDF","lat":-23.5208,"lon":-46.2062,"geo":"bairro"},{"os":"2026147028","cdc":"","solic":"ERIVALDO SILVA SANTOS","tipo":"701 - Estudo de Ligação Predial de Água","end":"AV. JOAO DE SOUZA FRANCO","nro":"1000","bairro":"VILA JUNDIAPEBA","data":"10/11/2026 08:25","iso":"2026-11-10T08:25","nat":"Ligação de Água","rot":"Recapeamento — Ligação de Água","cod":"121","grupo":"RECAPE","idade":0,"fora":false,"sit":"Nova","depto":"MANUTENÇÃO CIVIL","depto_curto":"Manutenção Civil","api":"Em Execução","fonte":"PDF","lat":-23.5495493,"lon":-46.2468798,"geo":"rua"},{"os":"2026112530","cdc":"","solic":"CINTIA SOARES MATIAS MILAGRES","tipo":"703 - Estudo de Ligação Predial de Água e Esgoto","end":"RUA VER. PLACIDO CAMPOLINO","nro":"181","bairro":"CONJ HABITACIONAL SAO SEBASTIAO","data":"10/11/2026 08:40","iso":"2026-11-10T08:40","nat":"Ligação de Água","rot":"Recapeamento — Ligação de Água","cod":"121","grupo":"RECAPE","idade":0,"fora":false,"sit":"Fora da base","depto":"","depto_curto":"—","api":"—","fonte":"PDF","lat":-23.5633711,"lon":-46.1812177,"geo":"rua"},{"os":"2026112531","cdc":"","solic":"CINTIA SOARES MATIAS MILAGRES","tipo":"703 - Estudo de Ligação Predial de Água e Esgoto","end":"RUA VER. PLACIDO CAMPOLINO","nro":"181","bairro":"CONJ HABITACIONAL SAO SEBASTIAO","data":"10/11/2026 08:40","iso":"2026-11-10T08:40","nat":"Ligação de Água","rot":"Recapeamento — Ligação de Água","cod":"121","grupo":"RECAPE","idade":0,"fora":false,"sit":"Fora da base","depto":"","depto_curto":"—","api":"—","fonte":"PDF","lat":-23.5633711,"lon":-46.1812177,"geo":"rua"},{"os":"2026149375","cdc":"","solic":"GABRIELLY DIAS SEPULVEDA","tipo":"701 - Estudo de Ligação Predial de Água","end":"AV. TALETE MACCIO","nro":"117","bairro":"VILA JUNDIAPEBA","data":"10/11/2026 08:52","iso":"2026-11-10T08:52","nat":"Ligação de Água","rot":"Recapeamento — Ligação de Água","cod":"121","grupo":"RECAPE","idade":0,"fora":false,"sit":"Nova","depto":"MANUTENÇÃO CIVIL","depto_curto":"Manutenção Civil","api":"Em Execução","fonte":"PDF","lat":-23.5501897,"lon":-46.2441515,"geo":"rua"},{"os":"2026158683","cdc":"596","solic":"CARLOS HARTMANN","tipo":"1033 - Vistoria de Vazamento de Água","end":"AV. BRASIL","nro":"180","bairro":"VILA MOGI MODERNO","data":"09/11/2026 17:05","iso":"2026-11-09T17:05","nat":"Água","rot":"Recapeamento — Água","cod":"101","grupo":"RECAPE","idade":1,"fora":false,"sit":"Concluída","depto":"","depto_curto":"—","api":"—","fonte":"PDF","lat":-23.5361338,"lon":-46.1886748,"geo":"rua"},{"os":"2026158120","cdc":"911","solic":"CIBELE PATRICIA DE SOUSA MARCELINO GIMENEZ","tipo":"Vistoria de Vazamento de Água","end":"RUA DR ANTONIO CANDIDO VIEIRA","nro":"162","bairro":"CENTRO","data":"04/11/2026 11:40","iso":"2026-11-04T11:40","nat":"Água","rot":"Recapeamento — Água","cod":"101","grupo":"RECAPE","idade":4,"fora":true,"sit":"Concluída","depto":"MANUTENÇÃO CIVIL","depto_curto":"Manutenção Civil","api":"Em Execução","fonte":"API","lat":-23.5189267,"lon":-46.1886001,"geo":"rua"},{"os":"2026158139","cdc":"72916","solic":"ANTONIO MARIA FERNANDES DA COSTA","tipo":"Vazamento de Água","end":"AV. SHOZO SAKAI","nro":"192","bairro":"VILA CINTRA","data":"04/11/2026 12:05","iso":"2026-11-04T12:05","nat":"Água","rot":"Recapeamento — Água","cod":"101","grupo":"RECAPE","idade":4,"fora":true,"sit":"Concluída","depto":"MANUTENÇÃO CIVIL","depto_curto":"Manutenção Civil","api":"Em Execução","fonte":"API","lat":-23.546323,"lon":-46.2319805,"geo":"rua"},{"os":"2026158160","cdc":"63553","solic":"CICERA MARIA DE CAMPOS ALVARENGA","tipo":"Verificação de Serviços Pendentes - Manut. Água","end":"RUA MANOEL FERNANDES","nro":"111","bairro":"VILA JUNDIAPEBA","data":"04/11/2026 12:31","iso":"2026-11-04T12:31","nat":"Verificação — Manutenção de Água","rot":"Verificação de Serviços Pendentes — Manut. Água","cod":"822","grupo":"VERIF","idade":4,"fora":true,"sit":"Concluída","depto":"RECOMPOSIÇÃO DE PAVIMENTO E REMOÇÃO DE ENTULHO","depto_curto":"Recomposição","api":"Em Execução","fonte":"API","lat":-23.5526677,"lon":-46.2420167,"geo":"rua"},{"os":"2026158374","cdc":"113385","solic":"FRANCISCO DE ASSIS OLIVEIRA","tipo":"Verificação de Serviços Pendentes - Manut. Água","end":"RUA ODORICO MENDES, 75 C/2 - JD BANDEIRAS","nro":"","bairro":"JARDIM DAS BANDEIRAS","data":"04/11/2026 15:30","iso":"2026-11-04T15:30","nat":"Verificação — Manutenção de Água","rot":"Verificação de Serviços Pendentes — Manut. Água","cod":"822","grupo":"VERIF","idade":4,"fora":true,"sit":"Reaberta","depto":"RECOMPOSIÇÃO DE PAVIMENTO E REMOÇÃO DE ENTULHO","depto_curto":"Recomposição","api":"Em Execução","fonte":"API","lat":-23.5244209,"lon":-46.1460586,"geo":"rua"},{"os":"2026158790","cdc":"92861","solic":"MARIA GORETH ALVES OLIVEIRA - COMPR","tipo":"Verificação de Serviços Pendentes - Manut. Água","end":"RUA ANITA GARIBALDI, 197 RES MIRAGE","nro":"","bairro":"LOTEAMENTO RESIDENCIAL MIRAGE","data":"05/11/2026 10:59","iso":"2026-11-05T10:59","nat":"Água","rot":"Recapeamento — Água","cod":"101","grupo":"RECAPE","idade":3,"fora":true,"sit":"Reaberta","depto":"RECOMPOSIÇÃO DE PAVIMENTO E REMOÇÃO DE ENTULHO","depto_curto":"Recomposição","api":"Em Execução","fonte":"API","lat":-23.5548271,"lon":-46.2289116,"geo":"bairro"},{"os":"2026159209","cdc":"55451","solic":"SERGIO MANOEL DE PAULA","tipo":"Verificação de Serviços Pendentes - Manut. Água","end":"AV. ALFREDO CRESTANA","nro":"1","bairro":"VILA JUNDIAPEBA","data":"05/11/2026 15:29","iso":"2026-11-05T15:29","nat":"Ligação de Água","rot":"Recapeamento — Ligação de Água","cod":"121","grupo":"RECAPE","idade":3,"fora":true,"sit":"Reaberta","depto":"RECOMPOSIÇÃO DE PAVIMENTO E REMOÇÃO DE ENTULHO","depto_curto":"Recomposição","api":"Em Execução","fonte":"API","lat":-23.5499149,"lon":-46.2481835,"geo":"rua"},{"os":"2026159293","cdc":"39959","solic":"BIANCA FERNANDES INACIO DA SILVA","tipo":"Verificação de Serviços Pendentes - Manut. Água","end":"AV. JAPAO, 751 A","nro":"","bairro":"VILA IPIRANGA","data":"06/11/2026 07:34","iso":"2026-11-06T07:34","nat":"Verificação — Manutenção de Água","rot":"Verificação de Serviços Pendentes — Manut. Água","cod":"822","grupo":"VERIF","idade":2,"fora":false,"sit":"Reaberta","depto":"RECOMPOSIÇÃO DE PAVIMENTO E REMOÇÃO DE ENTULHO","depto_curto":"Recomposição","api":"Em Execução","fonte":"API","lat":-23.5498519,"lon":-46.2045171,"geo":"rua"},{"os":"2026159798","cdc":"","solic":"Vagner","tipo":"Verificação de Serviços Pendentes - Manut. Água","end":"RUA TRES DE MAIO","nro":"170","bairro":"VILA SAO JOAO","data":"06/11/2026 10:41","iso":"2026-11-06T10:41","nat":"Verificação — Manutenção de Água","rot":"Verificação de Serviços Pendentes — Manut. Água","cod":"822","grupo":"VERIF","idade":2,"fora":false,"sit":"Reaberta","depto":"RECOMPOSIÇÃO DE PAVIMENTO E REMOÇÃO DE ENTULHO","depto_curto":"Recomposição","api":"Em Execução","fonte":"API","lat":-23.5511078,"lon":-46.1816035,"geo":"rua"},{"os":"2026159869","cdc":"163950","solic":"LEANDRO DE OLIVEIRA CAMPOS","tipo":"Verificação de Serviços Pendentes - Manut. Água","end":"RUA EDISON VIEIRA BRANDAO","nro":"126","bairro":"JARDINS DO PARAISO","data":"06/11/2026 12:22","iso":"2026-11-06T12:22","nat":"Verificação — Manutenção de Água","rot":"Verificação de Serviços Pendentes — Manut. Água","cod":"822","grupo":"VERIF","idade":2,"fora":false,"sit":"Reaberta","depto":"RECOMPOSIÇÃO DE PAVIMENTO E REMOÇÃO DE ENTULHO","depto_curto":"Recomposição","api":"Em Execução","fonte":"API","lat":-23.555842,"lon":-46.1863635,"geo":"rua"},{"os":"2026160949","cdc":"1666","solic":"ALEX VIEIRA DE ARAUJO","tipo":"Vistoria de Vazamento de Água","end":"RUA DR DEODATO WERTHEIMER","nro":"1803","bairro":"VILA MOGI MODERNO","data":"09/11/2026 10:08","iso":"2026-11-09T10:08","nat":"Troca de solo","rot":"Troca de solo","cod":"—","grupo":"SOLO","idade":1,"fora":false,"sit":"Reaberta","depto":"RECOMPOSIÇÃO DE PAVIMENTO E REMOÇÃO DE ENTULHO","depto_curto":"Recomposição","api":"Em Execução","fonte":"API","lat":-23.5267964,"lon":-46.1940186,"geo":"rua"},{"os":"2026161128","cdc":"20941","solic":"MARIO BLOISE JR","tipo":"Verificação de Serviços Pendentes - Manut. Água","end":"RUA PRES CAMPOS SALLES, 164 C/01 - VL INDUSTRIAL","nro":"","bairro":"VILA INDUSTRIAL","data":"09/11/2026 12:32","iso":"2026-11-09T12:32","nat":"Verificação — Manutenção de Água","rot":"Verificação de Serviços Pendentes — Manut. Água","cod":"822","grupo":"VERIF","idade":1,"fora":false,"sit":"Reaberta","depto":"POTENZA (Empreiteria de Recomposição e Reaterro de Valas)","depto_curto":"Potenza","api":"Em Execução","fonte":"API","lat":-23.5201117,"lon":-46.2026882,"geo":"rua"},{"os":"2026161262","cdc":"77339","solic":"ERICA DOS SANTOS CASSERE","tipo":"Verificação de Serviços Pendentes - Manut. Água","end":"RUA BENEDITO MARCONDES DA SILVA","nro":"289","bairro":"VILA BRASILEIRA","data":"09/11/2026 15:14","iso":"2026-11-09T15:14","nat":"Verificação — Manutenção de Água","rot":"Verificação de Serviços Pendentes — Manut. Água","cod":"822","grupo":"VERIF","idade":1,"fora":false,"sit":"Reaberta","depto":"RECOMPOSIÇÃO DE PAVIMENTO E REMOÇÃO DE ENTULHO","depto_curto":"Recomposição","api":"Em Execução","fonte":"API","lat":-23.5569124,"lon":-46.2023068,"geo":"rua"},{"os":"2026161298","cdc":"18585","solic":"ERIKA TAMANTINI RIBEIRO VIEIRO ARAUJO","tipo":"Vazamento de Água","end":"RUA DR. PAULO FRONTIN, 231 CENTRO","nro":"","bairro":"CENTRO","data":"09/11/2026 16:01","iso":"2026-11-09T16:01","nat":"Água","rot":"Recapeamento — Água","cod":"101","grupo":"RECAPE","idade":1,"fora":false,"sit":"Nova","depto":"RECOMPOSIÇÃO DE PAVIMENTO E REMOÇÃO DE ENTULHO","depto_curto":"Recomposição","api":"Em Execução","fonte":"API","lat":-23.5231863,"lon":-46.1928662,"geo":"rua"},{"os":"2026151728","cdc":"","solic":"MOISES FISCAL DE SERVIÇOS","tipo":"Recapeamento - Paralelepípedo - Ligação de Água","end":"RUA JOSE DA SILVA BARRETO","nro":"15","bairro":"VILA JUNDIAPEBA","data":"22/10/2026 15:31","iso":"2026-10-22T15:31","nat":"Ligação de Água","rot":"Recapeamento — Paralelepípedo","cod":"121","grupo":"RECAPE","idade":12,"fora":true,"sit":"Reaberta","depto":"RECOMPOSIÇÃO DE PAVIMENTO E REMOÇÃO DE ENTULHO","depto_curto":"Recomposição","api":"Aberta","fonte":"API","lat":-23.5510412,"lon":-46.2434901,"geo":"rua"},{"os":"2026146030","cdc":"","solic":"SIDNEI","tipo":"Manutenção de Coletor","end":"EST IMPERIAL,","nro":"","bairro":"BAIRRO DO BOTUJURU","data":"13/10/2026 08:21","iso":"2026-10-13T08:21","nat":"Esgoto","rot":"Recapeamento — Esgoto","cod":"123","grupo":"RECAPE","idade":19,"fora":true,"sit":"Concluída","depto":"SERVIÇOS DE MANUTENÇÃO DE REDES DE ESGOTO","depto_curto":"Redes Esgoto","api":"Em Execução","fonte":"API","lat":-23.483351,"lon":-46.1442544,"geo":"bairro"},{"os":"2026148219","cdc":"42229","solic":"JOAO JOSE DE SOUZA","tipo":"Vazamento de Esgoto","end":"RUA JOSE BONAFE","nro":"60","bairro":"CONJ. RESIDENCIAL JARDIM SAO JOAO","data":"16/10/2026 09:28","iso":"2026-10-16T09:28","nat":"Esgoto","rot":"Recapeamento — Esgoto","cod":"123","grupo":"RECAPE","idade":16,"fora":true,"sit":"Concluída","depto":"SERVIÇOS DE MANUTENÇÃO DE REDES DE ESGOTO","depto_curto":"Redes Esgoto","api":"Em Execução","fonte":"API","lat":-23.5422343,"lon":-46.1760902,"geo":"rua"},{"os":"2026148330","cdc":"37927","solic":"MONIQUE CAETANO RODRIGUES","tipo":"Verificação de Serviços Pendentes - Manut. Água","end":"RUA PE DR MARCILIO SIMOES R DE MELO, 82 C/","nro":"01","bairro":"JARDIM RODEIO-GB II","data":"16/10/2026 12:49","iso":"2026-10-16T12:49","nat":"Verificação — Manutenção de Água","rot":"Verificação de Serviços Pendentes — Manut. Água","cod":"822","grupo":"VERIF","idade":16,"fora":true,"sit":"Cancelada","depto":"POTENZA (Empreiteria de Recomposição e Reaterro de Valas)","depto_curto":"Potenza","api":"Em Execução","fonte":"API","lat":-23.4990968,"lon":-46.1793195,"geo":"rua"},{"os":"2026149233","cdc":"15822","solic":"IGREJA EVANGELICA PENTECOSTAL O BRASIL PARA CRISTO","tipo":"Geofonamento","end":"RUA ENG. FRANCISCO SALESSA","nro":"41","bairro":"VILA NATAL","data":"19/10/2026 09:23","iso":"2026-10-19T09:23","nat":"Água","rot":"Recapeamento — Água","cod":"101","grupo":"RECAPE","idade":15,"fora":true,"sit":"Cancelada","depto":"POTENZA (Empreiteria de Recomposição e Reaterro de Valas)","depto_curto":"Potenza","api":"Em Execução","fonte":"API","lat":-23.5317055,"lon":-46.1815198,"geo":"rua"},{"os":"2026149294","cdc":"146421","solic":"SERGIO COUTINHO","tipo":"Verificação de Serviços Pendentes - Manut. Água","end":"AV. FRANCISCO RODRIGUES FILHO","nro":"7025","bairro":"BAIRRO DO BOTUJURU","data":"19/10/2026 10:54","iso":"2026-10-19T10:54","nat":"Verificação — Manutenção de Água","rot":"Verificação de Serviços Pendentes — Manut. Água","cod":"822","grupo":"VERIF","idade":15,"fora":true,"sit":"Concluída","depto":"MANUTENÇÃO CIVIL","depto_curto":"Manutenção Civil","api":"Em Execução","fonte":"API","lat":-23.4842349,"lon":-46.1422116,"geo":"rua"},{"os":"2026149405","cdc":"87054","solic":"GENUSA MINERVINO MARCELINO","tipo":"Verificação de Serviços Pendentes - Ligações","end":"RUA STA. CRUZ DO ANDRE, 594 VL SAO PAULO","nro":"","bairro":"VILA SAO PAULO","data":"19/10/2026 14:23","iso":"2026-10-19T14:23","nat":"Ligação de Água","rot":"Recapeamento — Ligação de Água","cod":"121","grupo":"RECAPE","idade":15,"fora":true,"sit":"Concluída","depto":"RECOMPOSIÇÃO DE PAVIMENTO E REMOÇÃO DE ENTULHO","depto_curto":"Recomposição","api":"Em Execução","fonte":"API","lat":-23.4807617,"lon":-46.1280484,"geo":"rua"},{"os":"2026151054","cdc":"","solic":"SIDINEI DOS SANTOS","tipo":"Sondagem","end":"RUA ANA DOS PASSOS SILVA","nro":"121","bairro":"ALVORADA","data":"21/10/2026 15:27","iso":"2026-10-21T15:27","nat":"Esgoto","rot":"Recapeamento — Esgoto","cod":"123","grupo":"RECAPE","idade":13,"fora":true,"sit":"Concluída","depto":"SERVIÇOS DE MANUTENÇÃO DE REDES DE ESGOTO","depto_curto":"Redes Esgoto","api":"Em Execução","fonte":"API","lat":-23.5593917,"lon":-46.19626,"geo":"rua"},{"os":"2026153511","cdc":"","solic":"AGENTE REGIONAL MARCIO","tipo":"Sondagem","end":"AV. JAPAO","nro":"175","bairro":"CONJ HABITACIONAL STO ANGELO","data":"26/10/2026 11:09","iso":"2026-10-26T11:09","nat":"Esgoto","rot":"Recapeamento — Esgoto","cod":"123","grupo":"RECAPE","idade":10,"fora":true,"sit":"Cancelada","depto":"SERVIÇOS DE MANUTENÇÃO DE REDES DE ESGOTO","depto_curto":"Redes Esgoto","api":"Em Execução","fonte":"API","lat":-23.5866227,"lon":-46.2298313,"geo":"rua"},{"os":"2026153975","cdc":"","solic":"EDUC MOGI COLEGIO INTEGRADO LTDA","tipo":"Estudo de Ligação Predial de Água","end":"RUA CB. DIOGO OLIVER, 758 ESCOLA NAUTICO","nro":"","bairro":"CENTRO","data":"27/10/2026 08:58","iso":"2026-10-27T08:58","nat":"Ligação de Água","rot":"Recapeamento — Ligação de Água","cod":"121","grupo":"RECAPE","idade":9,"fora":true,"sit":"Cancelada","depto":"MANUTENÇÃO CIVIL","depto_curto":"Manutenção Civil","api":"Em Execução","fonte":"API","lat":-23.5196482,"lon":-46.1984911,"geo":"rua"},{"os":"2026154324","cdc":"","solic":"AGENTE REGIONAL MARCIO","tipo":"Sondagem","end":"RUA SUICA","nro":"59","bairro":"JARDIM SANTOS DUMONT I","data":"27/10/2026 13:25","iso":"2026-10-27T13:25","nat":"Esgoto","rot":"Recapeamento — Esgoto","cod":"123","grupo":"RECAPE","idade":9,"fora":true,"sit":"Concluída","depto":"SERVIÇOS DE MANUTENÇÃO DE REDES DE ESGOTO","depto_curto":"Redes Esgoto","api":"Em Execução","fonte":"API","lat":-23.5774692,"lon":-46.2212016,"geo":"rua"},{"os":"2026154421","cdc":"","solic":"AGENTE REGINAL SANDER","tipo":"Aterro / Reaterro / Recorte - Esgoto","end":"AV. JOSE ANTONIO DE MELLO","nro":"250","bairro":"VILA JUNDIAPEBA","data":"27/10/2026 15:37","iso":"2026-10-27T15:37","nat":"Esgoto","rot":"Recapeamento — Esgoto","cod":"123","grupo":"RECAPE","idade":9,"fora":true,"sit":"Concluída","depto":"SERVIÇOS DE MANUTENÇÃO DE REDES DE ESGOTO","depto_curto":"Redes Esgoto","api":"Em Execução","fonte":"API","lat":-23.5454075,"lon":-46.2451466,"geo":"rua"},{"os":"2026154929","cdc":"","solic":"CLAUDIO SERVIÇOS URBANOS","tipo":"Sondagem","end":"RUA VER. BENEDICTO DE OLIVEIRA FLORES","nro":"450","bairro":"JARDIM ESPERANCA","data":"28/10/2026 15:30","iso":"2026-10-28T15:30","nat":"Esgoto","rot":"Recapeamento — Esgoto","cod":"123","grupo":"RECAPE","idade":8,"fora":true,"sit":"Concluída","depto":"MANUTENÇÃO CIVIL","depto_curto":"Manutenção Civil","api":"Em Execução","fonte":"API","lat":-23.5584478,"lon":-46.2138354,"geo":"rua"},{"os":"2026156326","cdc":"","solic":"Alexandre","tipo":"Vistoria de Vazamento de Água","end":"AV. PEDRO ROMERO","nro":"329","bairro":"CESAR DE SOUSA","data":"30/10/2026 07:18","iso":"2026-10-30T07:18","nat":"Remoção de entulho","rot":"Recomposição de pavimento e remoção de entulho","cod":"—","grupo":"SOLO","idade":6,"fora":true,"sit":"Nova","depto":"RECOMPOSIÇÃO DE PAVIMENTO E REMOÇÃO DE ENTULHO","depto_curto":"Recomposição","api":"Em Execução","fonte":"API","lat":-23.500886,"lon":-46.1766447,"geo":"rua"},{"os":"2026156565","cdc":"180543","solic":"MARIA APARECIDA ALVES PAIM","tipo":"Verificação/Parecer da Equipe de Apoio","end":"RUA UGANDA, 976 A","nro":"","bairro":"JARDIM SANTOS DUMONT II","data":"01/11/2026 09:33","iso":"2026-11-01T09:33","nat":"Esgoto","rot":"Recapeamento — Esgoto","cod":"123","grupo":"RECAPE","idade":6,"fora":true,"sit":"Cancelada","depto":"POTENZA (Empreiteria de Recomposição e Reaterro de Valas)","depto_curto":"Potenza","api":"Em Execução","fonte":"API","lat":-23.5743149,"lon":-46.2273106,"geo":"rua"},{"os":"2026157330","cdc":"172687","solic":"Wagner","tipo":"Vazamento de água produto de pesquisa","end":"RUA JOAO BAPTISTA MONTEIRO","nro":"626","bairro":"VILA MELCHIZEDEC","data":"03/11/2026 09:56","iso":"2026-11-03T09:56","nat":"Água","rot":"Recapeamento — Água","cod":"101","grupo":"RECAPE","idade":5,"fora":true,"sit":"Cancelada","depto":"MANUTENÇÃO CIVIL","depto_curto":"Manutenção Civil","api":"Em Execução","fonte":"API","lat":-23.5582787,"lon":-46.1951653,"geo":"rua"},{"os":"2026157373","cdc":"43827","solic":"Enorsul","tipo":"Vazamento de água produto de pesquisa","end":"RUA APOLO DEZOITO, 41 JD STA TEREZA","nro":"","bairro":"VILA APOLO","data":"03/11/2026 10:21","iso":"2026-11-03T10:21","nat":"Água","rot":"Recapeamento — Água","cod":"101","grupo":"RECAPE","idade":5,"fora":true,"sit":"Concluída","depto":"MANUTENÇÃO CIVIL","depto_curto":"Manutenção Civil","api":"Em Execução","fonte":"API","lat":-23.5514762,"lon":-46.2161908,"geo":"rua"},{"os":"2026157378","cdc":"63326","solic":"Enorsul","tipo":"Vazamento de Água","end":"RUA APOLO ONZE, 178 FDS","nro":"","bairro":"VILA APOLO","data":"03/11/2026 10:22","iso":"2026-11-03T10:22","nat":"Água","rot":"Recapeamento — Água","cod":"101","grupo":"RECAPE","idade":5,"fora":true,"sit":"Concluída","depto":"MANUTENÇÃO CIVIL","depto_curto":"Manutenção Civil","api":"Em Execução","fonte":"API","lat":-23.5517334,"lon":-46.2171514,"geo":"rua"},{"os":"2026157544","cdc":"","solic":"ADELIO BARBOSA DOS SANTOS","tipo":"Estudo de Ligação Predial de Água","end":"AV. DR. PANTALEAO TRANDAFILOV FILHO, 76 C/","nro":"02","bairro":"JARDIM SANTOS DUMONT III","data":"03/11/2026 12:35","iso":"2026-11-03T12:35","nat":"Ligação de Água","rot":"Recapeamento — Ligação de Água","cod":"121","grupo":"RECAPE","idade":5,"fora":true,"sit":"Concluída","depto":"RECOMPOSIÇÃO DE PAVIMENTO E REMOÇÃO DE ENTULHO","depto_curto":"Recomposição","api":"Em Execução","fonte":"API","lat":-23.5770834,"lon":-46.2221908,"geo":"rua"}];
+const AGG = {"porNat":[{"nat":"Água","qtd":34,"fora":12,"pior":15,"media":3.2,"conf":65},{"nat":"Ligação de Água","qtd":28,"fora":5,"pior":15,"media":1.9,"conf":82},{"nat":"Esgoto","qtd":21,"fora":10,"pior":19,"media":6.0,"conf":52},{"nat":"Ligação de Esgoto","qtd":3,"fora":1,"pior":7,"media":3.0,"conf":67}],"sit":{"Fora da base":16,"Concluída":29,"Cancelada":7,"Reaberta":14,"Nova":20},"porFaixa":[{"faixa":"0 a 2 dias úteis","qtd":58,"fora":false},{"faixa":"3 a 5 dias úteis","qtd":9,"fora":true},{"faixa":"6 a 10 dias úteis","qtd":12,"fora":true},{"faixa":"mais de 10 dias úteis","qtd":7,"fora":true}],"topBairros":[{"bairro":"VILA JUNDIAPEBA","qtd":15,"fora":4,"lat":0,"lon":0},{"bairro":"VILA SAO PAULO","qtd":9,"fora":4,"lat":0,"lon":0},{"bairro":"VILA MOGI MODERNO","qtd":8,"fora":1,"lat":0,"lon":0},{"bairro":"CENTRO","qtd":8,"fora":2,"lat":0,"lon":0},{"bairro":"JARDIM NOVE DE JULHO","qtd":5,"fora":1,"lat":0,"lon":0},{"bairro":"VILA LAVINIA","qtd":3,"fora":0,"lat":0,"lon":0},{"bairro":"VILA SUISSA","qtd":2,"fora":1,"lat":0,"lon":0},{"bairro":"VILA MELCHIZEDEC","qtd":2,"fora":1,"lat":0,"lon":0},{"bairro":"JARDIM ESPERANCA","qtd":2,"fora":1,"lat":0,"lon":0},{"bairro":"PARQUE MORUMBI","qtd":2,"fora":0,"lat":0,"lon":0},{"bairro":"CONJ. RESIDENCIAL JARDIM SAO JOAO","qtd":2,"fora":1,"lat":0,"lon":0},{"bairro":"VILA NATAL","qtd":2,"fora":1,"lat":0,"lon":0}],"topOrigens":[{"origem":"Estudo de ligação predial","qtd":16},{"origem":"Vazamento de água","qtd":12},{"origem":"Vistoria de vazamento","qtd":12},{"origem":"Verificação de pendências","qtd":8},{"origem":"Sondagem","qtd":6},{"origem":"Vazamento de esgoto","qtd":5},{"origem":"Geofonamento (pesquisa)","qtd":4},{"origem":"Recapeamento (direto)","qtd":3},{"origem":"Reativação de ligação","qtd":3},{"origem":"Estudo ligação água/esgoto","qtd":3},{"origem":"Pressão baixa","qtd":2},{"origem":"Aterro / reaterro","qtd":2},{"origem":"Poço de visita","qtd":2},{"origem":"Estudo de Ligação Predial de Água","qtd":2},{"origem":"Vazamento de água produto de pesqu","qtd":2},{"origem":"Substituição de ligação","qtd":1},{"origem":"Hidrojateamento","qtd":1},{"origem":"Manutenção de Coletor","qtd":1},{"origem":"Geofonamento","qtd":1}],"serie":[{"dia":"2026-10-13","qtd":1},{"dia":"2026-10-14","qtd":1},{"dia":"2026-10-16","qtd":1},{"dia":"2026-10-19","qtd":2},{"dia":"2026-10-21","qtd":1},{"dia":"2026-10-22","qtd":1},{"dia":"2026-10-26","qtd":5},{"dia":"2026-10-27","qtd":3},{"dia":"2026-10-28","qtd":1},{"dia":"2026-10-29","qtd":1},{"dia":"2026-10-30","qtd":1},{"dia":"2026-11-01","qtd":1},{"dia":"2026-11-03","qtd":4},{"dia":"2026-11-04","qtd":2},{"dia":"2026-11-05","qtd":3},{"dia":"2026-11-06","qtd":2},{"dia":"2026-11-07","qtd":2},{"dia":"2026-11-08","qtd":2},{"dia":"2026-11-09","qtd":38},{"dia":"2026-11-10","qtd":14}],"lote":{"dias":[{"dia":"2026-11-09","qtd":38},{"dia":"2026-11-10","qtd":14}],"qtd":52},"kpi":{"total":86,"os":86,"fora":28,"pior":19,"media":3.5,"bairros":35},"ton":{"cargas":[{"dia":"03/11/2026","dow":"ter","veic":"ENZ 3C92","nf":"014567 S 11","tara":13210,"bruto":21660,"liq":8450,"t":8.45},{"dia":"03/11/2026","dow":"ter","veic":"ENZ 2E33","nf":"014568 S 11","tara":13190,"bruto":21630,"liq":8440,"t":8.44},{"dia":"04/11/2026","dow":"qua","veic":"ENZ 2E33","nf":"014617 S 11","tara":13090,"bruto":20970,"liq":7880,"t":7.88},{"dia":"04/11/2026","dow":"qua","veic":"ENZ 3C92","nf":"014615 S 11","tara":13240,"bruto":21650,"liq":8410,"t":8.41},{"dia":"05/11/2026","dow":"qui","veic":"ENZ 2J34","nf":"014678 S 11","tara":13060,"bruto":21050,"liq":7990,"t":7.99},{"dia":"05/11/2026","dow":"qui","veic":"ENZ 3C92","nf":"014676 S 11","tara":13140,"bruto":21060,"liq":7920,"t":7.92},{"dia":"06/11/2026","dow":"sex","veic":"ENZ 3C92","nf":"014701 S 11","tara":13230,"bruto":21830,"liq":8600,"t":8.6},{"dia":"06/11/2026","dow":"sex","veic":"ENZ 2J34","nf":"014705 S 11","tara":13460,"bruto":22260,"liq":8800,"t":8.8}],"total":66.49,"valorTotal":95222.32,"preco":1432.13,"m2":554.08,"valorM2":171.86,"dias":4,"mediaDia":16.622,"mediaCarga":8.311,"porVeic":[{"veic":"ENZ 2E33","t":16.32},{"veic":"ENZ 2J34","t":16.79},{"veic":"ENZ 3C92","t":33.38}],"porDia":[{"dia":"03/11/2026","t":16.89,"cargas":2},{"dia":"04/11/2026","t":16.29,"cargas":2},{"dia":"05/11/2026","t":15.91,"cargas":2},{"dia":"06/11/2026","t":17.4,"cargas":2}]},"rotas":{"antiga":[{"os":"2026142578","end":"RUA REGIS PLINIO BATALHA","nro":"1137","bairro":"VILA SAO PAULO","idade":18,"nat":"Esgoto","data":"14/10/2026 14:56","lat":-23.4788421,"lon":-46.1255716,"geo":"rua","km_anterior":0},{"os":"2026151708","end":"RUA NISHIO TADASI","nro":"638","bairro":"JARDIM NOVE DE JULHO","idade":10,"nat":"Água","data":"26/10/2026 09:05","lat":-23.6103444,"lon":-46.2522028,"geo":"rua","km_anterior":19.5},{"os":"2026152631","end":"RUA QUINZE DE NOVEMBRO","nro":"145","bairro":"VILA SAO PAULO","idade":10,"nat":"Água","data":"26/10/2026 09:05","lat":-23.4796331,"lon":-46.1378833,"geo":"rua","km_anterior":18.6},{"os":"2026152557","end":"RUA QUINZE DE NOVEMBRO","nro":"390","bairro":"VILA SAO PAULO","idade":10,"nat":"Água","data":"26/10/2026 10:37","lat":-23.4796331,"lon":-46.1378833,"geo":"rua","km_anterior":0.0},{"os":"2026152556","end":"RUA GASTAO COSTA","nro":"735","bairro":"VILA MOGI MODERNO","idade":10,"nat":"Água","data":"26/10/2026 11:20","lat":-23.5357533,"lon":-46.1930767,"geo":"rua","km_anterior":8.4},{"os":"2026065674","end":"PC JESUINO FRANCO","nro":"78","bairro":"SABAUNA","idade":7,"nat":"Ligação de Esgoto","data":"29/10/2026 08:25","lat":-23.4804,"lon":-46.0867,"geo":"bairro","km_anterior":12.5},{"os":"2026151570","end":"RUA JOAO RIBEIRO","nro":"210","bairro":"VILA SUISSA","idade":6,"nat":"Esgoto","data":"30/10/2026 11:05","lat":-23.4943512,"lon":-46.1474653,"geo":"rua","km_anterior":6.4},{"os":"2026157442","end":"RUA RICARDO RODRIGUES DE SOUZA","nro":"907","bairro":"VILA JUNDIAPEBA","idade":3,"nat":"Água","data":"05/11/2026 09:30","lat":-23.5516467,"lon":-46.2515797,"geo":"rua","km_anterior":12.4}],"otim":[{"os":"2026142578","end":"RUA REGIS PLINIO BATALHA","nro":"1137","bairro":"VILA SAO PAULO","idade":18,"nat":"Esgoto","data":"14/10/2026 14:56","lat":-23.4788421,"lon":-46.1255716,"geo":"rua","km_anterior":0},{"os":"2026152631","end":"RUA QUINZE DE NOVEMBRO","nro":"145","bairro":"VILA SAO PAULO","idade":10,"nat":"Água","data":"26/10/2026 09:05","lat":-23.4796331,"lon":-46.1378833,"geo":"rua","km_anterior":1.3},{"os":"2026152557","end":"RUA QUINZE DE NOVEMBRO","nro":"390","bairro":"VILA SAO PAULO","idade":10,"nat":"Água","data":"26/10/2026 10:37","lat":-23.4796331,"lon":-46.1378833,"geo":"rua","km_anterior":0.0},{"os":"2026151570","end":"RUA JOAO RIBEIRO","nro":"210","bairro":"VILA SUISSA","idade":6,"nat":"Esgoto","data":"30/10/2026 11:05","lat":-23.4943512,"lon":-46.1474653,"geo":"rua","km_anterior":1.9},{"os":"2026065674","end":"PC JESUINO FRANCO","nro":"78","bairro":"SABAUNA","idade":7,"nat":"Ligação de Esgoto","data":"29/10/2026 08:25","lat":-23.4804,"lon":-46.0867,"geo":"bairro","km_anterior":6.4},{"os":"2026152556","end":"RUA GASTAO COSTA","nro":"735","bairro":"VILA MOGI MODERNO","idade":10,"nat":"Água","data":"26/10/2026 11:20","lat":-23.5357533,"lon":-46.1930767,"geo":"rua","km_anterior":12.5},{"os":"2026157442","end":"RUA RICARDO RODRIGUES DE SOUZA","nro":"907","bairro":"VILA JUNDIAPEBA","idade":3,"nat":"Água","data":"05/11/2026 09:30","lat":-23.5516467,"lon":-46.2515797,"geo":"rua","km_anterior":6.2},{"os":"2026151708","end":"RUA NISHIO TADASI","nro":"638","bairro":"JARDIM NOVE DE JULHO","idade":10,"nat":"Água","data":"26/10/2026 09:05","lat":-23.6103444,"lon":-46.2522028,"geo":"rua","km_anterior":6.5}],"kmA":77.8,"kmB":34.8,"economia":43.0,"economia_pct":55,"minA":156,"minB":70,"minGanhos":86,"valasGanhas":3.4,"fases":[{"n":4,"mais_antiga":18,"bairro":"VILA SAO PAULO","os":[{"os":"2026142578","end":"RUA REGIS PLINIO BATALHA","nro":"1137","idade":18,"nat":"Esgoto"},{"os":"2026152631","end":"RUA QUINZE DE NOVEMBRO","nro":"145","idade":10,"nat":"Água"},{"os":"2026152557","end":"RUA QUINZE DE NOVEMBRO","nro":"390","idade":10,"nat":"Água"},{"os":"2026151570","end":"RUA JOAO RIBEIRO","nro":"210","idade":6,"nat":"Esgoto"}]},{"n":1,"mais_antiga":10,"bairro":"JARDIM NOVE DE JULHO","os":[{"os":"2026151708","end":"RUA NISHIO TADASI","nro":"638","idade":10,"nat":"Água"}]},{"n":1,"mais_antiga":10,"bairro":"VILA MOGI MODERNO","os":[{"os":"2026152556","end":"RUA GASTAO COSTA","nro":"735","idade":10,"nat":"Água"}]},{"n":1,"mais_antiga":7,"bairro":"SABAUNA","os":[{"os":"2026065674","end":"PC JESUINO FRANCO","nro":"78","idade":7,"nat":"Ligação de Esgoto"}]},{"n":1,"mais_antiga":3,"bairro":"VILA JUNDIAPEBA","os":[{"os":"2026157442","end":"RUA RICARDO RODRIGUES DE SOUZA","nro":"907","idade":3,"nat":"Água"}]}]},"questoes":[{"id":"A1","cat":"A","t":"Por que a OS 2026142578 está aberta há 18 dias úteis?","d":"É a mais antiga da fila e sozinha responde por mais atraso que todas as outras somadas. Preciso saber se o serviço foi executado e não baixado, se houve impedimento técnico ou se a OS nunca chegou à sua equipe.","ev":"Relatório CEBI 10/11 · OS ausente da base viva","crit":"alto","sel":true},{"id":"A2","cat":"A","t":"Quatro OS de 26/10 (Vila São Paulo e Mogi Moderno) estão há 10 dias úteis. Houve impedimento comum às quatro?","d":"As quatro entraram no mesmo dia e nenhuma foi executada. Se foi um lote liberado junto, quero saber o que travou; se foi falta de programação, preciso da razão.","ev":"OS 2026151708, 2026152631, 2026152557, 2026152556","crit":"alto","sel":true},{"id":"A3","t":"A OS 2026156570 aparece aberta no CEBI mas foi baixada como concluída. Qual é a situação real?","d":"Há divergência entre o relatório e a base. Preciso da confirmação de campo antes de encerrar.","cat":"A","ev":"API: statusEventoPrincipal Em Execução","crit":"medio","sel":false},{"id":"A4","cat":"A","t":"Quantas OS vocês recebem por dia e quantas conseguem executar por dia?","d":"Quero o número real de capacidade. Com 2 cargas diárias de massa, a frente entrega cerca de 8,3 t por viagem — preciso saber se isso limita a fila ou se o limite é equipe.","ev":"Planilha de tonelagem 03–06/11","crit":"alto","sel":true},{"id":"B1","cat":"B","t":"A operação trabalha sempre com 2 cargas por dia, em 8 cargas nos 4 dias. Qual é a capacidade máxima se houver demanda?","d":"Todos os dias fecharam entre 7,88 t e 8,80 t por carga. Isso indica teto operacional. Preciso saber qual o teto real e o que falta para ampliar.","ev":"8 cargas · média 8,311 t · máxima 8,800 t","crit":"alto","sel":true},{"id":"B2","cat":"B","t":"Por que o caminhão ENZ 3C92 fez 50% de toda a tonelagem do período?","d":"Um único veículo concentra 33,38 t de 66,49 t. Se ele parar, a frente para. Existe plano B?","ev":"33,380 t em 66,490 t","crit":"alto","sel":true},{"id":"B3","cat":"B","t":"Qual a produtividade média por equipe, em m² por dia?","d":"A planilha não traz área executada — as colunas estão zeradas. Preciso a metragem real por OS para fechar a conta m² × tonelada.","ev":"Planilha: colunas de área zeradas, resumo #DIV/0!","crit":"alto","sel":true},{"id":"B4","cat":"B","t":"Existe alguma OS executada que não foi lançada na planilha de tonelagem?","d":"Se houver serviço feito sem carga registrada, a medição fica incompleta e não consigo fechar o mês.","ev":"Divergência entre 68 eventos e 8 cargas","crit":"medio","sel":false},{"id":"C1","cat":"C","t":"A planilha não identifica a OS em nenhuma carga. É possível incluir o número da OS e a metragem por linha?","d":"Sem isso não consigo ratear tonelagem por OS, por bairro ou por tipo de recape. Com o número, o fechamento mensal passa a ser automático.","ev":"Coluna Observação vazia em todas as 8 linhas","crit":"alto","sel":true},{"id":"C2","cat":"C","t":"A área executada de água e esgoto está zerada na planilha. Como vocês apuram a metragem para a medição?","d":"O contrato mede por tonelada, mas a fiscalização mede m². Sem a área não há como conferir espessura — e é aí que aparece a glosa.","ev":"Colunas Quant./Área zeradas","crit":"alto","sel":true},{"id":"C3","cat":"C","t":"Qual a espessura média aplicada e como ela é controlada?","d":"O contrato exige 5 cm compactados (TR 7.1.4). Com 66,490 t a 5 cm, a área coberta é de 554 m². Se vocês executaram mais área com a mesma massa, a espessura está abaixo do contratado.","ev":"0,120 t/m² × 554 m² calculados","crit":"alto","sel":true},{"id":"C4","cat":"C","t":"As notas fiscais da planilha batem com as cargas efetivamente entregues no local?","d":"Conferi bruto − tara em todas as 8 e fechou. Mas a nota é da usina: quero confirmar que a massa chegou à vala e não houve descarte.","ev":"8 NF conferidas · bruto−tara = líquido","crit":"medio","sel":false},{"id":"D1","cat":"D","t":"Qual o índice de serviço recusado pela fiscalização no último mês?","d":"O TR 3.9 manda refazer sem ônus. Preciso do número de retrabalho para saber se o problema é prazo ou qualidade.","ev":"TR 3.9 / TR 4.1","crit":"medio","sel":true},{"id":"D2","cat":"D","t":"Há registro fotográfico de antes, durante e depois de cada OS?","d":"É exigência do TR 1.7 e 2.12.2. Sem foto não há como comprovar execução nem medir área com segurança.","ev":"TR 1.7 / 2.12.2","crit":"medio","sel":true},{"id":"D3","cat":"D","t":"Alguma das OS atrasadas tem impedimento de execução? Chuva, veículo no local, interferência?","d":"O TR 1.19 permite descontar dia improdutivo do prazo. Mas isso precisa de registro — não basta alegar depois.","ev":"TR 1.19","crit":"medio","sel":false},{"id":"E1","cat":"E","t":"Qual o horário de retirada das OS e como vocês recebem as urgentes?","d":"O TR 1.8 fixa retirada até 8h30, com urgência por rádio. Preciso saber se o fluxo real é esse ou se há OS chegando por outro caminho.","ev":"TR 1.8 / 1.21","crit":"medio","sel":false},{"id":"E2","cat":"E","t":"Quantas equipes vocês mantêm em campo hoje, e quantas são de recape?","d":"O TR 2.1.1 estima 2 equipes, chegando a 3 no pico. Quero o número efetivo para dimensionar a fila contra a capacidade.","ev":"TR 2.1.1 / 2.18","crit":"alto","sel":true},{"id":"E3","cat":"E","t":"Existe programação semanal formal, compartilhada com a fiscalização?","d":"Com 54 eventos entrando em dois dias, uma programação semanal evitaria a corrida. Pergunto se já existe e como é pactuada.","ev":"54 de 68 eventos em 09 e 10/11","crit":"medio","sel":true},{"id":"E4","cat":"E","t":"Qual a previsão de conclusão para os 8 eventos fora do prazo, com data por OS?","d":"É o pedido central. Quero data compromissada por OS, não previsão genérica.","ev":"8 OS fora do TR 3.7","crit":"alto","sel":true}],"providencias":[{"id":1,"prio":1,"cat":"imediata","t":"Cobrar formalmente as 8 OS fora do prazo, com data compromissada por OS","d":"As 8 somam <b>77 dias úteis</b> de atraso acumulado contra um limite contratual de 2 por OS. Não é caso de conversa: é notificação com prazo. Peça data por OS, não previsão genérica — e registre a resposta.","dono":"GAP + fiscal do contrato","prazo":"Hoje","evidencia":"TR 3.7 e cláusula 13.5"},{"id":2,"prio":1,"cat":"imediata","t":"Apurar individualmente a OS 2026142578 antes de qualquer penalidade","d":"18 dias úteis e <b>ausente da base viva</b>. Esse conjunto (muito antiga + fora da base) tem duas causas possíveis e opostas: serviço executado e nunca baixado, ou serviço nunca executado. Penalizar sem saber qual é expõe a fiscalização.","dono":"Fiscal Sinval / Aldemir","prazo":"Hoje","evidencia":"Relatório 10/11 × base viva"},{"id":3,"prio":1,"cat":"imediata","t":"Corrigir a chave da base de OS para OS+evento","d":"O pipeline trata 1 OS = 1 evento. Quando a OS já foi fechada e nasce um evento novo de recape, o sistema não reabre — e <b>29 OS pendentes ficaram invisíveis</b>. Enquanto não corrigir, o painel subconta a fila e a cobrança sai incompleta.","dono":"GAP","prazo":"Esta semana","evidencia":"29 divergências apuradas"},{"id":4,"prio":1,"cat":"imediata","t":"Executar os atrasados em rota agrupada por região","d":"A ordem por antiguidade percorre <b>77,8 km</b>; a ordem otimizada percorre <b>34,8 km</b> — 55% menos. A economia de ~86 min por saída equivale a <b>3,4 valas</b> a mais por dia. As três OS da Vila São Paulo estão a menos de 1,3 km entre si.","dono":"Encarregado Potenza","prazo":"Próxima saída","evidencia":"Roteiro calculado por geocodificação"},{"id":5,"prio":2,"cat":"estrutural","t":"Exigir número de OS e metragem em cada linha da planilha de tonelagem","d":"Hoje a planilha tem tonelada e valor, mas <b>nenhuma linha identifica a OS</b> e as colunas de área estão zeradas. Com OS + m² por linha, o fechamento mensal vira automático e a glosa por espessura passa a ter base documental.","dono":"GAP + Potenza","prazo":"Próxima medição","evidencia":"Planilha nov/2026"},{"id":6,"prio":2,"cat":"estrutural","t":"Instituir conferência de espessura por amostragem","d":"A régua é 0,120 t/m² (5 cm × 2,4 t/m³). Basta medir a área de uma OS e comparar com a massa faturada para saber se a espessura foi cumprida. Sem isso, a medição por tonelada é uma <b>declaração da contratada</b>, não uma aferição.","dono":"Fiscal do contrato","prazo":"Este mês","evidencia":"TR 7.1.4 II · 554 m² por 66,490 t"},{"id":7,"prio":2,"cat":"estrutural","t":"Quebrar o gargalo de recape de água","d":"Ligação de água está <b>100% no prazo</b>; recape de água, <b>81%</b>. Mesmo caminhão, mesma contratada, mesmo período. Como o veículo é o mesmo, o gargalo é a <b>frente de vala de rede</b>, não a logística de massa.","dono":"Chefia da divisão","prazo":"Este mês","evidencia":"Conformidade por tipo"},{"id":8,"prio":2,"cat":"gestao","t":"Programar a frente no fim de semana para absorver o pico de segunda","d":"<b>41 dos 68 eventos</b> entraram numa segunda-feira e 49 dos 68 entre 7h e 12h. A fila não cresce ao longo da semana: ela recebe um bloco na segunda de manhã. Uma programação antecipada absorve o pico antes de ele virar atraso.","dono":"GAP","prazo":"Próxima semana","evidencia":"Gráficos 11 e 12"},{"id":9,"prio":3,"cat":"estrutural","t":"Avaliar caminhão extra — a operação está no teto de carga","d":"O padrão é rígido: <b>2 cargas por dia, ~8,3 t cada</b>, todos os 4 dias. Aumentar a frente sem veículo extra não aumenta a entrega, só aumenta a espera da OS. Hoje um único caminhão (3C92) faz 50% do volume.","dono":"Chefia + contrato","prazo":"30 dias","evidencia":"8 cargas · 66,490 t"},{"id":10,"prio":3,"cat":"gestao","t":"Fechar a lacuna do aditivo de prorrogação do 007/2023","d":"A cláusula 5.1 dá 12 meses desde 27/01/2023 e não há aditivo de prazo nos autos recebidos. Sem vigência comprovada, medir e cobrar é risco de apontamento.","dono":"Gestão de Contratos","prazo":"30 dias","evidencia":"Cláusula 5.1"},{"id":11,"prio":3,"cat":"gestao","t":"Pedir errata do item 5 do apostilamento","d":"O item 5 declara R$ 51.490,00 para 500 m³ quando 500 × R$ 514,90 = <b>R$ 257.450,00</b>. São R$ 205.960,00 a menor no documento assinado. Corrigir antes da próxima medição.","dono":"Gestão de Contratos","prazo":"30 dias","evidencia":"Apostilamento 17/07/2024"},{"id":12,"prio":3,"cat":"gestao","t":"Alinhar o POP ao contrato em três pontos","d":"O POP pede CBUQ <b>Faixa V</b> (contrato exige III ou IV), declara atendimento 7h–18h sem sábado (TR fixa 7h30–16h30 + sábado) e promete 3 dias onde o contrato manda 48 h. Pop desalinhado enfraquece a cobrança.","dono":"GAP","prazo":"30 dias","evidencia":"POP × TR"}],"extras":{"verif":[{"os":"2026148330","end":"RUA PE DR MARCILIO SIMOES R DE MELO, 82 C/","nro":"01","bairro":"JARDIM RODEIO-GB II","nat":"Verificação — Manutenção de Água","data":"16/10/2026 12:49","idade":16,"fora":true,"depto_curto":"Potenza","tipo":"Verificação de Serviços Pendentes - Manut. Água","lat":-23.4990968,"lon":-46.1793195,"geo":"rua","sit":"Cancelada"},{"os":"2026149294","end":"AV. FRANCISCO RODRIGUES FILHO","nro":"7025","bairro":"BAIRRO DO BOTUJURU","nat":"Verificação — Manutenção de Água","data":"19/10/2026 10:54","idade":15,"fora":true,"depto_curto":"Manutenção Civil","tipo":"Verificação de Serviços Pendentes - Manut. Água","lat":-23.4842349,"lon":-46.1422116,"geo":"rua","sit":"Concluída"},{"os":"2026158160","end":"RUA MANOEL FERNANDES","nro":"111","bairro":"VILA JUNDIAPEBA","nat":"Verificação — Manutenção de Água","data":"04/11/2026 12:31","idade":4,"fora":true,"depto_curto":"Recomposição","tipo":"Verificação de Serviços Pendentes - Manut. Água","lat":-23.5526677,"lon":-46.2420167,"geo":"rua","sit":"Concluída"},{"os":"2026158374","end":"RUA ODORICO MENDES, 75 C/2 - JD BANDEIRAS","nro":"","bairro":"JARDIM DAS BANDEIRAS","nat":"Verificação — Manutenção de Água","data":"04/11/2026 15:30","idade":4,"fora":true,"depto_curto":"Recomposição","tipo":"Verificação de Serviços Pendentes - Manut. Água","lat":-23.5244209,"lon":-46.1460586,"geo":"rua","sit":"Reaberta"},{"os":"2026159293","end":"AV. JAPAO, 751 A","nro":"","bairro":"VILA IPIRANGA","nat":"Verificação — Manutenção de Água","data":"06/11/2026 07:34","idade":2,"fora":false,"depto_curto":"Recomposição","tipo":"Verificação de Serviços Pendentes - Manut. Água","lat":-23.5498519,"lon":-46.2045171,"geo":"rua","sit":"Reaberta"},{"os":"2026159798","end":"RUA TRES DE MAIO","nro":"170","bairro":"VILA SAO JOAO","nat":"Verificação — Manutenção de Água","data":"06/11/2026 10:41","idade":2,"fora":false,"depto_curto":"Recomposição","tipo":"Verificação de Serviços Pendentes - Manut. Água","lat":-23.5511078,"lon":-46.1816035,"geo":"rua","sit":"Reaberta"},{"os":"2026159869","end":"RUA EDISON VIEIRA BRANDAO","nro":"126","bairro":"JARDINS DO PARAISO","nat":"Verificação — Manutenção de Água","data":"06/11/2026 12:22","idade":2,"fora":false,"depto_curto":"Recomposição","tipo":"Verificação de Serviços Pendentes - Manut. Água","lat":-23.555842,"lon":-46.1863635,"geo":"rua","sit":"Reaberta"},{"os":"2026161128","end":"RUA PRES CAMPOS SALLES, 164 C/01 - VL INDUSTRIAL","nro":"","bairro":"VILA INDUSTRIAL","nat":"Verificação — Manutenção de Água","data":"09/11/2026 12:32","idade":1,"fora":false,"depto_curto":"Potenza","tipo":"Verificação de Serviços Pendentes - Manut. Água","lat":-23.5201117,"lon":-46.2026882,"geo":"rua","sit":"Reaberta"},{"os":"2026161262","end":"RUA BENEDITO MARCONDES DA SILVA","nro":"289","bairro":"VILA BRASILEIRA","nat":"Verificação — Manutenção de Água","data":"09/11/2026 15:14","idade":1,"fora":false,"depto_curto":"Recomposição","tipo":"Verificação de Serviços Pendentes - Manut. Água","lat":-23.5569124,"lon":-46.2023068,"geo":"rua","sit":"Reaberta"}],"solo":[{"os":"2026156326","end":"AV. PEDRO ROMERO","nro":"329","bairro":"CESAR DE SOUSA","nat":"Remoção de entulho","data":"30/10/2026 07:18","idade":6,"fora":true,"depto_curto":"Recomposição","tipo":"Vistoria de Vazamento de Água","lat":-23.500886,"lon":-46.1766447,"geo":"rua","sit":"Nova"},{"os":"2026160949","end":"RUA DR DEODATO WERTHEIMER","nro":"1803","bairro":"VILA MOGI MODERNO","nat":"Troca de solo","data":"09/11/2026 10:08","idade":1,"fora":false,"depto_curto":"Recomposição","tipo":"Vistoria de Vazamento de Água","lat":-23.5267964,"lon":-46.1940186,"geo":"rua","sit":"Reaberta"}],"resVerif":{"qtd":9,"fora":4,"pior":16,"media":5.2},"resSolo":{"qtd":2,"fora":1,"pior":6,"media":3.5},"resRec":{"qtd":86,"fora":28,"pior":19,"media":3.5},"total":97,"totalFora":33,"bairrosVerif":[{"bairro":"VILA JUNDIAPEBA","qtd":1},{"bairro":"JARDIM DAS BANDEIRAS","qtd":1},{"bairro":"VILA IPIRANGA","qtd":1},{"bairro":"VILA SAO JOAO","qtd":1},{"bairro":"JARDINS DO PARAISO","qtd":1},{"bairro":"VILA INDUSTRIAL","qtd":1},{"bairro":"VILA BRASILEIRA","qtd":1},{"bairro":"JARDIM RODEIO-GB II","qtd":1}],"posse":[{"d":"—","qtd":38},{"d":"Potenza","qtd":20},{"d":"Manutenção Civil","qtd":18},{"d":"Recomposição","qtd":14},{"d":"Redes Esgoto","qtd":6},{"d":"Redes Água","qtd":1}],"fonte":[{"f":"PDF","qtd":65},{"f":"API","qtd":32}]}};
+const REF = "2026-11-10 11:10";
+const BASE_TS = "10/11/2026 07:58";
+const PDF_TS = "10/11/2026 09:10";
+
+const el = (id) => document.getElementById(id);
+const nf = (n, d) => Number(n).toLocaleString("pt-BR", { minimumFractionDigits: d || 0, maximumFractionDigits: d || 0 });
+const brl = (v) => "R$ " + Number(v).toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const ton = (v) => Number(v).toLocaleString("pt-BR", { minimumFractionDigits: 3, maximumFractionDigits: 3 }) + " t";
+const esc = (s) => String(s == null ? "" : s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const pl = (n, sg, pu) => n + " " + (n === 1 ? sg : pu);
+const duClasse = (d) => d > 10 ? "r" : d > 5 ? "o" : d > 2 ? "y" : "g";
+
+const NATS = ["Água", "Ligação de Água", "Esgoto", "Ligação de Esgoto"];
+const COR_NAT = { "Água": C.aco, "Ligação de Água": C.info, "Esgoto": C.esp, "Ligação de Esgoto": C.ok };
+
+function tagNat(n) {
+  const c = n === "Água" ? "agua" : n === "Esgoto" ? "esgoto" : "lig";
+  return `<span class="tag ${c}">${esc(n)}</span>`;
+}
+function tagSit(s) {
+  if (s === "Fora da base") return '<span class="tag bad">fora da base</span>';
+  if (s === "Concluída" || s === "Cancelada") return `<span class="tag warn">${esc(s.toLowerCase())} *</span>`;
+  return `<span class="tag ok">${esc(s.toLowerCase())}</span>`;
+}
+function copiar(btn, id) {
+  const txt = el(id).textContent;
+  const ok = () => { const o = btn.textContent; btn.textContent = "copiado"; setTimeout(() => btn.textContent = o, 1500); };
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(txt).then(ok).catch(() => fallback());
+  } else fallback();
+  function fallback() {
+    const ta = document.createElement("textarea");
+    ta.value = txt; ta.style.position = "fixed"; ta.style.opacity = "0";
+    document.body.appendChild(ta); ta.select();
+    try { document.execCommand("copy"); ok(); } catch (e) { }
+    document.body.removeChild(ta);
+  }
+}
+
+/* ------------------------------------------------------------------ KPIs */
+function renderKpis() {
+  const k = AGG.kpi, T = AGG.ton;
+  const pct = Math.round(k.fora / k.total * 100);
+  const cards = [
+    { l: "Eventos em aberto", v: k.total, d: `${k.os} OS distintas`, c: "info" },
+    { l: "Dentro do prazo", v: k.total - k.fora, d: `${100 - pct}% do total`, c: "ok" },
+    { l: "Fora do prazo", v: k.fora, d: `régua de 2 dias úteis`, c: "bad" },
+    { l: "Pior atraso", v: k.pior, s: "du", d: "OS 2026142578", c: "bad" },
+    { l: "Idade média", v: nf(k.media, 1), s: "du", d: "do evento até hoje", c: "warn" },
+    { l: "Toneladas medidas", v: nf(T.total, 3), s: "t", d: `${brl(T.valorTotal)} · ${T.dias} dias`, c: "aco" },
+  ];
+  el("kpis").innerHTML = cards.map(c => `
+    <div class="kpi ${c.c}">
+      <div class="kl">${c.l}</div>
+      <div class="kv">${typeof c.v === "number" ? nf(c.v) : c.v}${c.s ? `<small>${c.s}</small>` : ""}</div>
+      <div class="kd">${esc(c.d)}</div>
+    </div>`).join("");
+  el("pill-fora").textContent = `${k.fora} fora do prazo · pior ${k.pior} du`;
+}
+
+/* -------------------------------------------------------------- VISÃO */
+function renderVisao() {
+  el("n1").textContent = AGG.kpi.total + " eventos";
+  el("n2").textContent = "média " + AGG.kpi.media + " du";
+  const maxN = Math.max(...AGG.porNat.map(p => p.qtd), 1);
+  el("g-nat").innerHTML = AGG.porNat.map(p => {
+    const extra = p.fora ? ` <span style="color:var(--bad);font-size:11px">· ${p.fora} fora</span>` : "";
+    return `<div class="bar">
+      <div class="lbl"><span>${esc(p.nat)}${extra}</span><b>${pl(p.qtd, "OS", "OS")}</b></div>
+      <div class="track"><div class="fill ${p.nat === "Água" ? "aco" : p.nat === "Esgoto" ? "esp" : "info"}" style="width:${p.qtd / maxN * 100}%"></div></div>
+    </div>`;
+  }).join("");
+
+  const maxF = Math.max(...AGG.porFaixa.map(f => f.qtd), 1);
+  el("g-faixa").innerHTML = AGG.porFaixa.map(f => `
+    <div class="bar">
+      <div class="lbl"><span>${esc(f.faixa)}</span><b>${pl(f.qtd, "evento", "eventos")}</b></div>
+      <div class="track"><div class="fill ${f.fora ? (f.faixa.includes("mais") ? "bad" : "warn") : "ok"}" style="width:${f.qtd / maxF * 100}%"></div></div>
+    </div>`).join("");
+
+  const s = AGG.serie, mx = Math.max(...s.map(x => x.qtd), 1);
+  el("g-serie").innerHTML = s.map(x => {
+    const h = Math.max(3, x.qtd / mx * 94);
+    return `<div class="c" title="${x.dia}: ${x.qtd} evento(s)">
+      <div class="v">${x.qtd}</div><div class="bar2" style="height:${h}px"></div></div>`;
+  }).join("");
+  el("g-serie-x").innerHTML = s.map(x => `<span>${x.dia.slice(8, 10)}/${x.dia.slice(5, 7)}</span>`).join("");
+  el("n-lote").textContent = `${AGG.lote.qtd} de ${AGG.kpi.total} em ${AGG.lote.dias.length} dias`;
+
+  const agua = AGG.porNat[0], lig = AGG.porNat[1], esg = AGG.porNat[2];
+  el("leitura").innerHTML = [
+    { c: "ok", ic: "✓", t: `${AGG.kpi.total - AGG.kpi.fora} dos ${AGG.kpi.total} eventos dentro dos 2 dias úteis`,
+      d: "A fila está sob controle no conjunto. O problema não é volume — é um punhado de casos que travou." },
+    { c: "bad", ic: "✗", t: `Um caso de esgoto parado há ${AGG.kpi.pior} dias úteis`,
+      d: "OS 2026142578, Rua Regís Plínio Batalha 1137, Vila São Paulo. Sozinha, responde por mais atraso que todas as outras somadas — e ela nem consta da base viva." },
+    { c: "warn", ic: "!", t: `Água concentra ${agua.fora} dos ${AGG.kpi.fora} atrasos`,
+      d: `São ${agua.qtd} recapes de água com ${agua.conf}% de conformidade. Ligação de água, no mesmo caminhão, está em 100% — o gargalo é a frente de vala de rede, não a logística.` },
+    { c: "info", ic: "i", t: `${AGG.lote.qtd} dos ${AGG.kpi.total} eventos entraram em dois dias`,
+      d: `${AGG.lote.dias[0].qtd} em ${AGG.lote.dias[0].dia.slice(8, 10)}/${AGG.lote.dias[0].dia.slice(5, 7)} e ${AGG.lote.dias[1].qtd} em ${AGG.lote.dias[1].dia.slice(8, 10)}/${AGG.lote.dias[1].dia.slice(5, 7)}. É lote liberado de uma vez, não atraso gradual.` },
+  ].map(a => `<div class="alert ${a.c}"><span class="ic">${a.ic}</span><div class="bd"><div class="tt">${esc(a.t)}</div><div class="ds">${esc(a.d)}</div></div></div>`).join("");
+}
+
+/* --------------------------------------------------------- PROVIDÊNCIAS */
+let pFiltro = "all";
+function renderProvidencias() {
+  const lista = AGG.providencias.filter(p => pFiltro === "all" || p.cat === pFiltro);
+  el("prov-lista").innerHTML = lista.map(p => `
+    <div class="prov p${p.prio}">
+      <div class="ph">
+        <span class="num">${p.id}</span>
+        <span class="pt">${esc(p.t)}</span>
+        <span class="tag ${p.prio === 1 ? "bad" : p.prio === 2 ? "warn" : "info"}">${p.prio === 1 ? "imediata" : p.prio === 2 ? "curto prazo" : "estrutural"}</span>
+      </div>
+      <div class="pd">${p.d}</div>
+      <div class="pf"><span><b>Dono:</b> ${esc(p.dono)}</span><span><b>Prazo:</b> ${esc(p.prazo)}</span><span><b>Base:</b> ${esc(p.evidencia)}</span></div>
+    </div>`).join("");
+  el("c-prov").textContent = AGG.providencias.length;
+
+  el("prov-evitar").innerHTML = [
+    { c: "bad", ic: "✗", t: "Baixar OS por ausência no relatório sem checar a base", d: "Foi assim que 29 OS pendentes sumiram da cobrança. O relatório lista evento vivo; a base registra OS. São coisas diferentes." },
+    { c: "bad", ic: "✗", t: "Aplicar multa ao caso de 18 dias antes de apurar", d: "Se o serviço foi executado e a baixa falhou, a multa é indevida e desgasta a fiscalização. Apure o fato primeiro; a penalidade vem depois com prova." },
+    { c: "warn", ic: "!", t: "Cobrar prazo pelo POP em vez do contrato", d: "O POP fala em 3 dias; o contrato manda 2 dias úteis por OS. Cobrar pela régua mais frouxa enfraquece a notificação." },
+    { c: "warn", ic: "!", t: "Aumentar a frente sem caminhão extra", d: "A operação já está no teto de 2 cargas/dia. Mais equipe no mesmo veículo só aumenta a fila de espera na vala." },
+    { c: "info", ic: "i", t: "Medir só por tonelada declarada", d: "Sem área por OS não há como conferir espessura. A tonelagem sozinha é declaração da contratada, não aferição." },
+  ].map(a => `<div class="alert ${a.c}"><span class="ic">${a.ic}</span><div class="bd"><div class="tt">${esc(a.t)}</div><div class="ds">${esc(a.d)}</div></div></div>`).join("");
+}
+
+/* ---------------------------------------------------------------- ROTA */
+let rAtual = "antiga";
+function renderRota() {
+  const R = AGG.rotas;
+  const rota = rAtual === "antiga" ? R.antiga : R.otim;
+  const km = rAtual === "antiga" ? R.kmA : R.kmB;
+
+  el("c-rota").textContent = rota.length;
+  el("rota-resumo").innerHTML = `
+    <div class="alert ${rAtual === "antiga" ? "info" : "ok"}"><span class="ic">${rAtual === "antiga" ? "i" : "✓"}</span><div class="bd">
+      <div class="tt">${rAtual === "antiga"
+        ? `Ordem por antiguidade — ${rota.length} OS, ${nf(km, 1)} km`
+        : `Ordem otimizada — ${rota.length} OS, ${nf(km, 1)} km`}</div>
+      <div class="ds">${rAtual === "antiga"
+        ? `Atende a régua da cobrança: a mais antiga primeiro. Percurso ${nf(km, 1)} km ≈ ${R.minA} min de deslocamento.`
+        : `Mesmas OS, menor percurso: ${nf(km, 1)} km ≈ ${R.minB} min. Economia de <b>${nf(R.economia, 1)} km</b> (${R.economia_pct}%) e <b>${R.minGanhos} min</b> — tempo para ${nf(R.valasGanhas, 1)} valas a mais.`}</div>
+    </div></div>`;
+
+  el("rota-lista").innerHTML = rota.map((x, i) => {
+    const cls = x.idade > 10 ? "urg" : x.idade > 5 ? "warn" : "ok";
+    return `<div class="stop ${cls}">
+      <div class="pin">${i + 1}</div>
+      <div class="sb">
+        <div class="st">${esc(x.end)}${x.nro ? ", " + esc(x.nro) : ""} ${tagNat(x.nat)}</div>
+        <div class="sa">${esc(x.bairro)} · OS <span class="mono">${esc(x.os)}</span> · aberta em ${esc(x.data)}</div>
+        <div class="sm">
+          <span><b>${x.idade}</b> dias úteis</span>
+          <span>precisão: ${x.geo === "rua" ? "endereço exato" : "centro do bairro"}</span>
+          ${i ? `<span>${nf(x.km_anterior, 1)} km do ponto anterior</span>` : `<span>ponto de partida</span>`}
+        </div>
+      </div>
+      <div class="sd"><span class="du ${duClasse(x.idade)}">${x.idade}</span></div>
+    </div>`;
+  }).join("");
+
+  cBarras("ch-rota", ["Por antiguidade", "Otimizada"], [R.kmA, R.kmB], {
+    cores: [C.bad, C.ok], rotulo: v => nf(v, 1) + " km",
+  });
+
+  el("rota-fases").innerHTML = R.fases.map((f, i) => `
+    <div style="padding:11px 0;border-bottom:1px solid rgba(32,38,47,.7)">
+      <div style="display:flex;align-items:center;gap:9px;margin-bottom:5px">
+        <span class="tag ${f.mais_antiga > 5 ? "bad" : f.mais_antiga > 2 ? "warn" : "ok"}">fase ${i + 1}</span>
+        <b style="font-size:12.5px">${esc(f.bairro)}</b>
+        <span style="margin-left:auto;font-size:11px;color:var(--tx3)">${pl(f.n, "OS", "OS")} · mais antiga ${f.mais_antiga} du</span>
+      </div>
+      ${f.os.map(o => `<div style="font-size:11.5px;color:var(--tx2);padding-left:4px"><span class="mono">${esc(o.os)}</span> — ${esc(o.end)}, ${esc(o.nro)} <span style="color:var(--tx3)">(${o.idade} du)</span></div>`).join("")}
+    </div>`).join("");
+
+  el("rota-regras").innerHTML = [
+    { c: "ok", ic: "1", t: "Comece pela mais antiga, mas não ignore a geografia", d: "A OS 2026142578 abre a rota nas duas ordens — é a mais antiga e está na mesma região das outras cinco. Ordem de antiguidade e ordem otimizada coincidem no começo." },
+    { c: "info", ic: "2", t: "Vila São Paulo resolve em uma saída", d: "Três OS a menos de 1,3 km entre si (Régis Plínio Batalha 1137, Quinze de Novembro 145 e 390). Uma única mobilização fecha as três." },
+    { c: "warn", ic: "3", t: "Jundiapeba é outro dia", d: "As duas OS de lá ficam a mais de 15 km do bloco central. Junte as duas numa saída própria, no fim do dia, para não atravessar a cidade duas vezes." },
+    { c: "info", ic: "4", t: "Confirme a localização antes de sair", d: "Duas OS vieram com bairro divergente no relatório: a 2026151708 está em Jundiapeba (não Jd. Nove de Julho) e a 2026065674 em Vila Andrade (não Sabaúna). Peça confirmação ao encarregado." },
+    { c: "ok", ic: "5", t: "Registre a execução no mesmo dia", d: "O TR 3.3 exige devolução da OS até 10h do dia seguinte. OS executada e não baixada vira atraso fantasma — foi o que produziu o caso de 18 dias." },
+  ].map(a => `<div class="alert ${a.c}"><span class="ic">${a.ic}</span><div class="bd"><div class="tt">${esc(a.t)}</div><div class="ds">${esc(a.d)}</div></div></div>`).join("");
+}
+
+/* ------------------------------------------------------------ ANÁLISES */
+function renderAnalises() {
+  const T = AGG.ton, porNat = AGG.porNat;
+  const conf = Math.round((AGG.kpi.total - AGG.kpi.fora) / AGG.kpi.total * 100);
+
+  el("analise-topo").innerHTML = `
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px">
+      <div><div id="m1"></div><div class="mcap">Conformidade geral</div></div>
+      <div><div id="m2"></div><div class="mcap">Recape de água</div></div>
+      <div><div id="m3"></div><div class="mcap">Recape de esgoto</div></div>
+      <div><div id="m4"></div><div class="mcap">Ligação de água</div></div>
+    </div>`;
+  cMedidor("m1", conf, { cor: C.ok, sub: "no prazo" });
+  cMedidor("m2", porNat[0].conf, { cor: porNat[0].conf >= 90 ? C.ok : C.warn, sub: "no prazo" });
+  cMedidor("m3", porNat[2].conf, { cor: porNat[2].conf >= 90 ? C.ok : C.warn, sub: "no prazo" });
+  cMedidor("m4", 100, { cor: C.ok, sub: "no prazo" });
+
+  cBarras("ch1", NATS.map(n => n.replace("Ligação de ", "Lig. ")), porNat.map(p => p.qtd), { cores: NATS.map(n => COR_NAT[n]) });
+  cPizza("ch2", porNat.map(p => ({ n: p.nat, v: p.qtd, c: COR_NAT[p.nat] })), { sub: "eventos" });
+  cBarrasH("ch3", AGG.porFaixa.map(f => ({ n: f.faixa, v: f.qtd, t: pl(f.qtd, "evento", "eventos"), c: f.fora ? (f.faixa.includes("mais") ? C.bad : C.warn) : C.ok })), { lw: 150 });
+  cBarrasProg("ch4", porNat.map(p => ({ n: p.nat, pct: p.conf, sub: `${p.qtd - p.fora} de ${p.qtd}`, c: p.conf === 100 ? C.ok : p.conf >= 80 ? C.warn : C.bad })), { lw: 130 });
+
+  const dias = {};
+  DADOS.forEach(d => { const k = d.iso.slice(0, 10); dias[k] = (dias[k] || 0) + 1; });
+  const labs = Object.keys(dias).sort();
+  cLinha("ch5", labs.map(d => d.slice(8, 10) + "/" + d.slice(5, 7)), labs.map(d => dias[d]), { h: 210 });
+
+  cBarrasH("ch6", AGG.topBairros.map(b => ({ n: b.bairro.length > 20 ? b.bairro.slice(0, 19) + "…" : b.bairro, v: b.qtd, t: b.fora ? `${b.qtd} · ${b.fora} fora` : b.qtd, c: b.fora ? C.bad : C.aco })), { lw: 145 });
+  cBarrasH("ch7", AGG.topOrigens.slice(0, 10).map(o => ({ n: o.origem.length > 22 ? o.origem.slice(0, 21) + "…" : o.origem, v: o.qtd, c: C.info })), { lw: 165 });
+
+  const topB = AGG.topBairros.slice(0, 8).map(b => b.bairro);
+  cHeat("ch8", topB.map(b => b.length > 17 ? b.slice(0, 16) + "…" : b), NATS.map(n => n.replace("Ligação de ", "Lig. ")),
+    topB.map(b => NATS.map(n => DADOS.filter(d => d.bairro === b && d.nat === n).length)), { lw: 140, ch: 27 });
+
+  const fora = DADOS.filter(d => d.fora).sort((a, b) => b.idade - a.idade);
+  cBarrasH("ch9", fora.map(d => ({ n: d.os + " " + d.bairro.slice(0, 11), v: d.idade, t: d.idade + " du", c: d.idade > 10 ? C.bad : d.idade > 5 ? C.warn : C.info })), { lw: 168 });
+
+  const ordem = ["Concluída", "Fora da base", "Nova", "Reaberta", "Cancelada"];
+  cRosca("ch10", ordem.filter(k => AGG.sit[k]).map(k => ({ n: k, v: AGG.sit[k], c: k === "Fora da base" ? C.bad : (k === "Concluída" || k === "Cancelada") ? C.warn : C.ok })), { sub: "eventos" });
+
+  const horas = Array.from({ length: 15 }, (_, i) => i + 7);
+  const ph = horas.map(h => DADOS.filter(d => +d.iso.slice(11, 13) === h).length);
+  cBarras("ch11", horas.map(h => h + "h"), ph, { cores: ph.map(v => v >= 10 ? C.aco : C.info2) });
+
+  const ds = ["Seg", "Ter", "Qua", "Qui", "Sex", "Sáb", "Dom"];
+  const pds = ds.map((_, i) => DADOS.filter(d => new Date(d.iso + ":00").getDay() === ((i + 1) % 7)).length);
+  cBarras("ch12", ds, pds, { cores: pds.map((v, i) => i === 0 ? C.bad : C.aco) });
+
+  const topB6 = AGG.topBairros.slice(0, 6).map(b => b.bairro);
+  cEmpilhado("ch13", topB6.map(b => b.length > 12 ? b.slice(0, 11) + "…" : b),
+    NATS.map(n => ({ n, c: COR_NAT[n], v: topB6.map(b => DADOS.filter(d => d.bairro === b && d.nat === n).length) })), { h: 230 });
+
+  cBarras("ch14", T.porVeic.map(v => v.veic.replace("ENZ ", "")), T.porVeic.map(v => v.t), { cores: T.porVeic.map((_, i) => PALETA[i]), rotulo: v => nf(v, 2) + "t" });
+  cLinha("ch15", T.porDia.map(d => d.dia.slice(0, 5)), T.porDia.map(d => d.t), { cor: C.info, dy: 1, rot: v => nf(v, 1) + "t" });
+
+  cBolhas("ch16", AGG.topBairros.map(b => {
+    const ev = DADOS.filter(d => d.bairro === b.bairro);
+    const p = Math.max(...ev.map(x => x.idade), 0);
+    return { x: b.qtd, y: p, r: 8 + b.qtd * 1.5, n: b.bairro.split(" ")[0].slice(0, 8), c: p > 5 ? C.bad : p > 2 ? C.warn : C.ok };
+  }), { xl: "eventos na fila", h: 280 });
+
+  el("analise-fim").innerHTML = [
+    { c: "ok", ic: "1", t: "A fila não estoura por volume", d: `${conf}% dentro de 2 dias úteis, média de ${AGG.kpi.media} dia útil. O problema são 8 casos, não o fluxo.` },
+    { c: "info", ic: "2", t: "Ligação de água é o único fluxo 100% no prazo", d: `26 eventos, pior caso em 1 dia útil. É o padrão a copiar: mesma natureza, mesma contratada, resultado oposto ao recape de água.` },
+    { c: "warn", ic: "3", t: `Recape de água responde por ${porNat[0].fora} dos ${AGG.kpi.fora} atrasos`, d: `Conformidade de ${porNat[0].conf}% contra 100% das ligações. Mesmo caminhão — o gargalo é a frente de vala de rede.` },
+    { c: "bad", ic: "4", t: "O caso de 18 dias está sozinho e não tem padrão", d: "OS 2026142578 não consta da base viva. Exige apuração individual antes de penalidade — pode ser erro de baixa, não serviço parado." },
+    { c: "info", ic: "5", t: "Entrada concentrada em segunda e pela manhã", d: `41 dos 68 entraram numa segunda-feira e 49 dos 68 entre 7h e 12h. Programar no fim de semana absorve o pico.` },
+    { c: "warn", ic: "6", t: `Operação no teto de carga: ${T.cargas.length} cargas em ${T.dias} dias`, d: `Sempre 2 cargas/dia e ~8,3 t cada, gerando ${ton(T.total)} e ${brl(T.valorTotal)}. Mais frente sem caminhão extra não aumenta entrega.` },
+  ].map(a => `<div class="alert ${a.c}"><span class="ic">${a.ic}</span><div class="bd"><div class="tt">${esc(a.t)}</div><div class="ds">${esc(a.d)}</div></div></div>`).join("");
+}
+
+/* --------------------------------------------------------------- FILA */
+let filtro = "all", ordem = { campo: "idade", dir: -1 }, busca = "";
+function passa(d) {
+  if (filtro === "fora" && !d.fora) return false;
+  if (filtro === "agua" && !(d.nat === "Água" || d.nat === "Ligação de Água")) return false;
+  if (filtro === "esgoto" && !(d.nat === "Esgoto" || d.nat === "Ligação de Esgoto")) return false;
+  if (filtro === "lig" && !d.nat.startsWith("Ligação")) return false;
+  const fs = el("f-sit").value;
+  if (fs && d.sit !== fs) return false;
+  if (busca) {
+    const b = busca.toLowerCase();
+    if (!`${d.os} ${d.end} ${d.bairro} ${d.solic} ${d.tipo} ${d.nat} ${d.nro}`.toLowerCase().includes(b)) return false;
+  }
+  return true;
+}
+function renderTabela() {
+  const rows = DADOS.filter(passa).sort((a, b) => {
+    const x = a[ordem.campo], y = b[ordem.campo];
+    return typeof x === "string" ? x.localeCompare(y, "pt-BR") * ordem.dir : (x - y) * ordem.dir;
+  });
+  el("tbody").innerHTML = rows.map(d => `
+    <tr>
+      <td class="num"><span class="du ${duClasse(d.idade)}">${d.idade}</span></td>
+      <td class="os">${esc(d.os)}</td>
+      <td>${tagNat(d.nat)}</td>
+      <td class="mono" style="color:var(--tx3)">${esc(d.data)}</td>
+      <td>${esc(d.end)}${d.nro ? ", " + esc(d.nro) : ""}</td>
+      <td>${esc(d.bairro)}</td>
+      <td style="color:var(--tx2);font-size:12px">${esc(d.tipo)}</td>
+      <td>${tagSit(d.sit)}</td>
+    </tr>`).join("");
+  el("vazio").style.display = rows.length ? "none" : "block";
+  el("n-fila").textContent = rows.length + " de " + DADOS.length;
+  el("c-fila").textContent = DADOS.filter(d => d.fora).length;
+}
+
+/* -------------------------------------------------------------- PRAZO */
+function renderPrazo() {
+  el("regua").innerHTML = `
+    <div class="alert ok"><span class="ic">✓</span><div class="bd">
+      <div class="tt">${AGG.kpi.total - AGG.kpi.fora} eventos (${Math.round((AGG.kpi.total - AGG.kpi.fora) / AGG.kpi.total * 100)}%) cumprem os 2 dias úteis</div>
+      <div class="ds">Todos os recapes de ligação de água estão nessa faixa, e a maior parte dos de água e esgoto.</div></div></div>
+    <div class="alert bad"><span class="ic">✗</span><div class="bd">
+      <div class="tt">${AGG.kpi.fora} eventos fora do prazo — 7 deles há mais de 5 dias úteis</div>
+      <div class="ds">Acima de 5 dias úteis o atraso deixa de ser flutuação e exige justificativa técnica formal, com base no TR 3.7 e na cláusula 13.5.</div></div></div>`;
+
+  cBarras("g-conf", AGG.porNat.map(p => p.nat.replace("Ligação de ", "Lig. ")),
+    AGG.porNat.map(p => p.conf), {
+    cores: AGG.porNat.map(p => p.conf === 100 ? C.ok : p.conf >= 80 ? C.warn : C.bad),
+    rotulo: v => v + "%",
+  });
+  const fora = DADOS.filter(d => d.fora).sort((a, b) => b.idade - a.idade);
+  cBarrasH("g-fora", fora.map(d => ({ n: `${d.os} · ${d.bairro.slice(0, 13)}`, v: d.idade, t: d.idade + " du", c: d.idade > 10 ? C.bad : d.idade > 5 ? C.warn : C.info })), { lw: 175 });
+
+  el("analise").innerHTML = fora.map(d => {
+    const nivel = d.idade > 10 ? "bad" : d.idade > 5 ? "warn" : "info";
+    let causa = "Caso fora do prazo sem padrão claro. Tratar individualmente.";
+    if (d.idade > 10) causa = "Caso isolado muito antigo. Pode ser serviço executado e nunca baixado — apurar antes de penalizar.";
+    else if (d.nat === "Água") causa = "Recape de água empatado. Como ligação de água anda no prazo com o mesmo caminhão, o gargalo é a frente de vala de rede.";
+    return `<div class="alert ${nivel}"><span class="ic">${d.idade}</span><div class="bd">
+      <div class="tt">${esc(d.os)} · ${esc(d.nat)} · ${esc(d.end)}${d.nro ? ", " + esc(d.nro) : ""} — ${esc(d.bairro)}</div>
+      <div class="ds"><b>${d.idade} dias úteis</b> desde ${esc(d.data)} · origem: ${esc(d.tipo)}. ${esc(causa)}</div></div></div>`;
+  }).join("");
+}
+
+/* ---------------------------------------------------------- TERRITÓRIO */
+function renderGeo() {
+  // mapa: projecao simples lat/lon -> svg
+  const pts = DADOS.filter(d => d.lat);
+  const lats = pts.map(p => p.lat), lons = pts.map(p => p.lon);
+  const latMin = Math.min(...lats) - 0.006, latMax = Math.max(...lats) + 0.006;
+  const lonMin = Math.min(...lons) - 0.006, lonMax = Math.max(...lons) + 0.006;
+  const W = 900, H = 520;
+  const X = v => (v - lonMin) / (lonMax - lonMin) * (W - 70) + 35;
+  const Y = v => H - 40 - (v - latMin) / (latMax - latMin) * (H - 70);
+  const mx = Math.max(...DADOS.map(d => d.idade), 1);
+  let s = "";
+  // grade
+  for (let i = 1; i <= 4; i++) {
+    s += `<line x1="${35 + (W - 70) * i / 5}" y1="25" x2="${35 + (W - 70) * i / 5}" y2="${H - 40}" stroke="${C.line}" opacity=".4"/>`;
+    s += `<line x1="35" y1="${25 + (H - 65) * i / 4}" x2="${W - 35}" y2="${25 + (H - 65) * i / 4}" stroke="${C.line}" opacity=".4"/>`;
+  }
+  // pontos (maiores e vermelhos = mais atrasados)
+  pts.slice().sort((a, b) => b.idade - a.idade).forEach(d => {
+    const r = 4 + (d.idade / mx) * 10;
+    const cor = d.idade > 10 ? C.bad : d.idade > 5 ? C.warn : d.idade > 2 ? "#fb923c" : C.info2;
+    s += `<circle cx="${X(d.lon).toFixed(1)}" cy="${Y(d.lat).toFixed(1)}" r="${r.toFixed(1)}" fill="${cor}" opacity=".55"/>`;
+    s += `<circle cx="${X(d.lon).toFixed(1)}" cy="${Y(d.lat).toFixed(1)}" r="${(r * .45).toFixed(1)}" fill="${cor}" opacity=".95"/>`;
+    if (d.fora) s += `<text x="${X(d.lon).toFixed(1)}" y="${(Y(d.lat) - r - 4).toFixed(1)}" fill="${C.tx}" font-size="8.5" text-anchor="middle" font-weight="700">${d.os.slice(-6)}</text>`;
+  });
+  // rotulos de bairro principais
+  AGG.topBairros.slice(0, 6).forEach(b => {
+    const ev = DADOS.filter(x => x.bairro === b.bairro && x.lat);
+    if (!ev.length) return;
+    const la = ev.reduce((a, x) => a + x.lat, 0) / ev.length;
+    const lo = ev.reduce((a, x) => a + x.lon, 0) / ev.length;
+    s += `<text x="${X(lo).toFixed(1)}" y="${(Y(la) + 4).toFixed(1)}" fill="${C.tx3}" font-size="9" text-anchor="middle" font-weight="600">${esc(b.bairro.split(" ")[0])}</text>`;
+  });
+  el("mapa").innerHTML = `<svg viewBox="0 0 ${W} ${H}" width="100%" style="display:block">${s}</svg>`;
+  el("mapa-leg").innerHTML = `
+    <div class="li"><span class="sw" style="background:${C.info2}"></span>no prazo (0–2 du)</div>
+    <div class="li"><span class="sw" style="background:#fb923c"></span>3 a 5 du</div>
+    <div class="li"><span class="sw" style="background:${C.warn}"></span>6 a 10 du</div>
+    <div class="li"><span class="sw" style="background:${C.bad}"></span>mais de 10 du</div>
+    <div class="li" style="margin-left:auto">tamanho do círculo = dias de atraso · número = final da OS</div>`;
+
+  const maxB = Math.max(...AGG.topBairros.map(b => b.qtd), 1);
+  el("g-bairro").innerHTML = AGG.topBairros.map(b => `
+    <div class="bar">
+      <div class="lbl"><span>${esc(b.bairro)}</span><b>${b.qtd}${b.fora ? `<span style="color:var(--bad);font-size:11px"> · ${b.fora} fora</span>` : ""}</b></div>
+      <div class="track" style="position:relative">
+        <div class="fill aco" style="width:${b.qtd / maxB * 100}%"></div>
+        ${b.fora ? `<div class="fill bad" style="width:${b.fora / b.qtd * (b.qtd / maxB * 100)}%;position:absolute;left:0;top:0"></div>` : ""}
+      </div>
+    </div>`).join("");
+
+  const mo = Math.max(...AGG.topOrigens.map(o => o.qtd), 1);
+  el("g-origem").innerHTML = AGG.topOrigens.map(o => `
+    <div class="bar">
+      <div class="lbl"><span>${esc(o.origem)}</span><b>${o.qtd}</b></div>
+      <div class="track"><div class="fill info" style="width:${o.qtd / mo * 100}%"></div></div>
+    </div>`).join("");
+
+  const jund = AGG.topBairros.find(b => b.bairro.includes("JUNDIAPEBA"));
+  const sp = AGG.topBairros.find(b => b.bairro.includes("SAO PAULO"));
+  el("geo-leitura").innerHTML = [
+    jund ? { c: "warn", ic: "!", t: `Vila Jundiapeba concentra ${jund.qtd} eventos`, d: "Maior concentração da fila. Tratar como frente única de recape reduz deslocamento e janela de usina." } : "",
+    sp ? { c: "warn", ic: "!", t: `Vila São Paulo concentra ${sp.qtd} eventos${sp.fora ? ` e ${sp.fora} dos atrasos` : ""}`, d: "Onde estão três dos quatro casos de 10 dias úteis, todos de 26/10 — um lote liberado junto e não atendido." } : "",
+    { c: "info", ic: "i", t: "Metade dos recapes nasce de estudo de ligação predial", d: "É o maior alimentador da fila, à frente dos vazamentos. Se o estudo de ligação atrasa, o recape chega atrasado junto — o gargalo pode estar antes do pavimento." },
+  ].filter(Boolean).map(a => `<div class="alert ${a.c}"><span class="ic">${a.ic}</span><div class="bd"><div class="tt">${esc(a.t)}</div><div class="ds">${esc(a.d)}</div></div></div>`).join("");
+}
+
+/* ---------------------------------------------------------- TONELAGEM */
+function renderTonelagem() {
+  const T = AGG.ton;
+  el("c-ton").textContent = nf(T.total, 0);
+  el("kpi-ton").innerHTML = [
+    { l: "Toneladas aplicadas", v: ton(T.total), d: `${T.cargas.length} cargas em ${T.dias} dias`, c: "aco" },
+    { l: "Valor medido", v: brl(T.valorTotal), d: `${brl(T.preco)}/t · apostilamento`, c: "ok" },
+    { l: "Área equivalente", v: nf(T.m2, 0) + " m²", d: "a 5 cm (0,120 t/m²)", c: "info" },
+    { l: "Custo por m²", v: brl(T.valorM2), d: "confere com o contrato", c: "info" },
+    { l: "Média por dia", v: ton(T.mediaDia), d: `${T.dias} dias com carga`, c: "warn" },
+    { l: "Média por carga", v: ton(T.mediaCarga), d: "capacidade ≈ 8,8 t", c: "warn" },
+  ].map(k => `<div class="kpi ${k.c}"><div class="kl">${k.l}</div>
+      <div class="kv" style="font-size:${String(k.v).length > 12 ? 20 : 26}px">${k.v}</div>
+      <div class="kd">${esc(k.d)}</div></div>`).join("");
+
+  const maxD = Math.max(...T.porDia.map(d => d.t), 1);
+  el("n-ton-dia").textContent = T.porDia.length + " dias";
+  el("g-ton-dia").innerHTML = T.porDia.map(d => `
+    <div class="bar"><div class="lbl"><span>${d.dia} · ${d.cargas} ${d.cargas === 1 ? "carga" : "cargas"}</span><b>${ton(d.t)}</b></div>
+    <div class="track"><div class="fill aco" style="width:${d.t / maxD * 100}%"></div></div></div>`).join("");
+
+  const maxV = Math.max(...T.porVeic.map(v => v.t), 1);
+  el("n-ton-veic").textContent = T.porVeic.length + " caminhões";
+  el("g-ton-veic").innerHTML = T.porVeic.map(v => `
+    <div class="bar"><div class="lbl"><span class="mono">${v.veic}</span><b>${ton(v.t)}</b></div>
+    <div class="track"><div class="fill info" style="width:${v.t / maxV * 100}%"></div></div></div>`).join("");
+
+  el("conta-ton").innerHTML = `
+    <div class="alert ok"><span class="ic">✓</span><div class="bd"><div class="tt">A conta fecha nas três pontas</div>
+      <div class="ds">Soma das ${T.cargas.length} cargas: <b>${ton(T.total)}</b> — igual ao rodapé da planilha.<br>
+      ${ton(T.total)} × ${brl(T.preco)} = <b>${brl(T.valorTotal)}</b> — igual ao valor declarado.<br>
+      Em cada carga, bruto − tara = líquido — as ${T.cargas.length} conferem.</div></div></div>
+    <div class="alert info"><span class="ic">i</span><div class="bd"><div class="tt">${ton(T.total)} equivalem a ${nf(T.m2, 0)} m² de recape a 5 cm</div>
+      <div class="ds">0,05 m × 2,4 t/m³ = 0,120 t/m². O custo resultante é ${brl(T.valorM2)}/m², que confere com a tabela do contrato.</div></div></div>
+    <div class="alert warn"><span class="ic">!</span><div class="bd"><div class="tt">A planilha não traz a área executada</div>
+      <div class="ds">As colunas de quantidade e área estão zeradas e o resumo mostra #DIV/0!. A área de ${nf(T.m2, 0)} m² é <b>calculada pela espessura teórica</b>, não medida. Quando houver área real por OS, esse número pode ser confrontado — é aí que aparece a glosa por espessura.</div></div></div>`;
+
+  el("tbody-ton").innerHTML = T.cargas.map(c => {
+    const dif = c.bruto - c.tara, ok = dif === c.liq;
+    return `<tr>
+      <td class="mono">${c.dia.slice(0, 5)}</td><td class="mono">${esc(c.veic)}</td><td class="mono">${esc(c.nf)}</td>
+      <td class="num">${nf(c.tara)}</td><td class="num">${nf(c.bruto)}</td><td class="num">${nf(c.liq)}</td>
+      <td class="num" style="font-weight:700">${ton(c.t)}</td><td class="num">${brl(c.t * T.preco)}</td>
+      <td class="num">${ok ? '<span class="tag ok">ok</span>' : '<span class="tag bad">erro</span>'}</td></tr>`;
+  }).join("");
+  el("foot-ton").innerHTML = `<td colspan="5" style="text-align:right">TOTAL</td>
+    <td class="num">${nf(T.cargas.reduce((a, c) => a + c.liq, 0))}</td>
+    <td class="num">${ton(T.total)}</td><td class="num">${brl(T.valorTotal)}</td><td></td>`;
+
+  const maior = T.porVeic.slice().sort((a, b) => b.t - a.t)[0];
+  el("leitura-ton").innerHTML = [
+    { c: "info", ic: "i", t: `Dois caminhões fazem o serviço em ${T.dias} dias`, d: `${maior.veic} concentra ${ton(maior.t)} (${Math.round(maior.t / T.total * 100)}% do total). Se ele parar, a frente para.` },
+    { c: "warn", ic: "!", t: `Ritmo de ${ton(T.mediaDia)} por dia produtivo`, d: `${T.cargas.length} cargas em ${T.dias} dias, sempre 2 por dia e ~8,3 t. Padrão estável — bom para prever, sinal de teto operacional.` },
+    { c: "ok", ic: "✓", t: `${brl(T.valorTotal)} medidos em ${T.dias} dias`, d: `Projeta ~${brl(T.valorTotal / T.dias * 21)} num mês de 21 dias úteis. Projeção aritmética, não previsão.` },
+  ].map(a => `<div class="alert ${a.c}"><span class="ic">${a.ic}</span><div class="bd"><div class="tt">${esc(a.t)}</div><div class="ds">${esc(a.d)}</div></div></div>`).join("");
+}
+
+/* ------------------------------------------------------------ POTENZA */
+const CATS = { A: "Prazo", B: "Produção", C: "Medição", D: "Qualidade", E: "Gestão" };
+let qFiltro = "all";
+const selecionadas = new Set(AGG.questoes.filter(q => q.sel).map(q => q.id));
+
+function renderQuestoes() {
+  const lista = AGG.questoes.filter(q => qFiltro === "all" || q.cat === qFiltro);
+  el("ques-lista").innerHTML = lista.map(q => `
+    <div class="ques ${selecionadas.has(q.id) ? "on" : ""}" data-q="${q.id}">
+      <div class="qh">
+        <div class="cb" onclick="toggleQ('${q.id}')">✓</div>
+        <div class="qt" onclick="toggleQ('${q.id}')">${esc(q.t)}</div>
+      </div>
+      <div class="qd">${q.d}</div>
+      <div class="qtag">
+        <span class="tag ${q.cat === "A" ? "bad" : q.cat === "C" ? "warn" : "info"}">${CATS[q.cat]} · ${q.id}</span>
+        <span class="tag ${q.crit === "alto" ? "bad" : "warn"}">prioridade ${q.crit}</span>
+        <span class="tag">${esc(q.ev)}</span>
+      </div>
+    </div>`).join("");
+}
+function toggleQ(id) {
+  const q = AGG.questoes.find(x => x.id === id);
+  if (selecionadas.has(id)) selecionadas.delete(id); else selecionadas.add(id);
+  renderQuestoes();
+  gerarMsg();
+}
+function gerarMsg() {
+  const sel = AGG.questoes.filter(q => selecionadas.has(q.id));
+  if (!sel.length) { el("msg-final").textContent = "Marque as perguntas acima e clique em \"Gerar mensagem única\"."; return; }
+  const porCat = {};
+  sel.forEach(q => { (porCat[q.cat] = porCat[q.cat] || []).push(q); });
+  let t = "Boa tarde. Seguem pontos para alinhamento sobre as OS de recapeamento em aberto (relatório CEBI de " + REF + "):\n";
+  Object.keys(CATS).forEach(c => {
+    if (!porCat[c]) return;
+    t += `\n${CATS[c].toUpperCase()}\n`;
+    porCat[c].forEach((q, i) => { t += `${i + 1}. ${q.t}\n`; });
+  });
+  t += "\nPeço retorno por escrito, com data compromissada por OS para os casos em atraso.\n\nAtenciosamente,\nMarcelo Augusto — Chefe de Divisão / SEMAE";
+  el("msg-final").textContent = t;
+}
+
+/* ----------------------------------------------------------- COBRANÇA */
+function msgTexto(d) {
+  return `Boa tarde. Solicito posição sobre a OS ${d.os} — recapeamento (${d.nat.toLowerCase()}) em ${d.end}${d.nro ? ", " + d.nro : ""}, ${d.bairro}.
+
+Evento aberto em ${d.data} e sem conclusão até hoje: ${d.idade} dias úteis, contra o máximo de 2 dias úteis previsto no item 3.7 do Termo de Referência do contrato 007/2023.
+
+Favor informar a previsão de execução e a justificativa técnica do atraso.`;
+}
+function renderCobranca() {
+  const fora = DADOS.filter(d => d.fora).sort((a, b) => b.idade - a.idade);
+  el("msgs").innerHTML = fora.map((d, i) => {
+    const u = d.idade > 10 ? "bad" : d.idade > 5 ? "warn" : "info";
+    return `<div class="msg">
+      <div class="hd"><span class="du ${duClasse(d.idade)}">${d.idade}</span>
+        <span class="mono" style="color:var(--tx)">${esc(d.os)}</span>${tagNat(d.nat)}
+        <span class="tag ${u}">${d.idade > 10 ? "apuração individual" : d.idade > 5 ? "cobrança formal" : "cobrança"}</span>
+        <button class="cp" data-copy="m${i}">copiar</button></div>
+      <div class="tx" id="m${i}">${esc(msgTexto(d))}</div>
+    </div>`;
+  }).join("");
+  document.querySelectorAll("[data-copy]").forEach(b => b.onclick = () => copiar(b, b.dataset.copy));
+
+  const k = AGG.kpi, T = AGG.ton;
+  el("resumo").textContent =
+`Recapeamento — situação em ${REF}
+
+${k.total} eventos de recape em aberto no CEBI (${k.os} OS distintas). ${k.total - k.fora} dentro do prazo de 2 dias úteis (${Math.round((k.total - k.fora) / k.total * 100)}%) e ${k.fora} fora.
+
+Os atrasos se concentram em recape de água (${AGG.porNat[0].fora} casos) e num caso isolado de esgoto parado há ${k.pior} dias úteis (OS 2026142578, Vila São Paulo). Quatro OS de 26/10 na Vila São Paulo e Mogi Moderno formam o mesmo lote e devem ser tratadas juntas.
+
+No período de 03 a 06/11 foram aplicadas ${ton(T.total)} de CBUQ, equivalentes a ${brl(T.valorTotal)} medidos.
+
+Recomendação: cobrar formalmente os ${k.fora} casos com fundamento no TR 3.7 e apurar individualmente o caso de ${k.pior} dias antes de aplicar penalidade.`;
+}
+
+
+/* ------------------------------------------- VERIFICAÇÃO E TROCA DE SOLO */
+function linhaExtra(d) {
+  const cls = d.idade > 10 ? "urg" : d.idade > 5 ? "warn" : "ok";
+  return `<div class="stop ${cls}">
+    <div class="pin">${d.idade}</div>
+    <div class="sb">
+      <div class="st">${esc(d.end)}${d.nro ? ", " + esc(d.nro) : ""}</div>
+      <div class="sa">${esc(d.bairro)} · OS <span class="mono">${esc(d.os)}</span> · aberta em ${esc(d.data)}</div>
+      <div class="sm">
+        <span>${esc(d.nat)}</span>
+        <span><b>${esc(d.depto_curto || "—")}</b></span>
+        <span>${esc(d.tipo || "")}</span>
+      </div>
+    </div>
+    <div class="sd"><span class="du ${duClasse(d.idade)}">${d.idade}</span></div>
+  </div>`;
+}
+
+function renderExtras() {
+  const E = AGG.extras;
+  el("c-extra").textContent = E.total;
+
+  el("extra-escopo").innerHTML = `
+    <div class="alert ok"><span class="ic">✓</span><div class="bd">
+      <div class="tt">${E.total} eventos nos três grupos, ${E.totalFora} fora do prazo</div>
+      <div class="ds">Recape ${E.resRec.qtd} · Verificação ${E.resVerif.qtd} · Troca de solo ${E.resSolo.qtd}. A verificação entra pelo tipo 822 (Manut. Água) — os tipos 114 (Ligações) e 235 (Parecer de Apoio) ficam fora do escopo.</div>
+    </div></div>`;
+
+  el("kpi-extra").innerHTML = [
+    { l: "Verificação de pendências", v: E.resVerif.qtd, d: `${E.resVerif.fora} fora · pior ${E.resVerif.pior} du`, c: "info" },
+    { l: "Troca de solo / entulho", v: E.resSolo.qtd, d: `${E.resSolo.fora} fora · pior ${E.resSolo.pior} du`, c: "warn" },
+    { l: "Recape", v: E.resRec.qtd, d: `${E.resRec.fora} fora · média ${E.resRec.media} du`, c: "aco" },
+  ].map(k => `<div class="kpi ${k.c}"><div class="kl">${k.l}</div>
+    <div class="kv">${k.v}</div><div class="kd">${esc(k.d)}</div></div>`).join("");
+
+  el("n-verif").textContent = `${E.verif.length} eventos`;
+  el("lista-verif").innerHTML = E.verif.length
+    ? E.verif.map(linhaExtra).join("")
+    : `<div class="alert info"><span class="ic">i</span><div class="bd"><div class="tt">Nenhuma verificação pendente na extração</div><div class="ds">Ou estão todas concluídas, ou a consulta não as trouxe nesta rodada.</div></div></div>`;
+
+  el("n-solo").textContent = `${E.solo.length} eventos`;
+  el("lista-solo").innerHTML = E.solo.length
+    ? E.solo.map(linhaExtra).join("")
+    : `<div class="alert info"><span class="ic">i</span><div class="bd"><div class="tt">Nenhuma troca de solo pendente</div><div class="ds">A frente está sem OS de reaterro aberta nesta extração.</div></div></div>`;
+
+  const mp = Math.max(...E.posse.map(x => x.qtd), 1);
+  el("g-posse").innerHTML = E.posse.map(x => `
+    <div class="bar"><div class="lbl"><span>${esc(x.d)}</span><b>${x.qtd}</b></div>
+    <div class="track"><div class="fill ${/Potenza|Recomposi/.test(x.d) ? "aco" : /Civil/.test(x.d) ? "warn" : "info"}" style="width:${x.qtd / mp * 100}%"></div></div></div>`).join("");
+
+  const mf = Math.max(...E.fonte.map(x => x.qtd), 1);
+  el("g-fonte").innerHTML = E.fonte.map(x => `
+    <div class="bar"><div class="lbl"><span>${esc(x.f)}</span><b>${x.qtd}</b></div>
+    <div class="track"><div class="fill ${x.f === "PDF" ? "aco" : "info"}" style="width:${x.qtd / mf * 100}%"></div></div></div>`).join("");
+
+  const v = E.resVerif, s = E.resSolo;
+  el("extra-leitura").innerHTML = [
+    { c: v.fora > 0 ? "warn" : "ok", ic: "1", t: `${v.qtd} verificações pendentes, ${v.fora} fora do prazo`,
+      d: v.fora > 0 ? `A mais antiga está parada há ${v.pior} dias úteis. Enquanto a verificação não fecha, a OS de recape da mesma rua não pode ser liberada — o atraso do pavimento começa aqui, não na frente de recape.` : "Todas dentro do prazo. A verificação não é o gargalo desta rodada." },
+    { c: s.qtd > 0 ? "warn" : "ok", ic: "2", t: `${s.qtd} ${s.qtd === 1 ? "evento" : "eventos"} de troca de solo / remoção de entulho`,
+      d: s.qtd > 0 ? `Troca de solo é a etapa anterior ao CBUQ: sem ela a vala não recebe massa. ${s.fora ? `${s.fora} já ${s.fora === 1 ? "está" : "estão"} fora do prazo, a mais antiga com ${s.pior} dias úteis.` : "Todas dentro do prazo."}` : "Sem OS aberta nesta extração." },
+    { c: "info", ic: "3", t: "A fila real é maior do que o recape sozinho mostrava",
+      d: `Somando os três grupos são ${E.total} eventos contra ${E.resRec.qtd} de recape. A diferença é a etapa que precede o pavimento — e é onde o prazo se perde sem ninguém cobrar.` },
+  ].map(a => `<div class="alert ${a.c}"><span class="ic">${a.ic}</span><div class="bd"><div class="tt">${esc(a.t)}</div><div class="ds">${esc(a.d)}</div></div></div>`).join("");
+}
+
+/* --------------------------------------------------------------- BASE */
+function renderBase() {
+  const div = DADOS.filter(d => d.sit === "Concluída" || d.sit === "Cancelada");
+  const foraBase = DADOS.filter(d => d.sit === "Fora da base");
+  el("divergencia").innerHTML = `
+    <div class="alert bad"><span class="ic">✗</span><div class="bd">
+      <div class="tt">${div.length} OS pendentes no relatório estão fechadas na base</div>
+      <div class="ds">O pipeline trata 1 OS = 1 evento. Quando a OS já foi fechada e nasce um evento novo de recape, o sistema não reabre — a OS desaparece da lista de cobrança.</div></div></div>
+    <div class="alert warn"><span class="ic">!</span><div class="bd">
+      <div class="tt">${foraBase.length} registros não existem na base</div>
+      <div class="ds">12 abriram antes da extração das ${BASE_TS.slice(11)} e deveriam estar lá — inclusive a OS 2026142578, a mais antiga. Os outros 5 abriram depois.</div></div></div>`;
+
+  el("tbody-div").innerHTML = div.sort((a, b) => b.idade - a.idade).map(d => `
+    <tr><td class="os">${esc(d.os)}</td>
+      <td class="num"><span class="du ${duClasse(d.idade)}">${d.idade}</span></td>
+      <td class="mono" style="color:var(--tx3)">${esc(d.data)}</td>
+      <td><span class="tag warn">${esc(d.sit.toLowerCase())}</span></td>
+      <td style="color:var(--tx2);font-size:11.5px">${esc(d.api)}</td>
+      <td style="color:var(--tx3);font-size:11.5px">não entra na cobrança pelo painel</td></tr>`).join("");
+
+  const max = Math.max(...Object.values(AGG.sit), 1);
+  el("g-sit").innerHTML = Object.entries(AGG.sit).sort((a, b) => b[1] - a[1]).map(([k, v]) => `
+    <div class="bar"><div class="lbl"><span>${esc(k)}</span><b>${v}</b></div>
+    <div class="track"><div class="fill ${k === "Fora da base" ? "bad" : k === "Concluída" || k === "Cancelada" ? "warn" : "ok"}" style="width:${v / max * 100}%"></div></div></div>`).join("");
+
+  const met = [
+    ["Fonte", `Relatório CEBI "Ordens de Serviço / Eventos Pendentes" de ${PDF_TS}, período 29/06/2025 a 10/11/2026.`],
+    ["Extração", "Leitura pelas linhas de grade do PDF: cada faixa entre duas linhas horizontais é um registro. Não mistura registros nem descarta o rodapé."],
+    ["Filtro", "Só serviços 101, 121, 123, 126 e 843 (recapeamento). Nenhum registro ficou de fora."],
+    ["Régua", "TR 3.7: máximo 2 dias úteis por OS. TR 3.2/3.4: o dia da emissão não conta, o da conclusão conta inteiro."],
+    ["Dias úteis", "Seg–sex, descontados feriados nacionais de 2026. Feriados municipais de Mogi não confirmados."],
+    ["Data contada", "A coluna Data do relatório é a do evento de recape, não a de abertura da OS. Em 46 de 51 OS comparáveis ela é posterior à abertura (até 27,8 dias)."],
+    ["Geocodificação", "40 endereços por rua e 28 por centroide de bairro. Distâncias em linha reta."],
+    ["Lacuna", "O relatório não traz m² nem tonelagem por OS. Não há valor rateado por OS nesta tela."],
+  ];
+  el("metodo").innerHTML = met.map(([a, b]) => `
+    <div style="padding:9px 0;border-bottom:1px solid rgba(32,38,47,.7)">
+      <div style="font-size:10px;font-weight:800;color:var(--tx2);text-transform:uppercase;letter-spacing:.6px">${esc(a)}</div>
+      <div style="font-size:12px;color:var(--tx3);line-height:1.55;margin-top:3px">${esc(b)}</div>
+    </div>`).join("");
+}
+
+/* -------------------------------------------------------------- NAV */
+document.querySelectorAll("nav button").forEach(b => {
+  b.onclick = () => {
+    document.querySelectorAll("nav button").forEach(x => x.classList.remove("on"));
+    document.querySelectorAll(".pane").forEach(x => x.classList.remove("on"));
+    b.classList.add("on");
+    el("p-" + b.dataset.p).classList.add("on");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+});
+document.querySelectorAll("thead th[data-s]").forEach(th => {
+  th.onclick = () => {
+    const c = th.dataset.s;
+    ordem = { campo: c, dir: ordem.campo === c ? ordem.dir * -1 : (c === "idade" ? -1 : 1) };
+    renderTabela();
+  };
+});
+document.querySelectorAll(".chip[data-f]").forEach(b => {
+  b.onclick = () => {
+    document.querySelectorAll(".chip[data-f]").forEach(x => x.classList.remove("on"));
+    b.classList.add("on"); filtro = b.dataset.f; renderTabela();
+  };
+});
+document.querySelectorAll(".chip[data-pf]").forEach(b => {
+  b.onclick = () => {
+    document.querySelectorAll(".chip[data-pf]").forEach(x => x.classList.remove("on"));
+    b.classList.add("on"); pFiltro = b.dataset.pf; renderProvidencias();
+  };
+});
+document.querySelectorAll(".chip[data-rf]").forEach(b => {
+  b.onclick = () => {
+    document.querySelectorAll(".chip[data-rf]").forEach(x => x.classList.remove("on"));
+    b.classList.add("on"); rAtual = b.dataset.rf; renderRota();
+  };
+});
+document.querySelectorAll(".chip[data-qf]").forEach(b => {
+  b.onclick = () => {
+    document.querySelectorAll(".chip[data-qf]").forEach(x => x.classList.remove("on"));
+    b.classList.add("on"); qFiltro = b.dataset.qf; renderQuestoes();
+  };
+});
+const btnMsg = el("btn-msg");
+if (btnMsg) btnMsg.onclick = gerarMsg;
+el("busca").oninput = e => { busca = e.target.value; renderTabela(); };
+el("f-sit").onchange = renderTabela;
+
+/* ------------------------------------------------------------- INIT */
+renderKpis();
+renderVisao();
+renderProvidencias();
+renderRota();
+renderAnalises();
+renderTabela();
+renderPrazo();
+renderGeo();
+renderTonelagem();
+renderExtras();
+renderQuestoes();
+gerarMsg();
+renderCobranca();
+renderBase();
+
+</script>
+</body>
+</html>
